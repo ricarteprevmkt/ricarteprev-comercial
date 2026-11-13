@@ -26,6 +26,11 @@ final class Navigation
                 ['label' => 'Indicadores regionais', 'route' => 'referrals.index', 'icon' => 'map-pin', 'abilities' => ['referrals.view_all', 'referrals.view_own']],
                 ['label' => 'Relatórios', 'route' => 'reports.index', 'icon' => 'document-chart-bar', 'abilities' => ['reports.view']],
             ]],
+            ['group' => 'Cadastros', 'items' => [
+                ['label' => 'Indicadores', 'route' => 'referrals.indicators', 'icon' => 'user-group', 'abilities' => ['indicators.manage']],
+                ['label' => 'Regras de comissão', 'route' => 'referrals.commission-rules', 'icon' => 'banknotes', 'abilities' => ['commissions.manage']],
+                ['label' => 'Catálogos', 'route' => 'admin.catalogs', 'icon' => 'list-bullet', 'abilities' => ['settings.manage']],
+            ]],
             ['group' => 'Administração', 'items' => [
                 ['label' => 'Usuários', 'route' => 'admin.users', 'icon' => 'users', 'abilities' => ['users.manage']],
                 ['label' => 'Perfis e permissões', 'route' => 'admin.roles', 'icon' => 'shield-check', 'abilities' => ['roles.manage']],

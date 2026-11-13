@@ -29,7 +29,7 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'Depois desse prazo a visita aparece como "sem resultado registrado".'],
             ['key' => 'finance.margin_revenue_basis', 'value' => 'expected', 'type' => 'string', 'group' => 'financeiro',
                 'label' => 'Receita usada na margem',
-                'description' => 'expected = receita prevista dos contratos; received = receita efetivamente recebida.'],
+                'description' => 'Base de receita para calcular a margem de contribuição estimada.'],
             ['key' => 'referrals.attribution_window_days', 'value' => 90, 'type' => 'int', 'group' => 'indicacoes',
                 'label' => 'Janela de atribuição da indicação (dias)',
                 'description' => 'Uma nova indicação de um contato já existente dentro desse prazo fica com o primeiro indicador.'],

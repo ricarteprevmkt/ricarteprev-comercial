@@ -33,8 +33,8 @@ composer test        # Pint + PHPStan + Pest
 | Fase | Conteúdo | Situação |
 |---|---|---|
 | 1 | Estrutura, autenticação, permissões, layout, migrations iniciais | Concluída |
-| 2 | Cadastros: usuários, executivos, indicadores, regiões, cidades, metas, parâmetros | Próxima |
-| 3 | CRM e funil comercial | |
+| 2 | Cadastros: usuários, executivos, indicadores, regiões, cidades, metas, catálogos, parâmetros, auditoria | Concluída |
+| 3 | CRM e funil comercial | Próxima |
 | 4 | Agenda e rotas | |
 | 5 | Indicadores regionais e comissões | |
 | 6 | Custos e resultados | |

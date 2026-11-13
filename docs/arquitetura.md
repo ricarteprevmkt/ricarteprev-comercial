@@ -66,14 +66,21 @@ O C2 Prev continua sendo usado pela Ricarte. A integração decidida é a **impo
 | `notifications` | Notificações internas |
 | `sessions`, `cache`, `jobs`, `failed_jobs`, `passkeys` | Infraestrutura |
 
+### Criado na Fase 2
+
+| Tabela | Finalidade |
+|---|---|
+| `executives` | Dados comerciais do executivo, ligado 1:1 a um usuário. CPF criptografado (`cpf_encrypted`) com hash único (`cpf_hash`). Status `active`, `on_leave` ou `terminated`; desligado perde o login automaticamente |
+| `goals` | Meta de um mês específico (`UNIQUE executive_id, month`). Sem registro, vale a meta padrão do executivo |
+| `regional_indicators` | Indicador regional. Acesso ao sistema opcional (`user_id`). WhatsApp normalizado e sem repetição |
+| `commission_rules` | Valor fixo ou percentual (com base de cálculo) e evento que gera o direito |
+| `lead_sources`, `loss_reasons`, `visit_reasons`, `expense_categories`, `referral_channels` | Catálogos configuráveis. Itens são desativados, nunca excluídos. Categorias de despesa têm natureza variável ou fixa |
+
+Fotos ficam em `storage/app/private/photos` e são servidas pela rota autenticada `fotos/...`, que confere se o usuário pode ver o cadastro.
+
 ### Próximas fases
 
 ```
-executives(user_id UNIQUE, cpf_enc, photo_path, city_id, region_id, hired_at, status, cost_allowance DECIMAL)
-regional_indicators(user_id NULL, name, phone, whatsapp, email, city_id, neighborhood, region_id, status, commission_rule_id)
-goals(executive_id, period_month, visits_target, contracts_target)             UNIQUE(executive_id, period_month)
-
-lead_sources, loss_reasons, visit_reasons, expense_categories, referral_channels   catálogos configuráveis
 leads(name, type, cpf_cnpj_enc, cpf_cnpj_hash UNIQUE NULL, phone_norm INDEX, whatsapp, email, city_id, neighborhood,
       address, lat, lng, lead_source_id, executive_id, origin_referral_id NULL, entered_at, status)
 opportunities(lead_id, executive_id, lead_source_id, stage, interest, estimated_value DECIMAL,

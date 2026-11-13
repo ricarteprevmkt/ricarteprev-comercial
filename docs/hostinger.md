@@ -61,6 +61,8 @@ Confirme `pdo_mysql`, `mbstring`, `intl`, `gd`, `bcmath`, `zip`, `fileinfo` e `o
 
 7. **hPanel > Segurança > SSL:** ative o certificado e force HTTPS.
 
+8. **E-mail:** crie uma caixa no hPanel e preencha `MAIL_*` no `.env`. Sem isso, os links de criação e redefinição de senha não chegam aos usuários. Enquanto não houver e-mail, defina a senha inicial no próprio cadastro.
+
 ## Deploys seguintes
 
 Na máquina local:
