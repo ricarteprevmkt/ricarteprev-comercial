@@ -9,7 +9,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
@@ -23,8 +23,29 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
+    /* Identidade Ricarte Prev: azul-marinho institucional, azul de dados, dourado e verde do logotipo */
+    --color-brand-50: #eef3fa;
+    --color-brand-100: #d9e3f2;
+    --color-brand-200: #b5c8e6;
+    --color-brand-300: #86a4d4;
+    --color-brand-400: #567dbe;
+    --color-brand-500: #2f6fd0;
+    --color-brand-600: #254a8a;
+    --color-brand-700: #1c3a70;
+    --color-brand-800: #142d5a;
+    --color-brand-900: #0b234b;
+    --color-brand-950: #071733;
+
+    --color-gold-100: #fff3d9;
+    --color-gold-400: #fdbe50;
+    --color-gold-500: #e9a83a;
+    --color-gold-700: #a8701c;
+
+    --color-success-500: #009a66;
+    --color-success-50: #e6f6f0;
+
+    --color-accent: var(--color-brand-900);
+    --color-accent-content: var(--color-brand-900);
     --color-accent-foreground: var(--color-white);
 }
 
@@ -64,3 +85,7 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+[x-cloak] {
+    display: none !important;
+}
