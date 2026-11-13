@@ -23,21 +23,30 @@ Confirme `pdo_mysql`, `mbstring`, `intl`, `gd`, `bcmath`, `zip`, `fileinfo` e `o
 
 ## Primeiro deploy
 
-1. **hPanel > Bancos de dados MySQL:** crie o banco e o usuário. Anote nome, usuário e senha.
-2. **hPanel > Avançado > Configuração do PHP:** selecione PHP 8.3 ou superior.
-3. **SSH:** clone o repositório ao lado do `public_html` do domínio:
+Antes, conclua as etapas 1 a 6 de [configuracao-hostinger.md](configuracao-hostinger.md) (subdomínio, banco, PHP, SSH, GitHub).
+
+1. **SSH:** clone o repositório na pasta do domínio, **fora** do `public_html`:
 
    ```bash
    cd ~/domains/SEU_DOMINIO
-   git clone URL_DO_REPOSITORIO ricarteprev
+   git clone git@github.com:USUARIO_GITHUB/ricarteprev-comercial.git ricarteprev
    cd ricarteprev
    cp .env.production.example .env
-   nano .env            # preencha APP_URL, DB_* e MAIL_*
+   nano .env            # preencha APP_URL, DB_* e MAIL_*; salve com Ctrl+O, Enter, Ctrl+X
    composer install --no-dev --optimize-autoloader
    php artisan key:generate
+   bash scripts/check-server.sh
    ```
 
-4. **Pasta pública:** troque o `public_html` por um link para `public`:
+2. **Pasta pública:** troque a pasta do subdomínio por um atalho para `public`:
+
+   ```bash
+   cd ~/domains/SEU_DOMINIO/public_html
+   mv comercial comercial_antigo
+   ln -s ../ricarteprev/public comercial
+   ```
+
+   Se o sistema usar o domínio principal (e não um subdomínio), o atalho substitui o próprio `public_html`:
 
    ```bash
    cd ~/domains/SEU_DOMINIO
@@ -45,7 +54,7 @@ Confirme `pdo_mysql`, `mbstring`, `intl`, `gd`, `bcmath`, `zip`, `fileinfo` e `o
    ln -s ricarteprev/public public_html
    ```
 
-5. **Banco e administrador:**
+3. **Banco e administrador:**
 
    ```bash
    cd ~/domains/SEU_DOMINIO/ricarteprev
@@ -53,15 +62,15 @@ Confirme `pdo_mysql`, `mbstring`, `intl`, `gd`, `bcmath`, `zip`, `fileinfo` e `o
    php artisan app:create-admin
    ```
 
-6. **hPanel > Avançado > Cron jobs:** adicione, a cada minuto:
+4. **hPanel > Avançado > Cron jobs:** adicione, a cada minuto:
 
    ```
    cd /home/USUARIO/domains/SEU_DOMINIO/ricarteprev && php artisan schedule:run >> /dev/null 2>&1
    ```
 
-7. **hPanel > Segurança > SSL:** ative o certificado e force HTTPS.
+5. **hPanel > Segurança > SSL:** ative o certificado e force HTTPS.
 
-8. **E-mail:** crie uma caixa no hPanel e preencha `MAIL_*` no `.env`. Sem isso, os links de criação e redefinição de senha não chegam aos usuários. Enquanto não houver e-mail, defina a senha inicial no próprio cadastro.
+6. **E-mail:** crie uma caixa no hPanel e preencha `MAIL_*` no `.env`. Sem isso, os links de criação e redefinição de senha não chegam aos usuários. Enquanto não houver e-mail, defina a senha inicial no próprio cadastro.
 
 ## Deploys seguintes
 

@@ -49,7 +49,7 @@ Nas próximas fases, as regras de negócio ficam em classes de ação e serviço
 
 ## Relação com o C2 Prev
 
-O C2 Prev continua sendo usado pela Ricarte. A integração decidida é a **importação de dados para o C2**. O formato (planilha exportada deste sistema ou API do C2) será detalhado na Fase 3, junto com o CRM.
+O C2 Prev continua sendo usado pela Ricarte. Decisão confirmada: este sistema **exporta** dados para o C2; nada é importado de lá. A exportação aguarda a documentação da API e o layout de saída do C2 (pendência 1 em [pendencias.md](pendencias.md)).
 
 ## Modelo de dados
 

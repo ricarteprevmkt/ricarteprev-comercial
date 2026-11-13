@@ -4,7 +4,9 @@ Gestão de executivos comerciais, visitas externas, funil, custos e indicadores 
 
 - Arquitetura e modelo de dados: [docs/arquitetura.md](docs/arquitetura.md)
 - Fórmulas dos indicadores: [docs/metricas.md](docs/metricas.md)
+- Configuração do servidor (passo a passo no hPanel): [docs/configuracao-hostinger.md](docs/configuracao-hostinger.md)
 - Implantação na Hostinger: [docs/hostinger.md](docs/hostinger.md)
+- Pendências: [docs/pendencias.md](docs/pendencias.md)
 
 ## Ambiente local (Laragon)
 
