@@ -149,6 +149,14 @@ Regras principais (em `app/Actions/Referrals`):
 - `App\Metrics\ExecutivePerformance` e `App\Metrics\Alerts`: metas, ritmo, ranking e pendências, reaproveitando as métricas de funil, agenda e custos.
 - `resources/js/alpine-register.js`: registro dos componentes de gráfico e mapa que funciona mesmo quando o Alpine do Livewire inicia antes do pacote JavaScript da aplicação.
 
+### Criado na Fase 8
+
+- `app/Reports`: os 12 relatórios (`Definitions/`), filtros com recorte por perfil (`ReportFilters`), exportação em PDF (dompdf, fonte em subconjunto), Excel e CSV (OpenSpout, CSV com `;` e BOM). Cada exportação é registrada na auditoria.
+- `app:send-alerts`: avisos internos (visitas da próxima hora a cada 15 min; resumo diário às 7h30), sem repetir o mesmo aviso no dia.
+- `app:backup-database`: cópia diária compactada do MySQL, com limpeza das antigas.
+- `SecurityHeaders`: X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy (localização e câmera só no próprio sistema) e HSTS em produção. Proxy confiável para HTTPS na Hostinger.
+- ApexCharts carregado sob demanda: pacote principal de ~160 KB.
+
 ### Próximas fases
 
 ```

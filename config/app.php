@@ -67,6 +67,9 @@ return [
 
     'timezone' => env('APP_TIMEZONE', 'America/Fortaleza'),
 
+    // Dias de cópias de segurança do banco mantidas (app:backup-database).
+    'backup_keep_days' => (int) env('BACKUP_KEEP_DAYS', 14),
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

@@ -55,7 +55,11 @@ final class ReportExporter
             'total' => count($rows),
             'user' => $user,
             'logo' => 'data:image/png;base64,'.base64_encode((string) file_get_contents(public_path('images/brand/logo-horizontal.png'))),
-        ])->setPaper('a4', count($report->columns()) > 6 ? 'landscape' : 'portrait')->download($name.'.pdf');
+        ])
+            // Embute só os caracteres usados da fonte: o arquivo cai de ~900 KB para poucas dezenas de KB.
+            ->setOption('isFontSubsettingEnabled', true)
+            ->setPaper('a4', count($report->columns()) > 6 ? 'landscape' : 'portrait')
+            ->download($name.'.pdf');
     }
 
     /**

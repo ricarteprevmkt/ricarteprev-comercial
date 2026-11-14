@@ -20,6 +20,10 @@ export default defineConfig({
         }),
         tailwindcss(),
     ]),
+    build: {
+        // A biblioteca de gráficos (~570 KB) vem em arquivo separado, baixado só nas telas com gráfico.
+        chunkSizeWarningLimit: 600,
+    },
     server: {
         cors: true,
         watch: {

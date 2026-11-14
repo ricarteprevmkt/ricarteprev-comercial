@@ -1,5 +1,6 @@
 import { registerAlpineData } from './alpine-register';
-import ApexCharts from 'apexcharts';
+let apexPromise = null;
+const loadApexCharts = () => (apexPromise ??= import('apexcharts').then((m) => m.default));
 
 /*
 | Gráficos com ApexCharts. Cada gráfico recebe as séries prontas do Livewire
@@ -141,13 +142,15 @@ const builders = {
 function apexChart(kind, initial, event) {
     return {
         chart: null,
-        init() {
+        async init() {
+            // A biblioteca de gráficos é baixada só nas telas que têm gráfico.
+            const ApexCharts = await loadApexCharts();
             this.chart = new ApexCharts(this.$refs.canvas, builders[kind](initial));
             this.chart.render();
             if (event) {
                 window.addEventListener(event, (e) => {
                     const data = e.detail.data ?? e.detail[0]?.data;
-                    if (data) this.chart.updateOptions(builders[kind](data), true, true);
+                    if (data) this.chart?.updateOptions(builders[kind](data), true, true);
                 });
             }
         },

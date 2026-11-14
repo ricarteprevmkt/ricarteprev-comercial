@@ -24,3 +24,6 @@ Schedule::command('queue:prune-failed --hours=720')->weekly();
 // Avisos internos (sino): visitas da próxima hora e resumo diário de pendências.
 Schedule::command('app:send-alerts --upcoming')->everyFifteenMinutes()->withoutOverlapping(10);
 Schedule::command('app:send-alerts')->dailyAt('07:30');
+
+// Cópia de segurança diária do banco (storage/app/private/backups), guardada por BACKUP_KEEP_DAYS dias.
+Schedule::command('app:backup-database')->dailyAt('02:30')->withoutOverlapping(60);

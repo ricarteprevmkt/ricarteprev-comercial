@@ -87,10 +87,32 @@ No servidor:
 cd ~/domains/SEU_DOMINIO/ricarteprev && bash scripts/deploy.sh
 ```
 
+## O que o cron executa
+
+O único cron (`schedule:run` a cada minuto) dispara:
+
+| Tarefa | Quando |
+|---|---|
+| Fila (exportações, avisos) | A cada minuto |
+| Avisos de visitas da próxima hora | A cada 15 minutos |
+| Resumo diário de pendências no sino | Todo dia às 7h30 |
+| Cópia de segurança do banco | Todo dia às 2h30 |
+| Limpeza da auditoria (2 anos) e de jobs falhos | Mensal e semanal |
+
+Para conferir no servidor: `php artisan schedule:list`.
+
 ## Backup
 
-- A Hostinger mantém backups do plano (verifique a frequência no hPanel).
-- Um dump diário próprio do MySQL entra na Fase 8, agendado pelo mesmo cron.
+- **Cópia própria, diária:** `storage/app/private/backups/<banco>-AAAAMMDD-HHMMSS.sql.gz`, mantida por `BACKUP_KEEP_DAYS` dias (padrão 14). Usa o `mysqldump` quando existe; senão, gera o SQL pelo PHP. A senha do banco nunca aparece na linha de comando.
+- **Cópia manual a qualquer momento:** `php artisan app:backup-database`.
+- **Restaurar** (crie antes um banco vazio no hPanel e use os dados dele):
+
+  ```bash
+  gzip -dc storage/app/private/backups/ARQUIVO.sql.gz | mysql -u USUARIO -p NOME_DO_BANCO
+  ```
+
+- **Cópia fora do servidor:** uma vez por semana, baixe o arquivo mais recente pelo Gerenciador de Arquivos do hPanel (ou `scp`) e guarde em local seguro. Se o servidor for perdido, as cópias que estão nele vão junto.
+- A Hostinger também mantém backups do plano (verifique a frequência no hPanel).
 
 ## Pontos ainda a confirmar no servidor real
 

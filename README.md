@@ -41,4 +41,4 @@ composer test        # Pint + PHPStan + Pest
 | 5 | Indicadores regionais: indicações, atribuição, acompanhamento pelo funil, painel e mapa, comissões, área do indicador | Concluída |
 | 6 | Custos e resultados: aprovação de despesas, custos por visita/contrato/região/executivo, receita contratada x recebida, margem, gráficos | Concluída |
 | 7 | Painéis: Visão geral (equipe e próprio executivo), desempenho individual, metas, alertas | Concluída |
-| 8 | Relatórios, notificações, backup, implantação definitiva | Próxima |
+| 8 | 12 relatórios com PDF/Excel/CSV, avisos automáticos, backup diário, cabeçalhos de segurança, otimização | Concluída (falta a implantação no servidor) |

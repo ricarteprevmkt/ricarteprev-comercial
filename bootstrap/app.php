@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureUserCanAny;
 use App\Http\Middleware\EnsureUserIsActive;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,7 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // Vale para todas as rotas web: quem for desativado perde a sessão na próxima requisição.
-        $middleware->web(append: [EnsureUserIsActive::class]);
+        $middleware->web(append: [EnsureUserIsActive::class, SecurityHeaders::class]);
+
+        // Na Hostinger o HTTPS termina no proxy: confiar nele para gerar URLs https e cookies seguros.
+        $middleware->trustProxies(at: '*');
 
         $middleware->alias([
             'can.any' => EnsureUserCanAny::class,
