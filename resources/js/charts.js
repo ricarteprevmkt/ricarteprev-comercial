@@ -1,3 +1,4 @@
+import { registerAlpineData } from './alpine-register';
 import ApexCharts from 'apexcharts';
 
 /*
@@ -48,8 +49,81 @@ const builders = {
         };
     },
 
-    /** Rosca. data: {labels, values, total_label} */
+    /** Funil horizontal. data: {labels, values} */
+    funnelBars(data) {
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'bar', height: 260 },
+            series: [{ name: 'Quantidade', data: data.values }],
+            colors: [PALETTE.navy, '#1c3a70', PALETTE.blue, PALETTE.sky, PALETTE.gold],
+            plotOptions: { bar: { horizontal: true, distributed: true, borderRadius: 4, barHeight: '70%' } },
+            dataLabels: { enabled: true, style: { fontSize: '12px', fontWeight: 600 } },
+            legend: { show: false },
+            xaxis: { categories: data.labels, labels: { formatter: (v) => Math.round(v) } },
+        };
+    },
+
+    /** Duas linhas (visitas e contratos). data: {labels, visits, contracts} */
+    visitsContracts(data) {
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'line', height: 260 },
+            series: [{ name: 'Visitas', data: data.visits }, { name: 'Contratos', data: data.contracts }],
+            colors: [PALETTE.blue, PALETTE.gold],
+            stroke: { width: 3, curve: 'smooth' },
+            markers: { size: 3 },
+            xaxis: { categories: data.labels, tickAmount: Math.min(10, data.labels.length) },
+            yaxis: { labels: { formatter: (v) => Math.round(v) }, min: 0 },
+        };
+    },
+
+    /** Realizado x meta por mês. data: {labels, visits, visits_target, contracts, contracts_target} */
+    targets(data) {
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'line', height: 260 },
+            series: [
+                { name: 'Visitas', type: 'column', data: data.visits },
+                { name: 'Meta de visitas', type: 'line', data: data.visits_target },
+                { name: 'Contratos', type: 'column', data: data.contracts },
+                { name: 'Meta de contratos', type: 'line', data: data.contracts_target },
+            ],
+            colors: [PALETTE.blue, PALETTE.navy, PALETTE.gold, '#a8701c'],
+            stroke: { width: [0, 2, 0, 2], dashArray: [0, 5, 0, 5] },
+            plotOptions: { bar: { columnWidth: '55%', borderRadius: 3 } },
+            xaxis: { categories: data.labels },
+            yaxis: { labels: { formatter: (v) => Math.round(v) }, min: 0 },
+        };
+    },
+
+    /** Ranking horizontal. data: {labels, values, name} */
+    ranking(data) {
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'bar', height: Math.max(160, data.labels.length * 38) },
+            series: [{ name: data.name ?? 'Total', data: data.values }],
+            colors: [PALETTE.blue],
+            plotOptions: { bar: { horizontal: true, borderRadius: 3, barHeight: '60%' } },
+            dataLabels: { enabled: true, style: { fontSize: '12px' } },
+            xaxis: { categories: data.labels, labels: { formatter: (v) => Math.round(v) } },
+            legend: { show: false },
+        };
+    },
+
+    /** Rosca. data: {labels, values, total_label, money?} */
     donut(data) {
+        if (data.money === false) {
+            return {
+                ...baseOptions(),
+                chart: { ...baseOptions().chart, type: 'donut', height: 240 },
+                series: data.values,
+                labels: data.labels,
+                colors: [PALETTE.navy, PALETTE.blue, PALETTE.gold, PALETTE.sky, PALETTE.zinc, PALETTE.green],
+                legend: { position: 'bottom', fontSize: '12px' },
+                stroke: { width: 2 },
+                plotOptions: { pie: { donut: { size: '68%', labels: { show: true, total: { show: true, label: data.total_label ?? 'Total' } } } } },
+            };
+        }
         return {
             ...baseOptions(),
             chart: { ...baseOptions().chart, type: 'donut', height: 260 },
@@ -83,6 +157,4 @@ function apexChart(kind, initial, event) {
     };
 }
 
-document.addEventListener('alpine:init', () => {
-    window.Alpine.data('apexChart', apexChart);
-});
+registerAlpineData('apexChart', apexChart);

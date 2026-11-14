@@ -1,15 +1,11 @@
 <div class="flex flex-col gap-6">
-    <x-page-header title="Executivos" subtitle="Cadastro da equipe comercial, cidades de atuação e metas mensais.">
+    <x-page-header title="Executivos" subtitle="Equipe comercial, cidades de atuação, metas mensais e desempenho individual.">
         <x-slot:actions>
             @can('executives.manage')
                 <flux:button variant="primary" icon="plus" wire:click="create">Novo executivo</flux:button>
             @endcan
         </x-slot:actions>
     </x-page-header>
-
-    <flux:callout icon="information-circle" color="blue">
-        <flux:callout.text>O desempenho individual (visitas, contratos, conversão e custos) aparece aqui na Fase 7, calculado a partir dos registros de agenda e funil.</flux:callout.text>
-    </flux:callout>
 
     <x-card :padding="false">
         <div class="flex flex-wrap gap-3 border-b border-zinc-100 p-4">
@@ -52,7 +48,7 @@
                                 <div class="flex items-center gap-3">
                                     <x-avatar :name="$executive->user->name" :src="$executive->photo_path ? route('photos.executive', $executive) : null" />
                                     <div class="min-w-0">
-                                        <div class="font-medium text-zinc-900">{{ $executive->user->name }}</div>
+                                        <a href="{{ route('executives.show', $executive) }}" wire:navigate class="font-medium text-zinc-900 hover:underline">{{ $executive->user->name }}</a>
                                         <div class="text-xs text-zinc-500">{{ $executive->user->email }}</div>
                                     </div>
                                 </div>
@@ -77,6 +73,7 @@
                                     <flux:dropdown position="bottom" align="end">
                                         <flux:button size="sm" variant="ghost" icon="ellipsis-horizontal" aria-label="Ações para {{ $executive->user->name }}" />
                                         <flux:menu>
+                                            <flux:menu.item icon="chart-bar" :href="route('executives.show', $executive)" wire:navigate>Ver desempenho</flux:menu.item>
                                             @can('executives.manage')
                                                 <flux:menu.item icon="pencil-square" wire:click="edit({{ $executive->id }})">Editar cadastro</flux:menu.item>
                                             @endcan

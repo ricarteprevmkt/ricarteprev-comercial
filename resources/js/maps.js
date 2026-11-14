@@ -1,3 +1,4 @@
+import { registerAlpineData } from './alpine-register';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -184,8 +185,6 @@ function heatMap(initial) {
     };
 }
 
-document.addEventListener('alpine:init', () => {
-    window.Alpine.data('routeMap', routeMap);
-    window.Alpine.data('pinPicker', pinPicker);
-    window.Alpine.data('heatMap', heatMap);
-});
+registerAlpineData('routeMap', routeMap);
+registerAlpineData('pinPicker', pinPicker);
+registerAlpineData('heatMap', heatMap);

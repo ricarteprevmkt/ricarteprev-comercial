@@ -32,6 +32,15 @@ Etapas, na ordem: Contato → Qualificado → Atendimento agendado → Proposta 
 - **Visitas sem resultado:** concluídas há mais de `visits.result_due_hours` horas sem resultado registrado.
 - **Conversão de visitas em oportunidades:** oportunidades criadas a partir de visitas ÷ visitas realizadas × 100.
 
+## Visão geral e executivos
+
+- **Evolução comercial:** visitas realizadas (no período) e, da coorte do funil, oportunidades, atendimentos agendados, propostas e contratos.
+- **Visitas → oportunidades:** oportunidades abertas a partir de uma visita no período ÷ visitas realizadas × 100.
+- **Ritmo da meta:** proporção do mês já decorrida (dia de hoje ÷ dias do mês). Em meses encerrados, 100%.
+- **Executivo abaixo da meta:** executivo ativo cujo percentual de visitas OU de contratos realizados no mês está abaixo do ritmo esperado. Executivos sem meta não entram.
+- **Meta do mês:** a meta específica do mês, se cadastrada; senão, a meta padrão do executivo.
+- **Deslocamento do executivo:** km informados nas visitas; sem km informado, a distância estimada da rota.
+
 ## Contratos e receita
 
 - **Contratos assinados:** contratos com `signed_at` no período.

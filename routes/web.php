@@ -7,6 +7,7 @@ use App\Livewire\Agenda;
 use App\Livewire\Executives;
 use App\Livewire\Finance;
 use App\Livewire\Funnel;
+use App\Livewire\Overview;
 use App\Livewire\Referrals;
 use App\Support\Navigation;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +23,6 @@ Route::middleware(['auth'])->group(function () {
         ->middleware("can.any:{$abilities}")
         ->name($name);
 
-    $pending('visao-geral', 'dashboard', 'Visão geral', 'Acompanhe o desempenho comercial da equipe e o andamento das oportunidades.', 'Fase 7', 'dashboard.view,dashboard.view_own');
     $pending('relatorios', 'reports.index', 'Relatórios', 'Relatórios com filtros e exportação em PDF e Excel.', 'Fase 8', 'reports.view');
 
     // Fase 3: CRM e funil comercial. O recorte por executivo é feito nas policies.
@@ -36,6 +36,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Fase 4: agenda e rotas.
     Route::livewire('agenda', Agenda\Index::class)->middleware('can.any:agenda.view_all,agenda.view_own')->name('agenda.index');
+
+    // Fase 7: painéis.
+    Route::livewire('visao-geral', Overview::class)->middleware('can.any:dashboard.view,dashboard.view_own')->name('dashboard');
+    Route::livewire('executivos/{executive}', Executives\Show::class)->middleware('can.any:executives.view,dashboard.view_own')->name('executives.show');
 
     // Fase 2: cadastros.
     Route::livewire('executivos', Executives\Index::class)->middleware('can.any:executives.view')->name('executives.index');

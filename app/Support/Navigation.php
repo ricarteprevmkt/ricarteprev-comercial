@@ -19,7 +19,7 @@ final class Navigation
         return [
             ['group' => 'Comercial', 'items' => [
                 ['label' => 'Visão geral', 'route' => 'dashboard', 'icon' => 'home', 'abilities' => ['dashboard.view', 'dashboard.view_own']],
-                ['label' => 'Executivos', 'route' => 'executives.index', 'icon' => 'user', 'abilities' => ['executives.view']],
+                ['label' => 'Executivos', 'route' => 'executives.index', 'icon' => 'user', 'abilities' => ['executives.view'], 'active' => 'executives.*'],
                 ['label' => 'Agenda e rotas', 'route' => 'agenda.index', 'icon' => 'calendar-days', 'abilities' => ['agenda.view_all', 'agenda.view_own']],
                 ['label' => 'Funil comercial', 'route' => 'funnel.index', 'icon' => 'funnel', 'abilities' => ['funnel.view_all', 'funnel.view_own'], 'active' => 'funnel.*'],
                 ['label' => 'Custos e resultados', 'route' => 'finance.index', 'icon' => 'chart-bar', 'abilities' => ['finance.view', 'expenses.view_own'], 'active' => 'finance.*'],

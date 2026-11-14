@@ -142,6 +142,13 @@ Regras principais (em `app/Actions/Referrals`):
 - `app/Metrics/FinanceMetrics.php`: custos, receitas, margem, distribuição por categoria, canal, região, executivo e evolução mensal.
 - Gráficos com ApexCharts (`resources/js/charts.js`), compilados pelo Vite.
 
+### Criado na Fase 7
+
+- `App\Livewire\Overview`: Visão geral. Com "dashboard.view", mostra a equipe (filtro por executivo); com "dashboard.view_own", só o próprio executivo, com a meta do mês.
+- `App\Livewire\Executives\Show`: desempenho individual (indicadores, evolução diária, realizado x meta, motivos de visitas não realizadas, oportunidades em aberto, comparativo entre executivos).
+- `App\Metrics\ExecutivePerformance` e `App\Metrics\Alerts`: metas, ritmo, ranking e pendências, reaproveitando as métricas de funil, agenda e custos.
+- `resources/js/alpine-register.js`: registro dos componentes de gráfico e mapa que funciona mesmo quando o Alpine do Livewire inicia antes do pacote JavaScript da aplicação.
+
 ### Próximas fases
 
 ```
