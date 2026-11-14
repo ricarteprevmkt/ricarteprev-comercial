@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Gate;
 final class Navigation
 {
     /**
-     * @return list<array{group: string, items: list<array{label: string, route: string, icon: string, abilities: list<string>}>}>
+     * @return list<array{group: string, items: list<array{label: string, route: string, icon: string, abilities: list<string>, active?: string}>}>
      */
     public static function groups(): array
     {
@@ -21,7 +21,7 @@ final class Navigation
                 ['label' => 'Visão geral', 'route' => 'dashboard', 'icon' => 'home', 'abilities' => ['dashboard.view', 'dashboard.view_own']],
                 ['label' => 'Executivos', 'route' => 'executives.index', 'icon' => 'user', 'abilities' => ['executives.view']],
                 ['label' => 'Agenda e rotas', 'route' => 'agenda.index', 'icon' => 'calendar-days', 'abilities' => ['agenda.view_all', 'agenda.view_own']],
-                ['label' => 'Funil comercial', 'route' => 'funnel.index', 'icon' => 'funnel', 'abilities' => ['funnel.view_all', 'funnel.view_own']],
+                ['label' => 'Funil comercial', 'route' => 'funnel.index', 'icon' => 'funnel', 'abilities' => ['funnel.view_all', 'funnel.view_own'], 'active' => 'funnel.*'],
                 ['label' => 'Custos e resultados', 'route' => 'finance.index', 'icon' => 'chart-bar', 'abilities' => ['finance.view', 'expenses.view_own']],
                 ['label' => 'Indicadores regionais', 'route' => 'referrals.index', 'icon' => 'map-pin', 'abilities' => ['referrals.view_all', 'referrals.view_own']],
                 ['label' => 'Relatórios', 'route' => 'reports.index', 'icon' => 'document-chart-bar', 'abilities' => ['reports.view']],
@@ -42,7 +42,7 @@ final class Navigation
     }
 
     /**
-     * @return list<array{group: string, items: list<array{label: string, route: string, icon: string, abilities: list<string>}>}>
+     * @return list<array{group: string, items: list<array{label: string, route: string, icon: string, abilities: list<string>, active?: string}>}>
      */
     public static function for(User $user): array
     {

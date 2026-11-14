@@ -11,11 +11,13 @@ Fonte única das fórmulas. Painéis e relatórios usam os mesmos serviços de c
 
 Etapas, na ordem: Contato → Qualificado → Atendimento agendado → Proposta apresentada → Contrato assinado. Situações fora do funil: Perdido, Desqualificado, Em acompanhamento.
 
-- **Base do funil (coorte):** oportunidades criadas no período.
-- **Chegou à etapa X:** oportunidades da base que passaram pela etapa X em algum momento, segundo `opportunity_histories`. Uma oportunidade que pula etapas conta nas etapas puladas.
+- **Base do funil (coorte):** oportunidades criadas no período, exceto as que estão em "Em acompanhamento".
+- **Chegou à etapa X:** oportunidades da base cuja etapa mais avançada já alcançada (`furthest_stage_rank`) é X ou posterior. Uma oportunidade que pula etapas conta nas etapas puladas, e uma oportunidade perdida continua contando nas etapas que alcançou.
 - **Conversão entre etapas:** chegaram à etapa seguinte ÷ chegaram à etapa atual × 100.
 - **Conversão geral:** chegaram a Contrato assinado ÷ base × 100.
-- **Tempo médio de conversão:** média, em dias, entre a criação e a assinatura, das oportunidades assinadas no período.
+- **Tempo médio de conversão:** média, em dias, entre a abertura da oportunidade e a assinatura, dos contratos assinados no período.
+- **Oportunidade parada:** em aberto e sem nenhuma atividade (mudança de etapa, próxima ação, proposta, contrato) há mais dias que o parâmetro `funnel.stale_after_days`.
+- **Prazo vencido:** em aberto com prazo da próxima ação anterior a hoje.
 - "Em acompanhamento" não entra na base de conversão. **(a validar)**
 
 ## Visitas

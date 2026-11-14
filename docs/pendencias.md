@@ -30,6 +30,7 @@ Enquanto isso, a Fase 3 já guarda os dados necessários (CPF/CNPJ, telefone nor
 - [ ] O custo da equipe (salários) entra no custo por contrato? Hoje entra só se for lançado na categoria "Equipe comercial", que está como **fixa** e não entra na margem.
 - [ ] "Em acompanhamento" entra na base de conversão do funil? Hoje, não.
 - [ ] Regras de comissão dos indicadores (valor, percentual e evento gerador).
+- [ ] Cancelamento de contrato: o status existe, mas o fluxo (quem cancela, o que acontece com a oportunidade e com a comissão) precisa ser definido.
 
 ## Outros
 

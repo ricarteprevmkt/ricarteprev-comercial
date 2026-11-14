@@ -3,6 +3,7 @@
 use App\Http\Controllers\PhotoController;
 use App\Livewire\Admin;
 use App\Livewire\Executives;
+use App\Livewire\Funnel;
 use App\Livewire\Referrals;
 use App\Support\Navigation;
 use Illuminate\Support\Facades\Route;
@@ -20,10 +21,18 @@ Route::middleware(['auth'])->group(function () {
 
     $pending('visao-geral', 'dashboard', 'Visão geral', 'Acompanhe o desempenho comercial da equipe e o andamento das oportunidades.', 'Fase 7', 'dashboard.view,dashboard.view_own');
     $pending('agenda', 'agenda.index', 'Agenda e rotas', 'Planejamento diário, visitas, deslocamentos e acompanhamento da equipe em campo.', 'Fase 4', 'agenda.view_all,agenda.view_own');
-    $pending('funil', 'funnel.index', 'Funil comercial', 'Fluxo de oportunidades e taxa de conversão da equipe comercial.', 'Fase 3', 'funnel.view_all,funnel.view_own');
     $pending('custos', 'finance.index', 'Custos e resultados', 'Eficiência da operação comercial e retorno sobre o investimento.', 'Fase 6', 'finance.view,expenses.view_own');
     $pending('indicadores-regionais', 'referrals.index', 'Indicadores regionais', 'Indicações por região e impacto das parcerias locais.', 'Fase 5', 'referrals.view_all,referrals.view_own');
     $pending('relatorios', 'reports.index', 'Relatórios', 'Relatórios com filtros e exportação em PDF e Excel.', 'Fase 8', 'reports.view');
+
+    // Fase 3: CRM e funil comercial. O recorte por executivo é feito nas policies.
+    Route::prefix('funil')->name('funnel.')->middleware('can.any:funnel.view_all,funnel.view_own')->group(function () {
+        Route::livewire('/', Funnel\Dashboard::class)->name('index');
+        Route::livewire('oportunidades', Funnel\Opportunities::class)->name('opportunities');
+        Route::livewire('oportunidades/{opportunity}', Funnel\OpportunityShow::class)->name('opportunities.show');
+        Route::livewire('contatos', Funnel\Leads::class)->name('leads');
+        Route::livewire('contratos', Funnel\Contracts::class)->name('contracts');
+    });
 
     // Fase 2: cadastros.
     Route::livewire('executivos', Executives\Index::class)->middleware('can.any:executives.view')->name('executives.index');

@@ -36,8 +36,8 @@ composer test        # Pint + PHPStan + Pest
 |---|---|---|
 | 1 | Estrutura, autenticação, permissões, layout, migrations iniciais | Concluída |
 | 2 | Cadastros: usuários, executivos, indicadores, regiões, cidades, metas, catálogos, parâmetros, auditoria | Concluída |
-| 3 | CRM e funil comercial | Próxima |
-| 4 | Agenda e rotas | |
+| 3 | CRM e funil comercial: contatos, oportunidades, histórico, propostas, contratos, recebimentos e painel do funil | Concluída |
+| 4 | Agenda e rotas | Próxima |
 | 5 | Indicadores regionais e comissões | |
 | 6 | Custos e resultados | |
 | 7 | Painéis | |

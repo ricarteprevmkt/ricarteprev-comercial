@@ -20,7 +20,7 @@
                             <flux:sidebar.item
                                 :icon="$item['icon']"
                                 :href="route($item['route'])"
-                                :current="request()->routeIs($item['route'])"
+                                :current="request()->routeIs($item['active'] ?? $item['route'])"
                                 wire:navigate
                             >
                                 {{ $item['label'] }}

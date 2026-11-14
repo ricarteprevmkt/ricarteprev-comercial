@@ -78,6 +78,26 @@ O C2 Prev continua sendo usado pela Ricarte. Decisão confirmada: este sistema *
 
 Fotos ficam em `storage/app/private/photos` e são servidas pela rota autenticada `fotos/...`, que confere se o usuário pode ver o cadastro.
 
+### Criado na Fase 3
+
+| Tabela | Finalidade |
+|---|---|
+| `leads` | Contato (PF ou PJ). CPF/CNPJ criptografado com hash único; telefone e WhatsApp só com dígitos. Origem, executivo responsável e indicador ("Indicado por") |
+| `opportunities` | Etapa atual, `furthest_stage_rank` (etapa mais avançada já alcançada, base das conversões), interesse, valor estimado, próxima ação e prazo, motivo de perda, `last_activity_at` para o alerta de oportunidade parada |
+| `opportunity_histories` | Cada mudança de etapa: de, para, usuário, observação e data. Nunca é apagado |
+| `proposals` | Propostas apresentadas. Registrar uma proposta avança a oportunidade para "Proposta apresentada" |
+| `contracts` | Um por oportunidade. Situação: aguardando conclusão, assinado ou cancelado. Copia origem, executivo e indicador da oportunidade |
+| `contract_receipts` | Receita efetivamente recebida, lançada só em contrato assinado |
+
+Regras principais (em `app/Actions/Crm`):
+
+- "Contrato assinado" só é alcançado registrando o contrato; depois disso a etapa não muda mais.
+- Perdido e Desqualificado exigem motivo; reabrir limpa o motivo.
+- Contato duplicado: mesmo CPF/CNPJ é bloqueado; mesmo telefone é bloqueado até o usuário confirmar que é outra pessoa.
+- O executivo vê e altera só os próprios registros (policies `LeadPolicy`, `OpportunityPolicy`, `ContractPolicy` e escopo `visibleTo`).
+
+As métricas do funil ficam em `app/Metrics/FunnelMetrics.php` e seguem [metricas.md](metricas.md).
+
 ### Próximas fases
 
 ```
