@@ -145,7 +145,47 @@ function pinPicker(latField, lngField) {
     };
 }
 
+/**
+ * Mapa de concentração de indicações por município: círculos no centro de
+ * cada cidade, com tamanho e cor pela quantidade de indicações.
+ * points: [{lat,lng,name,total,signed}]
+ */
+function heatMap(initial) {
+    const color = (n) => (n > 25 ? '#0b234b' : n >= 16 ? '#1c3a70' : n >= 8 ? '#2f6fd0' : '#86a4d4');
+
+    return {
+        map: null,
+        layer: null,
+        init() {
+            this.map = L.map(this.$refs.canvas, { scrollWheelZoom: false });
+            tileLayer(this.$refs.canvas).addTo(this.map);
+            this.layer = L.layerGroup().addTo(this.map);
+            this.render(initial);
+            window.addEventListener('referral-map', (e) => this.render(e.detail.points ?? e.detail[0]?.points ?? []));
+        },
+        render(points) {
+            this.layer.clearLayers();
+            const bounds = [];
+            const max = Math.max(1, ...points.map((p) => p.total));
+
+            for (const p of points) {
+                const radius = 8 + Math.sqrt(p.total / max) * 22;
+                L.circleMarker([p.lat, p.lng], { radius, color: '#fff', weight: 2, fillColor: color(p.total), fillOpacity: 0.85 })
+                    .bindTooltip(`<strong>${escapeHtml(p.name)}</strong><br>${p.total} indicação(ões) · ${p.signed} contrato(s)`)
+                    .addTo(this.layer);
+                bounds.push([p.lat, p.lng]);
+            }
+
+            if (bounds.length > 1) this.map.fitBounds(bounds, { padding: [40, 40], maxZoom: 11 });
+            else if (bounds.length === 1) this.map.setView(bounds[0], 10);
+            else this.map.setView(DEFAULT_CENTER, 9);
+            setTimeout(() => this.map.invalidateSize(), 50);
+        },
+    };
+}
+
 document.addEventListener('alpine:init', () => {
     window.Alpine.data('routeMap', routeMap);
     window.Alpine.data('pinPicker', pinPicker);
+    window.Alpine.data('heatMap', heatMap);
 });

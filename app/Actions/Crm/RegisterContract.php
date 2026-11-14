@@ -2,6 +2,7 @@
 
 namespace App\Actions\Crm;
 
+use App\Actions\Referrals\Commissions;
 use App\Enums\ContractStatus;
 use App\Enums\LeadStatus;
 use App\Enums\OpportunityStage;
@@ -23,7 +24,7 @@ use Illuminate\Validation\ValidationException;
  */
 final class RegisterContract
 {
-    public function __construct(private MoveOpportunity $move) {}
+    public function __construct(private MoveOpportunity $move, private Commissions $commissions) {}
 
     /**
      * @param  array{number?: string|null, status: ContractStatus, signed_at?: string|null, contract_value: string, expected_revenue?: string|null, notes?: string|null}  $data
@@ -60,6 +61,7 @@ final class RegisterContract
 
             if ($data['status'] === ContractStatus::Signed) {
                 $this->markSigned($opportunity, $user);
+                $this->commissions->onContractSigned($contract);
             } else {
                 $opportunity->forceFill(['last_activity_at' => now()])->save();
             }
@@ -78,6 +80,7 @@ final class RegisterContract
         return DB::transaction(function () use ($contract, $signedAt, $user) {
             $contract->update(['status' => ContractStatus::Signed, 'signed_at' => $signedAt]);
             $this->markSigned($contract->opportunity, $user);
+            $this->commissions->onContractSigned($contract);
 
             return $contract;
         });
@@ -92,13 +95,18 @@ final class RegisterContract
             throw ValidationException::withMessages(['receipt.amount' => 'Registre recebimentos só de contratos assinados.']);
         }
 
-        return ContractReceipt::query()->create([
-            'contract_id' => $contract->id,
-            'received_at' => $data['received_at'],
-            'amount' => $data['amount'],
-            'notes' => $data['notes'] ?? null,
-            'created_by' => $user?->id,
-        ]);
+        return DB::transaction(function () use ($contract, $data, $user) {
+            $receipt = ContractReceipt::query()->create([
+                'contract_id' => $contract->id,
+                'received_at' => $data['received_at'],
+                'amount' => $data['amount'],
+                'notes' => $data['notes'] ?? null,
+                'created_by' => $user?->id,
+            ]);
+            $this->commissions->onReceipt($receipt);
+
+            return $receipt;
+        });
     }
 
     private function markSigned(Opportunity $opportunity, ?User $user): void

@@ -1,6 +1,7 @@
 <?php
 
 use App\Support\Cpf;
+use App\Support\Money;
 use App\Support\Phone;
 
 it('valida CPF pelos dígitos verificadores', function (string $cpf, bool $valid) {
@@ -33,4 +34,12 @@ it('formata telefone e monta link do WhatsApp', function () {
         ->and(Phone::format('8835123456'))->toBe('(88) 3512-3456')
         ->and(Phone::whatsappUrl('(88) 99876-5432'))->toBe('https://wa.me/5588998765432')
         ->and(Phone::isValid('99876-5432'))->toBeFalse();
+});
+
+it('calcula percentual em dinheiro arredondando ao centavo', function () {
+    expect(Money::percent('333.33', '5'))->toBe('16.67')
+        ->and(Money::percent('1000', '5'))->toBe('50.00')
+        ->and(Money::percent('100.10', '10'))->toBe('10.01')
+        ->and(Money::sub('120', '70'))->toBe('50.00')
+        ->and(Money::compare('10.00', '10'))->toBe(0);
 });

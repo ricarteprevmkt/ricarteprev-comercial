@@ -38,7 +38,7 @@ composer test        # Pint + PHPStan + Pest
 | 2 | Cadastros: usuários, executivos, indicadores, regiões, cidades, metas, catálogos, parâmetros, auditoria | Concluída |
 | 3 | CRM e funil comercial: contatos, oportunidades, histórico, propostas, contratos, recebimentos e painel do funil | Concluída |
 | 4 | Agenda e rotas: visitas, registro em campo, reagendamento, mapa, rota estimada, despesas com comprovante, resumo do dia | Concluída |
-| 5 | Indicadores regionais e comissões | Próxima |
-| 6 | Custos e resultados | |
+| 5 | Indicadores regionais: indicações, atribuição, acompanhamento pelo funil, painel e mapa, comissões, área do indicador | Concluída |
+| 6 | Custos e resultados | Próxima |
 | 7 | Painéis | |
 | 8 | Relatórios, notificações, backup, implantação definitiva | |

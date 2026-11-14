@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Actions\Referrals\SyncReferralStatus;
 use App\Enums\Role;
+use App\Enums\VisitStatus;
+use App\Models\Opportunity;
 use App\Models\User;
+use App\Models\Visit;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
@@ -28,6 +32,25 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->configureAuthorization();
         $this->configureAuthAudit();
+        $this->configureReferralSync();
+    }
+
+    /**
+     * Mudanças no funil e na agenda atualizam a situação das indicações do contato.
+     */
+    protected function configureReferralSync(): void
+    {
+        Opportunity::saved(function (Opportunity $opportunity) {
+            if ($opportunity->wasRecentlyCreated || $opportunity->wasChanged(['stage', 'furthest_stage_rank'])) {
+                app(SyncReferralStatus::class)->forLead($opportunity->lead);
+            }
+        });
+
+        Visit::saved(function (Visit $visit) {
+            if ($visit->lead_id && $visit->wasChanged('status') && $visit->status === VisitStatus::Done) {
+                app(SyncReferralStatus::class)->forLead($visit->lead);
+            }
+        });
     }
 
     protected function configureDefaults(): void

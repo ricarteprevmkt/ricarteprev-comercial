@@ -50,13 +50,14 @@ it('leva cada perfil ao primeiro módulo que ele pode abrir', function (Role $ro
     'administrador' => [Role::Admin, 'dashboard'],
     'gestor' => [Role::Manager, 'dashboard'],
     'executivo' => [Role::Executive, 'dashboard'],
-    'indicador' => [Role::Indicator, 'referrals.index'],
+    'indicador' => [Role::Indicator, 'referrals.mine'],
 ]);
 
 it('restringe o indicador às próprias indicações', function () {
     $indicator = userWithRole(Role::Indicator);
 
-    $this->actingAs($indicator)->get(route('referrals.index'))->assertOk();
+    $this->actingAs($indicator)->get(route('referrals.mine'))->assertOk();
+    $this->actingAs($indicator)->get(route('referrals.index'))->assertForbidden();
     $this->actingAs($indicator)->get(route('dashboard'))->assertForbidden();
     $this->actingAs($indicator)->get(route('finance.index'))->assertForbidden();
     $this->actingAs($indicator)->get(route('funnel.index'))->assertForbidden();
@@ -103,4 +104,12 @@ it('registra tentativa de login sem sucesso', function () {
     $this->post(route('login.store'), ['email' => 'ninguem@ricarteprev.test', 'password' => 'errada']);
 
     $this->assertDatabaseHas('activity_logs', ['log_name' => 'acesso', 'event' => 'login_failed']);
+});
+
+it('mostra a cada perfil a entrada certa de indicações no menu', function () {
+    $this->actingAs(userWithRole(Role::Admin))->get(route('admin.users'))
+        ->assertSee('Indicadores regionais')->assertDontSee('Minhas indicações');
+
+    $this->actingAs(userWithRole(Role::Indicator))->get(route('referrals.mine'))
+        ->assertSee('Minhas indicações');
 });

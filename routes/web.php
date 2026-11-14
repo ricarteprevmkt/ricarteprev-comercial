@@ -23,7 +23,6 @@ Route::middleware(['auth'])->group(function () {
 
     $pending('visao-geral', 'dashboard', 'Visão geral', 'Acompanhe o desempenho comercial da equipe e o andamento das oportunidades.', 'Fase 7', 'dashboard.view,dashboard.view_own');
     $pending('custos', 'finance.index', 'Custos e resultados', 'Eficiência da operação comercial e retorno sobre o investimento.', 'Fase 6', 'finance.view,expenses.view_own');
-    $pending('indicadores-regionais', 'referrals.index', 'Indicadores regionais', 'Indicações por região e impacto das parcerias locais.', 'Fase 5', 'referrals.view_all,referrals.view_own');
     $pending('relatorios', 'reports.index', 'Relatórios', 'Relatórios com filtros e exportação em PDF e Excel.', 'Fase 8', 'reports.view');
 
     // Fase 3: CRM e funil comercial. O recorte por executivo é feito nas policies.
@@ -40,6 +39,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Fase 2: cadastros.
     Route::livewire('executivos', Executives\Index::class)->middleware('can.any:executives.view')->name('executives.index');
+    // Fase 5: indicadores regionais.
+    Route::livewire('indicadores-regionais', Referrals\Dashboard::class)->middleware('can.any:referrals.view_all')->name('referrals.index');
+    Route::livewire('indicadores-regionais/indicacoes', Referrals\ReferralList::class)->middleware('can.any:referrals.view_all,referrals.create')->name('referrals.list');
+    Route::livewire('indicadores-regionais/comissoes', Referrals\CommissionsIndex::class)->middleware('can.any:commissions.manage')->name('referrals.commissions');
+    Route::livewire('indicadores-regionais/indicadores/{indicator}', Referrals\IndicatorShow::class)->middleware('can.any:indicators.manage,referrals.view_all')->name('referrals.indicators.show');
+    Route::livewire('minhas-indicacoes', Referrals\Portal::class)->middleware('can.any:referrals.view_own')->name('referrals.mine');
     Route::livewire('indicadores-regionais/cadastro', Referrals\Indicators::class)->middleware('can.any:indicators.manage')->name('referrals.indicators');
     Route::livewire('indicadores-regionais/regras-de-comissao', Referrals\CommissionRules::class)->middleware('can.any:commissions.manage')->name('referrals.commission-rules');
 

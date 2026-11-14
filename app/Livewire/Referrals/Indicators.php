@@ -10,6 +10,7 @@ use App\Models\CommissionRule;
 use App\Models\RegionalIndicator;
 use App\Rules\BrazilianPhone;
 use App\Support\Phone;
+use App\Support\Visibility;
 use Flux\Flux;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
@@ -89,6 +90,7 @@ class Indicators extends Component
             'city_id' => $indicator->city_id,
             'neighborhood' => $indicator->neighborhood ?? '',
             'region_id' => $indicator->region_id,
+            'default_executive_id' => $indicator->default_executive_id,
             'referral_channel_id' => $indicator->referral_channel_id,
             'commission_rule_id' => $indicator->commission_rule_id,
             'registered_at' => $indicator->registered_at->toDateString(),
@@ -111,6 +113,7 @@ class Indicators extends Component
             'form.city_id' => ['required', 'integer', 'exists:cities,id'],
             'form.neighborhood' => ['nullable', 'string', 'max:120'],
             'form.region_id' => ['nullable', 'integer', 'exists:regions,id'],
+            'form.default_executive_id' => ['nullable', 'integer', 'exists:executives,id'],
             'form.referral_channel_id' => ['nullable', 'integer', 'exists:referral_channels,id'],
             'form.commission_rule_id' => ['nullable', 'integer', 'exists:commission_rules,id'],
             'form.registered_at' => ['required', 'date', 'before_or_equal:today'],
@@ -142,6 +145,7 @@ class Indicators extends Component
                 'city_id' => (int) $this->form['city_id'],
                 'neighborhood' => $this->form['neighborhood'] ?: null,
                 'region_id' => $this->form['region_id'] ? (int) $this->form['region_id'] : null,
+                'default_executive_id' => $this->form['default_executive_id'] ? (int) $this->form['default_executive_id'] : null,
                 'referral_channel_id' => $this->form['referral_channel_id'] ? (int) $this->form['referral_channel_id'] : null,
                 'commission_rule_id' => $this->form['commission_rule_id'] ? (int) $this->form['commission_rule_id'] : null,
                 'registered_at' => $this->form['registered_at'],
@@ -171,7 +175,7 @@ class Indicators extends Component
         $this->hasAccess = false;
         $this->form = [
             'name' => '', 'phone' => '', 'whatsapp' => '', 'email' => '', 'city_id' => null, 'neighborhood' => '',
-            'region_id' => null, 'referral_channel_id' => null, 'commission_rule_id' => null,
+            'region_id' => null, 'default_executive_id' => null, 'referral_channel_id' => null, 'commission_rule_id' => null,
             'registered_at' => now()->toDateString(), 'status' => IndicatorStatus::Active->value, 'notes' => '',
         ];
     }
@@ -207,6 +211,7 @@ class Indicators extends Component
             'filterRegions' => $this->regionOptions(),
             'channels' => ReferralChannel::query()->active()->ordered()->get(),
             'rules' => CommissionRule::query()->active()->orderBy('name')->get(),
+            'executives' => Visibility::assignableExecutives(auth()->user(), $this->form['default_executive_id'] ? (int) $this->form['default_executive_id'] : null),
         ]);
     }
 }

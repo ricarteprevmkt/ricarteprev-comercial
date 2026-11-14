@@ -49,6 +49,13 @@ Etapas, na ordem: Contato → Qualificado → Atendimento agendado → Proposta 
 
 ## Indicações
 
+- **Base (coorte):** indicações válidas (não duplicadas) com data no período.
+- **Leads qualificados / oportunidades geradas:** indicações da base que chegaram a "Qualificada" / "Oportunidade gerada" (etapa mais avançada alcançada).
+- **Contratos originados:** contratos assinados no período com indicador atribuído.
+- **Conversão das indicações:** indicações da base que chegaram a "Contrato assinado" ÷ base × 100.
+- **Comissões previstas:** comissões geradas no período ainda não aprovadas. **Aprovadas:** aprovadas no período. **Pagas:** pagamentos registrados no período.
+- **Mapa:** círculo no centro de cada município, com tamanho e cor pela quantidade de indicações (faixas 1–7, 8–15, 16–25, mais de 25).
+
 - Produtividade de indicadores é medida separadamente da produtividade dos executivos.
 - **Conversão do indicador:** contratos originados ÷ indicações × 100.
 - **Duplicidade:** um contato já existente indicado de novo dentro de `referrals.attribution_window_days` mantém o primeiro indicador. A nova indicação fica registrada como duplicada, para análise.

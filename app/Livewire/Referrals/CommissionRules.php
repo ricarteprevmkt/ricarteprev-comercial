@@ -62,10 +62,12 @@ class CommissionRules extends Component
             'form.type' => ['required', new Enum(CommissionType::class)],
             'form.value' => ['required', 'decimal:0,2', 'gt:0', $isPercent ? 'max:100' : 'max:9999999'],
             'form.base' => [$isPercent ? 'required' : 'nullable', new Enum(CommissionBase::class)],
-            'form.trigger_event' => ['required', new Enum(CommissionTrigger::class)],
+            'form.trigger_event' => ['required', new Enum(CommissionTrigger::class), ($this->form['base'] ?? null) === 'received_revenue' && $isPercent ? 'in:revenue_received' : 'string'],
             'form.description' => ['nullable', 'string', 'max:1000'],
             'form.active' => ['boolean'],
-        ], attributes: [
+        ], [
+            'form.trigger_event.in' => 'Percentual sobre receita recebida só pode gerar comissão no recebimento.',
+        ], [
             'form.name' => 'nome', 'form.type' => 'tipo', 'form.value' => 'valor', 'form.base' => 'base de cálculo',
             'form.trigger_event' => 'evento', 'form.description' => 'descrição',
         ]);

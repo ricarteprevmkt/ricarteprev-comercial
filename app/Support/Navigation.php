@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Gate;
 final class Navigation
 {
     /**
-     * @return list<array{group: string, items: list<array{label: string, route: string, icon: string, abilities: list<string>, active?: string}>}>
+     * @return list<array{group: string, items: list<array{label: string, route: string, icon: string, abilities: list<string>, active?: string|list<string>, requires_executive?: bool, hidden_for?: string}>}>
      */
     public static function groups(): array
     {
@@ -23,7 +23,10 @@ final class Navigation
                 ['label' => 'Agenda e rotas', 'route' => 'agenda.index', 'icon' => 'calendar-days', 'abilities' => ['agenda.view_all', 'agenda.view_own']],
                 ['label' => 'Funil comercial', 'route' => 'funnel.index', 'icon' => 'funnel', 'abilities' => ['funnel.view_all', 'funnel.view_own'], 'active' => 'funnel.*'],
                 ['label' => 'Custos e resultados', 'route' => 'finance.index', 'icon' => 'chart-bar', 'abilities' => ['finance.view', 'expenses.view_own']],
-                ['label' => 'Indicadores regionais', 'route' => 'referrals.index', 'icon' => 'map-pin', 'abilities' => ['referrals.view_all', 'referrals.view_own']],
+                // Equipe com visão geral: painel regional. Executivo: lista das indicações que atende.
+                ['label' => 'Indicadores regionais', 'route' => 'referrals.index', 'icon' => 'map-pin', 'abilities' => ['referrals.view_all'], 'active' => ['referrals.index', 'referrals.list', 'referrals.commissions', 'referrals.indicators.show']],
+                ['label' => 'Indicações', 'route' => 'referrals.list', 'icon' => 'map-pin', 'abilities' => ['referrals.create'], 'requires_executive' => true],
+                ['label' => 'Minhas indicações', 'route' => 'referrals.mine', 'icon' => 'map-pin', 'abilities' => ['referrals.view_own'], 'hidden_for' => 'referrals.view_all'],
                 ['label' => 'Relatórios', 'route' => 'reports.index', 'icon' => 'document-chart-bar', 'abilities' => ['reports.view']],
             ]],
             ['group' => 'Cadastros', 'items' => [
@@ -42,7 +45,7 @@ final class Navigation
     }
 
     /**
-     * @return list<array{group: string, items: list<array{label: string, route: string, icon: string, abilities: list<string>, active?: string}>}>
+     * @return list<array{group: string, items: list<array{label: string, route: string, icon: string, abilities: list<string>, active?: string|list<string>, requires_executive?: bool, hidden_for?: string}>}>
      */
     public static function for(User $user): array
     {
@@ -50,7 +53,11 @@ final class Navigation
         $groups = [];
 
         foreach (self::groups() as $group) {
-            $items = array_values(array_filter($group['items'], fn (array $item) => $gate->any($item['abilities'])));
+            $isExecutive = $user->executive()->exists();
+            $seesPanel = $gate->allows('referrals.view_all');
+            $items = array_values(array_filter($group['items'], fn (array $item) => $gate->any($item['abilities'])
+                && (! ($item['requires_executive'] ?? false) || ($isExecutive && ! $seesPanel))
+                && (! isset($item['hidden_for']) || $gate->denies($item['hidden_for']))));
 
             if ($items !== []) {
                 $groups[] = ['group' => $group['group'], 'items' => $items];

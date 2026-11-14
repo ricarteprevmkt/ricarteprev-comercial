@@ -5,6 +5,8 @@
         </x-slot:actions>
     </x-page-header>
 
+    <x-referral-tabs />
+
     <x-card :padding="false">
         <div class="flex flex-wrap gap-3 border-b border-zinc-100 p-4">
             <flux:input wire:model.live.debounce.300ms="search" icon="magnifying-glass" placeholder="Buscar por nome ou WhatsApp" class="max-w-xs" aria-label="Buscar" />
@@ -44,7 +46,7 @@
                                 <div class="flex items-center gap-3">
                                     <x-avatar :name="$indicator->name" :src="$indicator->photo_path ? route('photos.indicator', $indicator) : null" />
                                     <div class="min-w-0">
-                                        <div class="font-medium text-zinc-900">{{ $indicator->name }}</div>
+                                        <a href="{{ route('referrals.indicators.show', $indicator) }}" wire:navigate class="font-medium text-zinc-900 hover:underline">{{ $indicator->name }}</a>
                                         <a href="{{ \App\Support\Phone::whatsappUrl($indicator->whatsapp) }}" target="_blank" rel="noopener" class="text-xs tabular-nums text-success-500 hover:underline">{{ \App\Support\Phone::format($indicator->whatsapp) }}</a>
                                     </div>
                                 </div>
@@ -122,6 +124,12 @@
 
             <fieldset class="grid gap-4 sm:grid-cols-2">
                 <legend class="mb-2 text-sm font-semibold text-brand-900 sm:col-span-2">Relação comercial</legend>
+                <flux:select wire:model="form.default_executive_id" label="Executivo que atende as indicações" class="sm:col-span-2" description="As novas indicações deste indicador vão para este executivo.">
+                    <flux:select.option value="">Definir a cada indicação</flux:select.option>
+                    @foreach ($executives as $executive)
+                        <flux:select.option :value="$executive->id">{{ $executive->user->name }}</flux:select.option>
+                    @endforeach
+                </flux:select>
                 <flux:select wire:model="form.commission_rule_id" label="Regra de comissão" description="Sem regra, as indicações não geram comissão.">
                     <flux:select.option value="">Sem comissão</flux:select.option>
                     @foreach ($rules as $rule)

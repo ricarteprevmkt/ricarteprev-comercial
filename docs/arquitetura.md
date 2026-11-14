@@ -117,6 +117,24 @@ Regras principais (em `app/Actions/Agenda`):
 - Check-in usa a localização do navegador, só com permissão do usuário. Não há rastreamento contínuo.
 - O mapa usa Leaflet com tiles do OpenStreetMap (configuráveis por `MAP_TILE_URL`), sem chave de API.
 
+### Criado na Fase 5
+
+| Tabela | Finalidade |
+|---|---|
+| `referrals` | Indicação: indicador, contato, executivo, canal, data, situação, etapa mais avançada (`furthest_rank`), duplicidade e consentimento |
+| `referral_histories` | Cada mudança de situação, manual (com usuário) ou automática (pelo funil) |
+| `commissions` | Comissão gerada por contrato ou recebimento, com cópia da regra no momento da geração, valor previsto e aprovado |
+| `commission_payments` | Pagamentos (parciais ou total) de uma comissão aprovada |
+| `regional_indicators.default_executive_id` | Executivo que recebe as indicações do indicador |
+
+Regras principais (em `app/Actions/Referrals`):
+
+- Contato novo: a indicação cria o contato com origem "Indicações" e "Indicado por" o indicador.
+- Contato já existente: a indicação é registrada como duplicada e não muda a atribuição. Exceção: se a indicação válida anterior passou da janela de atribuição (90 dias por padrão) e o contato ainda não é cliente, a nova indicação assume a atribuição.
+- A situação acompanha o funil: Contato → Contato realizado, Qualificado → Qualificada, Atendimento agendado → Oportunidade gerada, Proposta → Proposta apresentada, Contrato → Contrato assinado. Se todas as oportunidades forem perdidas, fica Perdida. Visita concluída sem oportunidade conta como Contato realizado.
+- Comissão só existe com regra ativa associada ao indicador. O evento da regra define quando gera; a base define sobre o quê (receita recebida gera a cada recebimento). Valores calculados com bcmath e arredondados ao centavo.
+- O indicador com acesso vê só as próprias indicações (nome, cidade, data e situação). Desempenho e comissões só aparecem se o administrador liberar.
+
 ### Próximas fases
 
 ```

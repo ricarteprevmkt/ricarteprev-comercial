@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -28,6 +29,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property int|null $city_id
  * @property string|null $neighborhood
  * @property int|null $region_id
+ * @property int|null $default_executive_id
  * @property int|null $referral_channel_id
  * @property int|null $commission_rule_id
  * @property CarbonImmutable $registered_at
@@ -47,7 +49,7 @@ class RegionalIndicator extends Model
     /** @var list<string> */
     protected $fillable = [
         'user_id', 'name', 'photo_path', 'phone', 'whatsapp', 'email', 'city_id', 'neighborhood',
-        'region_id', 'referral_channel_id', 'commission_rule_id', 'registered_at', 'status', 'notes',
+        'region_id', 'default_executive_id', 'referral_channel_id', 'commission_rule_id', 'registered_at', 'status', 'notes',
     ];
 
     /** @var array<string, mixed> */
@@ -83,6 +85,24 @@ class RegionalIndicator extends Model
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);
+    }
+
+    /** @return BelongsTo<Executive, $this> */
+    public function defaultExecutive(): BelongsTo
+    {
+        return $this->belongsTo(Executive::class, 'default_executive_id');
+    }
+
+    /** @return HasMany<Referral, $this> */
+    public function referrals(): HasMany
+    {
+        return $this->hasMany(Referral::class);
+    }
+
+    /** @return HasMany<Commission, $this> */
+    public function commissions(): HasMany
+    {
+        return $this->hasMany(Commission::class);
     }
 
     /** @return BelongsTo<CommissionRule, $this> */
