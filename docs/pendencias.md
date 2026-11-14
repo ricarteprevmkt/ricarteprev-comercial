@@ -34,5 +34,6 @@ Enquanto isso, a Fase 3 já guarda os dados necessários (CPF/CNPJ, telefone nor
 
 ## Outros
 
+- [ ] Tiles do mapa: o padrão usa o servidor público do OpenStreetMap, adequado para uso interno moderado. Se o uso crescer, contratar um provedor de tiles e trocar `MAP_TILE_URL` no `.env`.
 - [ ] E-mail SMTP de produção (sem ele, os links de criação de senha não chegam).
 - [ ] Proposta comercial publicada precisa ser atualizada: ainda cita app nativo e portal PWA.

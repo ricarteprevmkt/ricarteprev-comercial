@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\PhotoController;
 use App\Livewire\Admin;
+use App\Livewire\Agenda;
 use App\Livewire\Executives;
 use App\Livewire\Funnel;
 use App\Livewire\Referrals;
@@ -20,7 +22,6 @@ Route::middleware(['auth'])->group(function () {
         ->name($name);
 
     $pending('visao-geral', 'dashboard', 'Visão geral', 'Acompanhe o desempenho comercial da equipe e o andamento das oportunidades.', 'Fase 7', 'dashboard.view,dashboard.view_own');
-    $pending('agenda', 'agenda.index', 'Agenda e rotas', 'Planejamento diário, visitas, deslocamentos e acompanhamento da equipe em campo.', 'Fase 4', 'agenda.view_all,agenda.view_own');
     $pending('custos', 'finance.index', 'Custos e resultados', 'Eficiência da operação comercial e retorno sobre o investimento.', 'Fase 6', 'finance.view,expenses.view_own');
     $pending('indicadores-regionais', 'referrals.index', 'Indicadores regionais', 'Indicações por região e impacto das parcerias locais.', 'Fase 5', 'referrals.view_all,referrals.view_own');
     $pending('relatorios', 'reports.index', 'Relatórios', 'Relatórios com filtros e exportação em PDF e Excel.', 'Fase 8', 'reports.view');
@@ -33,6 +34,9 @@ Route::middleware(['auth'])->group(function () {
         Route::livewire('contatos', Funnel\Leads::class)->name('leads');
         Route::livewire('contratos', Funnel\Contracts::class)->name('contracts');
     });
+
+    // Fase 4: agenda e rotas.
+    Route::livewire('agenda', Agenda\Index::class)->middleware('can.any:agenda.view_all,agenda.view_own')->name('agenda.index');
 
     // Fase 2: cadastros.
     Route::livewire('executivos', Executives\Index::class)->middleware('can.any:executives.view')->name('executives.index');
@@ -51,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
     // Fotos ficam no disco privado; a autorização é feita no controller.
     Route::get('fotos/executivos/{executive}', [PhotoController::class, 'executive'])->name('photos.executive');
     Route::get('fotos/indicadores/{indicator}', [PhotoController::class, 'indicator'])->name('photos.indicator');
+    Route::get('anexos/{attachment}', [AttachmentController::class, 'show'])->name('attachments.show');
 });
 
 require __DIR__.'/settings.php';

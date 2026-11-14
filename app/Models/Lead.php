@@ -31,6 +31,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property int|null $city_id
  * @property string|null $neighborhood
  * @property string|null $address
+ * @property string|null $latitude
+ * @property string|null $longitude
  * @property int|null $lead_source_id
  * @property int|null $executive_id
  * @property int|null $regional_indicator_id
@@ -69,6 +71,8 @@ class Lead extends Model
             'status' => LeadStatus::class,
             'document_encrypted' => 'encrypted',
             'entered_at' => 'immutable_date',
+            'latitude' => 'decimal:7',
+            'longitude' => 'decimal:7',
         ];
     }
 
@@ -112,6 +116,12 @@ class Lead extends Model
     public function opportunities(): HasMany
     {
         return $this->hasMany(Opportunity::class);
+    }
+
+    /** @return HasMany<Visit, $this> */
+    public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class)->latest('scheduled_at');
     }
 
     /** @return HasMany<Contract, $this> */

@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    /*
+    | Mapas (Leaflet). O padrão usa os tiles públicos do OpenStreetMap, gratuitos
+    | e sem chave. Para uso intenso, troque por outro provedor de tiles no .env.
+    */
+    'map' => [
+        'tiles' => env('MAP_TILE_URL', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
+        'attribution' => env('MAP_TILE_ATTRIBUTION', '&copy; colaboradores do OpenStreetMap'),
+    ],
+
 ];

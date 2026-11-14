@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $executive_id
  * @property int|null $lead_source_id
  * @property int|null $regional_indicator_id
+ * @property int|null $visit_id
  * @property OpportunityStage $stage
  * @property int $furthest_stage_rank
  * @property string|null $interest
@@ -50,7 +51,7 @@ class Opportunity extends Model
 
     /** @var list<string> */
     protected $fillable = [
-        'lead_id', 'executive_id', 'lead_source_id', 'regional_indicator_id', 'interest', 'estimated_value',
+        'lead_id', 'executive_id', 'lead_source_id', 'regional_indicator_id', 'visit_id', 'interest', 'estimated_value',
         'next_action', 'next_action_due', 'created_by',
     ];
 
@@ -107,6 +108,12 @@ class Opportunity extends Model
     public function proposals(): HasMany
     {
         return $this->hasMany(Proposal::class)->latest('presented_at');
+    }
+
+    /** @return HasMany<Visit, $this> */
+    public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class)->latest('scheduled_at');
     }
 
     /** @return HasOne<Contract, $this> */

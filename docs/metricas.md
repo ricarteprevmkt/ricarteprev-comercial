@@ -22,8 +22,13 @@ Etapas, na ordem: Contato → Qualificado → Atendimento agendado → Proposta 
 
 ## Visitas
 
-- **Visitas realizadas:** visitas com status Concluída e data efetiva no período.
-- **Visitas planejadas:** todas as visitas agendadas para o período, exceto as canceladas.
+- **Visitas realizadas:** visitas concluídas com horário agendado no período.
+- **Visitas planejadas:** visitas agendadas para o período, exceto canceladas e as substituídas por reagendamento.
+- **Visitas pendentes:** agendadas, confirmadas ou em andamento.
+- **Distância estimada:** soma das rotas do período (linha reta × fator de estrada). Pontos sem endereço marcado usam o centro da cidade e deixam a rota marcada como aproximada.
+- **Km informados:** soma do km registrado nas visitas concluídas. Fica sempre separado do estimado.
+- **Custo estimado do deslocamento:** distância estimada × custo por km (parâmetro). Sem o parâmetro, não é exibido.
+- **Despesas do dia:** despesas efetivas lançadas na data, exceto as recusadas.
 - **Visitas sem resultado:** concluídas há mais de `visits.result_due_hours` horas sem resultado registrado.
 - **Conversão de visitas em oportunidades:** oportunidades criadas a partir de visitas ÷ visitas realizadas × 100.
 

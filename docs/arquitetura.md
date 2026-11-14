@@ -98,6 +98,25 @@ Regras principais (em `app/Actions/Crm`):
 
 As métricas do funil ficam em `app/Metrics/FunnelMetrics.php` e seguem [metricas.md](metricas.md).
 
+### Criado na Fase 4
+
+| Tabela | Finalidade |
+|---|---|
+| `visits` | Atividade de agenda (visita externa, atendimento agendado, retorno, follow-up, reunião), com prioridade, situação, local (ponto marcado, ponto do contato ou centro da cidade), registro do resultado, check-in, km informado e vínculo de reagendamento |
+| `routes` / `route_stops` | Rota estimada do dia por executivo, recalculada sempre que a agenda do dia muda |
+| `expenses` | Despesas efetivas ou estimadas, aguardando aprovação, aprovadas ou recusadas |
+| `attachments` | Comprovantes no disco privado, entregues por rota autenticada |
+| `opportunities.visit_id` | Oportunidade aberta a partir de uma visita (conversão visita → oportunidade) |
+
+Regras principais (em `app/Actions/Agenda`):
+
+- Agendar um "Atendimento agendado" para uma oportunidade que ainda não chegou a essa etapa avança a oportunidade.
+- Concluir uma visita ligada a uma oportunidade registra a atividade e copia a próxima ação e a data do próximo contato.
+- Reagendar cria uma nova visita e marca a original como reagendada, mantendo o vínculo.
+- A rota parte do centro da cidade base do executivo, segue a ordem dos horários e não inclui a volta.
+- Check-in usa a localização do navegador, só com permissão do usuário. Não há rastreamento contínuo.
+- O mapa usa Leaflet com tiles do OpenStreetMap (configuráveis por `MAP_TILE_URL`), sem chave de API.
+
 ### Próximas fases
 
 ```

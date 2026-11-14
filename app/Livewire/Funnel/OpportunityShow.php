@@ -182,6 +182,7 @@ class OpportunityShow extends Component
     }
 
     #[On('lead-saved')]
+    #[On('visit-saved')]
     public function refreshLead(): void
     {
         $this->opportunity->refresh();
@@ -189,7 +190,7 @@ class OpportunityShow extends Component
 
     public function render(): View
     {
-        $this->opportunity->load(['lead.city', 'lead.indicator', 'executive.user', 'source', 'indicator', 'lossReason', 'contract', 'proposals', 'histories.user']);
+        $this->opportunity->load(['lead.city', 'lead.indicator', 'executive.user', 'source', 'indicator', 'lossReason', 'contract', 'proposals', 'histories.user', 'visits']);
 
         return view('livewire.funnel.opportunity-show', [
             'funnel' => OpportunityStage::funnel(),

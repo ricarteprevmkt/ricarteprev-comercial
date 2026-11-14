@@ -144,6 +144,25 @@
                 @endcan
             </x-card>
 
+            <x-card title="Visitas" :padding="false">
+                @if ($canUpdate && ! $closed && auth()->user()->can('agenda.manage'))
+                    <x-slot:actions>
+                        <flux:button size="sm" icon="plus" wire:click="$dispatch('visit-form:create', { leadId: {{ $lead->id }}, opportunityId: {{ $o->id }} })">Agendar</flux:button>
+                    </x-slot:actions>
+                @endif
+                @forelse ($o->visits as $visit)
+                    <div class="border-b border-zinc-100 px-5 py-3 text-sm last:border-0" wire:key="vis-{{ $visit->id }}">
+                        <div class="flex items-center justify-between gap-2">
+                            <a href="{{ route('agenda.index', ['dia' => $visit->scheduled_at->toDateString()]) }}" wire:navigate class="text-zinc-900 hover:underline">{{ $visit->scheduled_at->format('d/m/Y H:i') }} · {{ $visit->type->label() }}</a>
+                            <flux:badge size="sm" :color="$visit->status->color()">{{ $visit->status->label() }}</flux:badge>
+                        </div>
+                        @if ($visit->outcome)<div class="text-zinc-600">{{ \Illuminate\Support\Str::limit($visit->outcome, 160) }}</div>@endif
+                    </div>
+                @empty
+                    <p class="px-5 py-6 text-center text-sm text-zinc-500">Nenhuma visita.</p>
+                @endforelse
+            </x-card>
+
             <x-card title="Propostas" :padding="false">
                 @forelse ($o->proposals as $item)
                     <div class="border-b border-zinc-100 px-5 py-3 text-sm last:border-0" wire:key="p-{{ $item->id }}">
@@ -161,6 +180,9 @@
     </div>
 
     <livewire:funnel.lead-form />
+    @can('agenda.manage')
+        <livewire:agenda.visit-form />
+    @endcan
 
     {{-- Modais --}}
     <flux:modal name="move-stage" class="w-full max-w-md">
