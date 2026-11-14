@@ -20,3 +20,7 @@ Schedule::command('queue:work --stop-when-empty --max-time=50 --tries=3')
 Schedule::command('activitylog:clean --force')->monthly();
 
 Schedule::command('queue:prune-failed --hours=720')->weekly();
+
+// Avisos internos (sino): visitas da próxima hora e resumo diário de pendências.
+Schedule::command('app:send-alerts --upcoming')->everyFifteenMinutes()->withoutOverlapping(10);
+Schedule::command('app:send-alerts')->dailyAt('07:30');

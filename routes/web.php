@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\ReportExportController;
 use App\Livewire\Admin;
 use App\Livewire\Agenda;
 use App\Livewire\Executives;
@@ -9,6 +10,7 @@ use App\Livewire\Finance;
 use App\Livewire\Funnel;
 use App\Livewire\Overview;
 use App\Livewire\Referrals;
+use App\Livewire\Reports;
 use App\Support\Navigation;
 use Illuminate\Support\Facades\Route;
 
@@ -18,12 +20,9 @@ Route::middleware(['auth'])->group(function () {
     // Destino após o login: o primeiro módulo que o perfil do usuário pode abrir.
     Route::get('inicio', fn () => redirect()->route(Navigation::homeRouteFor(auth()->user())))->name('start');
 
-    // Módulos ainda não construídos mostram a fase em que serão liberados.
-    $pending = fn (string $uri, string $name, string $title, string $subtitle, string $phase, string $abilities) => Route::view($uri, 'modules.pending', compact('title', 'subtitle', 'phase'))
-        ->middleware("can.any:{$abilities}")
-        ->name($name);
-
-    $pending('relatorios', 'reports.index', 'Relatórios', 'Relatórios com filtros e exportação em PDF e Excel.', 'Fase 8', 'reports.view');
+    // Fase 8: relatórios.
+    Route::livewire('relatorios', Reports\Index::class)->middleware('can.any:reports.view')->name('reports.index');
+    Route::get('relatorios/{report}/exportar/{format}', ReportExportController::class)->middleware('can.any:reports.export')->name('reports.export');
 
     // Fase 3: CRM e funil comercial. O recorte por executivo é feito nas policies.
     Route::prefix('funil')->name('funnel.')->middleware('can.any:funnel.view_all,funnel.view_own')->group(function () {

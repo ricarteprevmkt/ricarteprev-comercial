@@ -34,6 +34,7 @@ class Settings extends Component
         'routes.road_factor' => ['min:1', 'max:3'],
         'routes.cost_per_km' => ['min:0', 'max:100'],
         'funnel.stale_after_days' => ['min:1', 'max:365'],
+        'funnel.proposal_followup_days' => ['min:1', 'max:365'],
         'visits.result_due_hours' => ['min:1', 'max:720'],
         'referrals.attribution_window_days' => ['min:0', 'max:3650'],
     ];

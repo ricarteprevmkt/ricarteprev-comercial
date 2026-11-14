@@ -36,6 +36,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read ExpenseCategory $category
  * @property-read Executive|null $executive
  * @property-read Visit|null $visit
+ * @property-read City|null $city
  */
 class Expense extends Model
 {
@@ -71,6 +72,12 @@ class Expense extends Model
     public function executive(): BelongsTo
     {
         return $this->belongsTo(Executive::class)->withTrashed();
+    }
+
+    /** @return BelongsTo<City, $this> */
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
     }
 
     /** @return BelongsTo<Visit, $this> */
