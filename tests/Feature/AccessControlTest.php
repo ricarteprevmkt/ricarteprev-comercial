@@ -15,7 +15,7 @@ it('não oferece cadastro público', function () {
 it('libera todos os módulos para o administrador', function () {
     $admin = userWithRole(Role::Admin);
 
-    foreach (['dashboard', 'executives.index', 'agenda.index', 'funnel.index', 'finance.index', 'referrals.index', 'reports.index', 'admin.users', 'admin.roles', 'admin.audit'] as $route) {
+    foreach (['dashboard', 'executives.index', 'agenda.index', 'funnel.index', 'finance.dashboard', 'finance.expenses', 'referrals.index', 'reports.index', 'admin.users', 'admin.roles', 'admin.audit'] as $route) {
         $this->actingAs($admin)->get(route($route))->assertOk();
     }
 });

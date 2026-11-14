@@ -22,7 +22,7 @@ final class Navigation
                 ['label' => 'Executivos', 'route' => 'executives.index', 'icon' => 'user', 'abilities' => ['executives.view']],
                 ['label' => 'Agenda e rotas', 'route' => 'agenda.index', 'icon' => 'calendar-days', 'abilities' => ['agenda.view_all', 'agenda.view_own']],
                 ['label' => 'Funil comercial', 'route' => 'funnel.index', 'icon' => 'funnel', 'abilities' => ['funnel.view_all', 'funnel.view_own'], 'active' => 'funnel.*'],
-                ['label' => 'Custos e resultados', 'route' => 'finance.index', 'icon' => 'chart-bar', 'abilities' => ['finance.view', 'expenses.view_own']],
+                ['label' => 'Custos e resultados', 'route' => 'finance.index', 'icon' => 'chart-bar', 'abilities' => ['finance.view', 'expenses.view_own'], 'active' => 'finance.*'],
                 // Equipe com visão geral: painel regional. Executivo: lista das indicações que atende.
                 ['label' => 'Indicadores regionais', 'route' => 'referrals.index', 'icon' => 'map-pin', 'abilities' => ['referrals.view_all'], 'active' => ['referrals.index', 'referrals.list', 'referrals.commissions', 'referrals.indicators.show']],
                 ['label' => 'Indicações', 'route' => 'referrals.list', 'icon' => 'map-pin', 'abilities' => ['referrals.create'], 'requires_executive' => true],

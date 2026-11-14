@@ -30,6 +30,7 @@
                             <span class="w-10 text-xs tabular-nums text-zinc-400">{{ $item->sort_order }}</span>
                             <span @class(['flex-1 font-medium', 'text-zinc-900' => $item->active, 'text-zinc-400 line-through' => ! $item->active])>{{ $item->name }}</span>
                             @if ($current === \App\Enums\CatalogType::ExpenseCategories)
+                                @if ($item->is_travel)<flux:badge size="sm" color="amber">Deslocamento</flux:badge>@endif
                                 <flux:badge size="sm" :color="$item->nature === 'variable' ? 'blue' : 'zinc'">{{ $item->nature === 'variable' ? 'Variável' : 'Fixa' }}</flux:badge>
                             @endif
                             @if ($current === \App\Enums\CatalogType::LossReasons)
@@ -54,6 +55,7 @@
                     <flux:select.option value="variable">Variável</flux:select.option>
                     <flux:select.option value="fixed">Fixa</flux:select.option>
                 </flux:select>
+                <flux:switch wire:model="form.is_travel" label="Conta como deslocamento" description="Entra no indicador Deslocamentos (combustível, pedágio, estacionamento)." />
             @endif
             @if ($current === \App\Enums\CatalogType::LossReasons)
                 <flux:select wire:model="form.applies_to" label="Usado em">

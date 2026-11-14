@@ -58,7 +58,7 @@ enum CatalogType: string
      * Itens padrão sugeridos pelo briefing comercial. São configuração, não dados
      * fictícios: o administrador pode renomear, reordenar ou desativar.
      *
-     * @return list<array<string, string>>
+     * @return list<array<string, string|bool>>
      */
     public function defaults(): array
     {
@@ -71,9 +71,14 @@ enum CatalogType: string
         };
 
         $fixed = ['Equipe comercial', 'Ferramentas', 'Despesas operacionais'];
+        $travel = ['Combustível e deslocamento', 'Pedágio', 'Estacionamento'];
 
         return array_map(fn (string $name) => match ($this) {
-            self::ExpenseCategories => ['name' => $name, 'nature' => in_array($name, $fixed, true) ? 'fixed' : 'variable'],
+            self::ExpenseCategories => [
+                'name' => $name,
+                'nature' => in_array($name, $fixed, true) ? 'fixed' : 'variable',
+                'is_travel' => in_array($name, $travel, true),
+            ],
             self::LossReasons => ['name' => $name, 'applies_to' => 'both'],
             default => ['name' => $name],
         }, $names);

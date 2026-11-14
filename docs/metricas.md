@@ -41,10 +41,14 @@ Etapas, na ordem: Contato → Qualificado → Atendimento agendado → Proposta 
 
 ## Custos
 
-- Entram só despesas **aprovadas** e do tipo **efetivo**. Valores estimados aparecem em separado, nunca somados aos efetivos.
+- Entram só despesas **aprovadas** e do tipo **efetivo**. Pendentes aparecem à parte; recusadas nunca entram. Valores estimados (rota × custo por km) aparecem em separado, nunca somados aos efetivos.
+- **Custo operacional:** soma das despesas aprovadas do período.
+- **Deslocamentos:** despesas aprovadas das categorias marcadas como deslocamento (combustível, pedágio, estacionamento; configurável em Catálogos).
+- **Custo por região:** região do executivo da despesa; despesa geral usa a região da cidade informada. Visitas e contratos contam pela região do executivo.
+- **Receita prevista:** soma da receita prevista de cada contrato assinado; quando o contrato não tem receita prevista, usa o valor do contrato.
 - **Custo por visita:** custos comerciais atribuídos ao período ÷ visitas concluídas no período.
 - **Custo por contrato:** custos comerciais atribuídos ao período ÷ contratos assinados no período.
-- **Margem de contribuição estimada:** receita considerada − custos de natureza variável. A receita considerada é a prevista ou a recebida, conforme `finance.margin_revenue_basis`. O card mostra qual base está em uso.
+- **Margem de contribuição estimada:** receita considerada − despesas aprovadas de natureza variável − comissões de indicadores geradas no período (exceto canceladas). A receita considerada é a prevista ou a recebida, conforme `finance.margin_revenue_basis`. O card mostra qual base está em uso. Despesas de natureza fixa ficam fora da margem.
 - Se o custo da equipe (salários) entra no custo por contrato **(a validar)**: hoje, só se for lançado na categoria "Equipe comercial".
 
 ## Indicações

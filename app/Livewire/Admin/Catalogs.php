@@ -25,8 +25,8 @@ class Catalogs extends Component
 
     public ?int $editingId = null;
 
-    /** @var array{name: string, sort_order: int|string, active: bool, nature: string, applies_to: string} */
-    public array $form = ['name' => '', 'sort_order' => 0, 'active' => true, 'nature' => 'variable', 'applies_to' => 'both'];
+    /** @var array{name: string, sort_order: int|string, active: bool, nature: string, applies_to: string, is_travel: bool} */
+    public array $form = ['name' => '', 'sort_order' => 0, 'active' => true, 'nature' => 'variable', 'applies_to' => 'both', 'is_travel' => false];
 
     public function mount(): void
     {
@@ -55,7 +55,7 @@ class Catalogs extends Component
         $this->resetValidation();
         $this->editingId = null;
         $next = (int) ($this->catalog()->model()::query()->max('sort_order') ?? 0) + 10;
-        $this->form = ['name' => '', 'sort_order' => $next, 'active' => true, 'nature' => 'variable', 'applies_to' => 'both'];
+        $this->form = ['name' => '', 'sort_order' => $next, 'active' => true, 'nature' => 'variable', 'applies_to' => 'both', 'is_travel' => false];
         Flux::modal('catalog-form')->show();
     }
 
@@ -70,6 +70,7 @@ class Catalogs extends Component
             'active' => $item->active,
             'nature' => $item->getAttribute('nature') ?? 'variable',
             'applies_to' => $item->getAttribute('applies_to') ?? 'both',
+            'is_travel' => (bool) ($item->getAttribute('is_travel') ?? false),
         ];
         Flux::modal('catalog-form')->show();
     }
@@ -99,6 +100,7 @@ class Catalogs extends Component
 
         if ($catalog === CatalogType::ExpenseCategories) {
             $item->setAttribute('nature', $this->form['nature']);
+            $item->setAttribute('is_travel', (bool) $this->form['is_travel']);
         }
         if ($catalog === CatalogType::LossReasons) {
             $item->setAttribute('applies_to', $this->form['applies_to']);

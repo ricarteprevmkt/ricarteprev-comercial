@@ -135,6 +135,13 @@ Regras principais (em `app/Actions/Referrals`):
 - Comissão só existe com regra ativa associada ao indicador. O evento da regra define quando gera; a base define sobre o quê (receita recebida gera a cada recebimento). Valores calculados com bcmath e arredondados ao centavo.
 - O indicador com acesso vê só as próprias indicações (nome, cidade, data e situação). Desempenho e comissões só aparecem se o administrador liberar.
 
+### Criado na Fase 6
+
+- `expense_categories.is_travel`: categorias que compõem o indicador Deslocamentos.
+- Aprovação e recusa de despesas (`app/Actions/Finance/ReviewExpense.php`): só pendentes, ninguém aprova a própria despesa, recusa exige motivo e avisa o executivo.
+- `app/Metrics/FinanceMetrics.php`: custos, receitas, margem, distribuição por categoria, canal, região, executivo e evolução mensal.
+- Gráficos com ApexCharts (`resources/js/charts.js`), compilados pelo Vite.
+
 ### Próximas fases
 
 ```

@@ -4,6 +4,7 @@ namespace App\Actions\Agenda;
 
 use App\Enums\ExpenseStatus;
 use App\Models\Attachment;
+use App\Models\City;
 use App\Models\Executive;
 use App\Models\Expense;
 use App\Models\User;
@@ -33,7 +34,9 @@ final class SaveExpense
         try {
             return DB::transaction(function () use ($expense, $data, $receipt, $path, $user) {
                 $expense ??= new Expense(['created_by' => $user?->id]);
+                // Região: a do executivo; para despesa geral, a da cidade informada.
                 $regionId = isset($data['executive_id']) ? Executive::query()->whereKey($data['executive_id'])->value('region_id') : null;
+                $regionId ??= isset($data['city_id']) ? City::query()->whereKey($data['city_id'])->value('region_id') : null;
 
                 $expense->fill($data + ['kind' => 'actual']);
                 $expense->region_id = $regionId;

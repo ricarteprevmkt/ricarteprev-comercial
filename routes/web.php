@@ -5,6 +5,7 @@ use App\Http\Controllers\PhotoController;
 use App\Livewire\Admin;
 use App\Livewire\Agenda;
 use App\Livewire\Executives;
+use App\Livewire\Finance;
 use App\Livewire\Funnel;
 use App\Livewire\Referrals;
 use App\Support\Navigation;
@@ -22,7 +23,6 @@ Route::middleware(['auth'])->group(function () {
         ->name($name);
 
     $pending('visao-geral', 'dashboard', 'Visão geral', 'Acompanhe o desempenho comercial da equipe e o andamento das oportunidades.', 'Fase 7', 'dashboard.view,dashboard.view_own');
-    $pending('custos', 'finance.index', 'Custos e resultados', 'Eficiência da operação comercial e retorno sobre o investimento.', 'Fase 6', 'finance.view,expenses.view_own');
     $pending('relatorios', 'reports.index', 'Relatórios', 'Relatórios com filtros e exportação em PDF e Excel.', 'Fase 8', 'reports.view');
 
     // Fase 3: CRM e funil comercial. O recorte por executivo é feito nas policies.
@@ -39,6 +39,13 @@ Route::middleware(['auth'])->group(function () {
 
     // Fase 2: cadastros.
     Route::livewire('executivos', Executives\Index::class)->middleware('can.any:executives.view')->name('executives.index');
+    // Fase 6: custos e resultados. Quem só vê as próprias despesas vai direto para a lista.
+    Route::get('custos', fn () => auth()->user()->can('finance.view')
+        ? redirect()->route('finance.dashboard')
+        : redirect()->route('finance.expenses'))->middleware('can.any:finance.view,expenses.view_own')->name('finance.index');
+    Route::livewire('custos/painel', Finance\Dashboard::class)->middleware('can.any:finance.view')->name('finance.dashboard');
+    Route::livewire('custos/despesas', Finance\Expenses::class)->middleware('can.any:finance.view,expenses.view_own')->name('finance.expenses');
+
     // Fase 5: indicadores regionais.
     Route::livewire('indicadores-regionais', Referrals\Dashboard::class)->middleware('can.any:referrals.view_all')->name('referrals.index');
     Route::livewire('indicadores-regionais/indicacoes', Referrals\ReferralList::class)->middleware('can.any:referrals.view_all,referrals.create')->name('referrals.list');
