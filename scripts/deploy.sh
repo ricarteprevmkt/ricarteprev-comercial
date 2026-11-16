@@ -2,7 +2,7 @@
 #
 # Deploy na Hostinger (plano Premium), executado NO SERVIDOR via SSH:
 #
-#   cd ~/domains/SEU_DOMINIO/ricarteprev && bash scripts/deploy.sh
+#   cd ~/domains/ricarteprev.com/ricarteprev && bash scripts/deploy.sh
 #
 # Os assets (public/build) já vêm compilados no repositório, porque o plano
 # não roda Node.js. Rode `npm run build` na máquina local e faça commit antes.

@@ -29,7 +29,7 @@ Antes, conclua as etapas 1 a 6 de [configuracao-hostinger.md](configuracao-hosti
 
    ```bash
    cd ~/domains/ricarteprev.com
-   git clone git@github.com:USUARIO_GITHUB/ricarteprev-comercial.git ricarteprev
+   git clone git@github.com:ricarteprevmkt/ricarteprev-comercial.git ricarteprev
    cd ricarteprev
    cp .env.production.example .env
    nano .env            # preencha APP_URL, DB_* e MAIL_*; salve com Ctrl+O, Enter, Ctrl+X
