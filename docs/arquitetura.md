@@ -19,9 +19,9 @@
 | Perfil | Acesso padrão |
 |---|---|
 | Administrador | Tudo (via `Gate::before`) |
-| Gestor comercial | Equipe inteira, aprovação de despesas, indicadores, relatórios e metas |
+| Gestor comercial | Equipe inteira, aprovação de despesas, parceiros, relatórios e metas |
 | Executivo comercial | Apenas os próprios registros: agenda, oportunidades, contratos e despesas |
-| Indicador regional | Registrar indicações e acompanhar as próprias. Desempenho e comissões só se o administrador liberar |
+| Parceiro regional | Registrar indicações e acompanhar as próprias. Desempenho e comissões só se o administrador liberar |
 
 O catálogo de permissões está em `app/Support/Acl.php`. O seeder aplica os padrões só na criação do perfil; depois, vale o que o administrador configurar.
 
@@ -72,7 +72,7 @@ O C2 Prev continua sendo usado pela Ricarte. Decisão confirmada: este sistema *
 |---|---|
 | `executives` | Dados comerciais do executivo, ligado 1:1 a um usuário. CPF criptografado (`cpf_encrypted`) com hash único (`cpf_hash`). Status `active`, `on_leave` ou `terminated`; desligado perde o login automaticamente |
 | `goals` | Meta de um mês específico (`UNIQUE executive_id, month`). Sem registro, vale a meta padrão do executivo |
-| `regional_indicators` | Indicador regional. Acesso ao sistema opcional (`user_id`). WhatsApp normalizado e sem repetição |
+| `regional_indicators` | Parceiro regional. Acesso ao sistema opcional (`user_id`). WhatsApp normalizado e sem repetição |
 | `commission_rules` | Valor fixo ou percentual (com base de cálculo) e evento que gera o direito |
 | `lead_sources`, `loss_reasons`, `visit_reasons`, `expense_categories`, `referral_channels` | Catálogos configuráveis. Itens são desativados, nunca excluídos. Categorias de despesa têm natureza variável ou fixa |
 
@@ -82,11 +82,11 @@ Fotos ficam em `storage/app/private/photos` e são servidas pela rota autenticad
 
 | Tabela | Finalidade |
 |---|---|
-| `leads` | Contato (PF ou PJ). CPF/CNPJ criptografado com hash único; telefone e WhatsApp só com dígitos. Origem, executivo responsável e indicador ("Indicado por") |
+| `leads` | Contato (PF ou PJ). CPF/CNPJ criptografado com hash único; telefone e WhatsApp só com dígitos. Origem, executivo responsável e parceiro ("Indicado por") |
 | `opportunities` | Etapa atual, `furthest_stage_rank` (etapa mais avançada já alcançada, base das conversões), interesse, valor estimado, próxima ação e prazo, motivo de perda, `last_activity_at` para o alerta de oportunidade parada |
 | `opportunity_histories` | Cada mudança de etapa: de, para, usuário, observação e data. Nunca é apagado |
 | `proposals` | Propostas apresentadas. Registrar uma proposta avança a oportunidade para "Proposta apresentada" |
-| `contracts` | Um por oportunidade. Situação: aguardando conclusão, assinado ou cancelado. Copia origem, executivo e indicador da oportunidade |
+| `contracts` | Um por oportunidade. Situação: aguardando conclusão, assinado ou cancelado. Copia origem, executivo e parceiro da oportunidade |
 | `contract_receipts` | Receita efetivamente recebida, lançada só em contrato assinado |
 
 Regras principais (em `app/Actions/Crm`):
@@ -121,19 +121,19 @@ Regras principais (em `app/Actions/Agenda`):
 
 | Tabela | Finalidade |
 |---|---|
-| `referrals` | Indicação: indicador, contato, executivo, canal, data, situação, etapa mais avançada (`furthest_rank`), duplicidade e consentimento |
+| `referrals` | Indicação: parceiro, contato, executivo, canal, data, situação, etapa mais avançada (`furthest_rank`), duplicidade e consentimento |
 | `referral_histories` | Cada mudança de situação, manual (com usuário) ou automática (pelo funil) |
 | `commissions` | Comissão gerada por contrato ou recebimento, com cópia da regra no momento da geração, valor previsto e aprovado |
 | `commission_payments` | Pagamentos (parciais ou total) de uma comissão aprovada |
-| `regional_indicators.default_executive_id` | Executivo que recebe as indicações do indicador |
+| `regional_indicators.default_executive_id` | Executivo que recebe as indicações do parceiro |
 
 Regras principais (em `app/Actions/Referrals`):
 
-- Contato novo: a indicação cria o contato com origem "Indicações" e "Indicado por" o indicador.
+- Contato novo: a indicação cria o contato com origem "Indicações" e "Indicado por" o parceiro.
 - Contato já existente: a indicação é registrada como duplicada e não muda a atribuição. Exceção: se a indicação válida anterior passou da janela de atribuição (90 dias por padrão) e o contato ainda não é cliente, a nova indicação assume a atribuição.
 - A situação acompanha o funil: Contato → Contato realizado, Qualificado → Qualificada, Atendimento agendado → Oportunidade gerada, Proposta → Proposta apresentada, Contrato → Contrato assinado. Se todas as oportunidades forem perdidas, fica Perdida. Visita concluída sem oportunidade conta como Contato realizado.
-- Comissão só existe com regra ativa associada ao indicador. O evento da regra define quando gera; a base define sobre o quê (receita recebida gera a cada recebimento). Valores calculados com bcmath e arredondados ao centavo.
-- O indicador com acesso vê só as próprias indicações (nome, cidade, data e situação). Desempenho e comissões só aparecem se o administrador liberar.
+- Comissão só existe com regra ativa associada ao parceiro. O evento da regra define quando gera; a base define sobre o quê (receita recebida gera a cada recebimento). Valores calculados com bcmath e arredondados ao centavo.
+- O parceiro com acesso vê só as próprias indicações (nome, cidade, data e situação). Desempenho e comissões só aparecem se o administrador liberar.
 
 ### Criado na Fase 6
 
@@ -196,6 +196,7 @@ Regras gerais: valores em DECIMAL, chaves estrangeiras com `restrict` em histór
 
 ## Distâncias e rotas sem API paga
 
-- Distância estimada = distância em linha reta (haversine) × fator de estrada (padrão 1,30, configurável).
+- Distância da rota = distância pelas estradas (OpenRouteService, `App\Support\RoadDistance`), com cada trecho em cache por 180 dias. Sem chave (`ORS_API_KEY`), com o serviço fora do ar ou no limite diário: linha reta (haversine) × fator de estrada (padrão 1,30), e o serviço fica 10 minutos sem ser consultado. A rota guarda a origem em `routes.km_source` (`road` ou `estimate`). Só coordenadas são enviadas ao serviço.
+- `php artisan app:rebuild-routes [--from] [--to] [--only-estimated]` recalcula rotas já existentes (respeita 40 consultas/minuto).
 - OSRM ou OpenRouteService podem ser ligados depois pelo `.env`, sem ser obrigatórios.
 - A localização do executivo é a do último check-in, capturada pelo navegador com consentimento. Não há rastreamento em tempo real.

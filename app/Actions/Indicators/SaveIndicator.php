@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Cria ou atualiza um indicador regional. Quando "has_access" está ligado,
- * cria (ou reativa) o usuário com perfil indicador; desligado, desativa o acesso.
+ * Cria ou atualiza um parceiro regional. Quando "has_access" está ligado,
+ * cria (ou reativa) o usuário com perfil parceiro; desligado, desativa o acesso.
  */
 final class SaveIndicator
 {
@@ -27,7 +27,7 @@ final class SaveIndicator
     public function handle(?RegionalIndicator $indicator, array $data, bool $hasAccess, ?UploadedFile $photo = null, ?User $actor = null): array
     {
         if ($hasAccess && empty($data['email'])) {
-            throw ValidationException::withMessages(['form.email' => 'Para dar acesso ao sistema, informe o e-mail do indicador.']);
+            throw ValidationException::withMessages(['form.email' => 'Para dar acesso ao sistema, informe o e-mail do parceiro.']);
         }
 
         $oldPhoto = $indicator?->photo_path;

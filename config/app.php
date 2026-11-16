@@ -15,6 +15,9 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    // Versão exibida no rodapé da barra lateral. Atualize a cada entrega.
+    'version' => '1.0.1',
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

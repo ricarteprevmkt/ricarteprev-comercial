@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\DB;
  * - Receita contratada: valor dos contratos assinados no período.
  * - Receita recebida: recebimentos lançados no período. Nunca é inferida do contrato.
  * - Margem: receita considerada (prevista ou recebida, conforme parâmetro)
- *   − despesas de natureza variável − comissões de indicadores do período.
+ *   − despesas de natureza variável − comissões de parceiros do período.
  *
  * $executiveIds: null = todos (inclui despesas gerais, sem executivo).
  */

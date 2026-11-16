@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-6">
-    <x-page-header title="Regras de comissão" subtitle="Como e quando um indicador tem direito a comissão. Sem regra associada, a indicação não gera comissão.">
+    <x-page-header title="Regras de comissão" subtitle="Como e quando um parceiro tem direito a comissão. Sem regra associada, a indicação não gera comissão.">
         <x-slot:actions>
             <flux:button variant="primary" icon="plus" wire:click="create">Nova regra</flux:button>
         </x-slot:actions>
@@ -14,7 +14,7 @@
                 <flux:table.columns>
                     <flux:table.column>Regra</flux:table.column>
                     <flux:table.column class="max-md:hidden">Cálculo</flux:table.column>
-                    <flux:table.column align="end">Indicadores</flux:table.column>
+                    <flux:table.column align="end">Parceiros</flux:table.column>
                     <flux:table.column>Status</flux:table.column>
                     <flux:table.column align="end"><span class="sr-only">Ações</span></flux:table.column>
                 </flux:table.columns>

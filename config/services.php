@@ -39,6 +39,16 @@ return [
     | Mapas (Leaflet). O padrão usa os tiles públicos do OpenStreetMap, gratuitos
     | e sem chave. Para uso intenso, troque por outro provedor de tiles no .env.
     */
+    /*
+    | Distância pelas estradas (OpenRouteService, gratuito até 2.000 rotas/dia).
+    | Sem chave, o sistema usa a linha reta × fator de estrada (Parâmetros).
+    */
+    'openrouteservice' => [
+        'key' => env('ORS_API_KEY'),
+        'url' => env('ORS_URL', 'https://api.openrouteservice.org'),
+        'timeout' => (int) env('ORS_TIMEOUT', 6),
+    ],
+
     'map' => [
         'tiles' => env('MAP_TILE_URL', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
         'attribution' => env('MAP_TILE_ATTRIBUTION', '&copy; colaboradores do OpenStreetMap'),

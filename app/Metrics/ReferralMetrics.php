@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * Base (coorte): indicações válidas (não duplicadas) com data no período.
  * "Chegou a X": furthest_rank >= rank(X). Contratos originados: contratos
- * assinados no período com indicador atribuído.
+ * assinados no período com parceiro atribuído.
  */
 final class ReferralMetrics
 {

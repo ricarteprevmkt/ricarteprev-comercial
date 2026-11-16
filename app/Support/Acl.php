@@ -44,12 +44,12 @@ final class Acl
                 'expenses.manage' => 'Lançar despesas',
                 'expenses.approve' => 'Aprovar despesas',
             ],
-            'Indicadores regionais' => [
+            'Parceiros regionais' => [
                 'referrals.view_all' => 'Ver todas as indicações',
                 'referrals.view_own' => 'Ver as próprias indicações',
                 'referrals.create' => 'Registrar indicações',
-                'referrals.performance_own' => 'Ver o próprio desempenho como indicador',
-                'indicators.manage' => 'Cadastrar indicadores regionais',
+                'referrals.performance_own' => 'Ver o próprio desempenho como parceiro',
+                'indicators.manage' => 'Cadastrar parceiros regionais',
                 'commissions.manage' => 'Gerenciar comissões',
                 'commissions.view_own' => 'Ver as próprias comissões',
             ],

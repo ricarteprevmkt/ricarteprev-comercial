@@ -49,14 +49,14 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('custos/painel', Finance\Dashboard::class)->middleware('can.any:finance.view')->name('finance.dashboard');
     Route::livewire('custos/despesas', Finance\Expenses::class)->middleware('can.any:finance.view,expenses.view_own')->name('finance.expenses');
 
-    // Fase 5: indicadores regionais.
-    Route::livewire('indicadores-regionais', Referrals\Dashboard::class)->middleware('can.any:referrals.view_all')->name('referrals.index');
-    Route::livewire('indicadores-regionais/indicacoes', Referrals\ReferralList::class)->middleware('can.any:referrals.view_all,referrals.create')->name('referrals.list');
-    Route::livewire('indicadores-regionais/comissoes', Referrals\CommissionsIndex::class)->middleware('can.any:commissions.manage')->name('referrals.commissions');
-    Route::livewire('indicadores-regionais/indicadores/{indicator}', Referrals\IndicatorShow::class)->middleware('can.any:indicators.manage,referrals.view_all')->name('referrals.indicators.show');
+    // Fase 5: parceiros regionais.
+    Route::livewire('parceiros-regionais', Referrals\Dashboard::class)->middleware('can.any:referrals.view_all')->name('referrals.index');
+    Route::livewire('parceiros-regionais/indicacoes', Referrals\ReferralList::class)->middleware('can.any:referrals.view_all,referrals.create')->name('referrals.list');
+    Route::livewire('parceiros-regionais/comissoes', Referrals\CommissionsIndex::class)->middleware('can.any:commissions.manage')->name('referrals.commissions');
+    Route::livewire('parceiros-regionais/parceiros/{indicator}', Referrals\IndicatorShow::class)->middleware('can.any:indicators.manage,referrals.view_all')->name('referrals.indicators.show');
     Route::livewire('minhas-indicacoes', Referrals\Portal::class)->middleware('can.any:referrals.view_own')->name('referrals.mine');
-    Route::livewire('indicadores-regionais/cadastro', Referrals\Indicators::class)->middleware('can.any:indicators.manage')->name('referrals.indicators');
-    Route::livewire('indicadores-regionais/regras-de-comissao', Referrals\CommissionRules::class)->middleware('can.any:commissions.manage')->name('referrals.commission-rules');
+    Route::livewire('parceiros-regionais/cadastro', Referrals\Indicators::class)->middleware('can.any:indicators.manage')->name('referrals.indicators');
+    Route::livewire('parceiros-regionais/regras-de-comissao', Referrals\CommissionRules::class)->middleware('can.any:commissions.manage')->name('referrals.commission-rules');
 
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::livewire('usuarios', Admin\Users::class)->middleware('can.any:users.manage')->name('users');
@@ -69,7 +69,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Fotos ficam no disco privado; a autorização é feita no controller.
     Route::get('fotos/executivos/{executive}', [PhotoController::class, 'executive'])->name('photos.executive');
-    Route::get('fotos/indicadores/{indicator}', [PhotoController::class, 'indicator'])->name('photos.indicator');
+    Route::get('fotos/parceiros/{indicator}', [PhotoController::class, 'indicator'])->name('photos.indicator');
     Route::get('anexos/{attachment}', [AttachmentController::class, 'show'])->name('attachments.show');
 });
 

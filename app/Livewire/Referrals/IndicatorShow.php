@@ -11,9 +11,9 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 /**
- * Visão individual de um indicador: números do período, indicações e comissões.
+ * Visão individual de um parceiro: números do período, indicações e comissões.
  */
-#[Title('Indicador')]
+#[Title('Parceiro')]
 class IndicatorShow extends Component
 {
     public RegionalIndicator $indicator;

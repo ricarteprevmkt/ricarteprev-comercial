@@ -19,7 +19,7 @@ use Illuminate\Validation\ValidationException;
  * - Assinado: a oportunidade vai para "Contrato assinado" e o contato vira cliente.
  * - Aguardando conclusão: o contrato fica pendente e a oportunidade não muda.
  *
- * Origem, executivo e indicador são copiados da oportunidade, para que o
+ * Origem, executivo e parceiro são copiados da oportunidade, para que o
  * resultado fique atribuído a quem gerou o negócio mesmo se o cadastro mudar.
  */
 final class RegisterContract

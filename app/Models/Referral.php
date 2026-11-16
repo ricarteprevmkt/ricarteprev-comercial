@@ -89,7 +89,7 @@ class Referral extends Model
     }
 
     /**
-     * Quem tem "referrals.view_all" vê todas; o indicador vê as próprias;
+     * Quem tem "referrals.view_all" vê todas; o parceiro vê as próprias;
      * o executivo vê as que estão com ele.
      *
      * @param  Builder<Referral>  $query

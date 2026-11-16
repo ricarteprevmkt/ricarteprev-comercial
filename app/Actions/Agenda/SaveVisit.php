@@ -96,13 +96,16 @@ final class SaveVisit
         });
     }
 
+    /** Recalcula a rota depois que a gravação for confirmada (a rota pode consultar um serviço externo). */
     public function rebuild(int $executiveId, CarbonImmutable $date): void
     {
-        $executive = Executive::withTrashed()->find($executiveId);
+        DB::afterCommit(function () use ($executiveId, $date) {
+            $executive = Executive::withTrashed()->find($executiveId);
 
-        if ($executive) {
-            $this->routes->handle($executive, $date);
-        }
+            if ($executive) {
+                $this->routes->handle($executive, $date);
+            }
+        });
     }
 
     /**

@@ -56,7 +56,10 @@
         {{-- Evolução comercial --}}
         <x-card title="Evolução comercial" description="Volume por etapa no período" class="xl:col-span-2">
             <div class="grid gap-4 lg:grid-cols-[1fr_13rem]">
-                <div wire:ignore x-data="apexChart('funnelBars', @js($funnelChart), 'overview-funnel')"><div x-ref="canvas"></div></div>
+                <div>
+                    <x-funnel-chart :stages="$funnelChart" />
+                    <p class="mt-3 text-xs text-zinc-500">À direita, quanto cada etapa representa da anterior.</p>
+                </div>
                 <div class="flex flex-col gap-3 rounded-lg bg-zinc-50 p-4">
                     <div>
                         <div class="text-xs text-zinc-500">Visitas → oportunidades</div>

@@ -7,7 +7,7 @@ Itens que dependem de informação ou ação fora do código. Atualizado a cada 
 | # | Pendência | Depende de | Bloqueia |
 |---|---|---|---|
 | 1 | **Exportação para o C2 Prev:** documentação da API do C2, autenticação e formato (layout) do arquivo ou payload de saída | Daniel / C2 | Módulo de exportação |
-| 2 | **Servidor Hostinger:** banco MySQL criado, SSH ativo, PHP 8.3+ com as extensões, saída do `scripts/check-server.sh` | Daniel (ver [configuracao-hostinger.md](configuracao-hostinger.md)) | Primeira implantação |
+| 2 | **Servidor Hostinger:** endereço `comercial.ricarteprev.com`, banco e usuário `u316363488_comercial` e SSH já feitos (16/11/2026). Etapa 5 conferida: PHP 8.5, todas as extensões, Composer 2.9, Git e MariaDB 11.8. Falta o repositório (pendência 3) | Daniel (ver [configuracao-hostinger.md](configuracao-hostinger.md)) | Primeira implantação |
 | 3 | **Repositório remoto:** repositório privado no GitHub para o deploy por `git pull` | Daniel | Primeira implantação |
 
 ## Exportação para o C2 Prev (pendência 1)
@@ -29,11 +29,12 @@ Enquanto isso, a Fase 3 já guarda os dados necessários (CPF/CNPJ, telefone nor
 
 - [ ] O custo da equipe (salários) entra no custo por contrato? Hoje entra só se for lançado na categoria "Equipe comercial", que está como **fixa** e não entra na margem.
 - [ ] "Em acompanhamento" entra na base de conversão do funil? Hoje, não.
-- [ ] Regras de comissão dos indicadores (valor, percentual e evento gerador).
+- [ ] Regras de comissão dos parceiros (valor, percentual e evento gerador).
 - [ ] Cancelamento de contrato: o status existe, mas o fluxo (quem cancela, o que acontece com a oportunidade e com a comissão) precisa ser definido.
 
 ## Outros
 
 - [ ] Tiles do mapa: o padrão usa o servidor público do OpenStreetMap, adequado para uso interno moderado. Se o uso crescer, contratar um provedor de tiles e trocar `MAP_TILE_URL` no `.env`.
+- [ ] Chave do OpenRouteService no `.env` do servidor (`ORS_API_KEY`), para a distância das rotas pelas estradas. Sem ela, vale a estimativa pelo fator de estrada. Ver a Etapa 9 de [configuracao-hostinger.md](configuracao-hostinger.md).
 - [ ] E-mail SMTP de produção (sem ele, os links de criação de senha não chegam).
 - [ ] Proposta comercial publicada precisa ser atualizada: ainda cita app nativo e portal PWA.

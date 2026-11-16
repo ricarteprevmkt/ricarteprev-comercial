@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\SystemSetting;
+use App\Support\RoadDistance;
 use Flux\Flux;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -107,6 +108,7 @@ class Settings extends Component
         return view('livewire.admin.settings', [
             'groups' => $groups,
             'choices' => self::CHOICES,
+            'roadRouting' => ['enabled' => RoadDistance::enabled(), 'paused' => RoadDistance::paused()],
             'groupLabels' => ['rotas' => 'Rotas e deslocamento', 'funil' => 'Funil comercial', 'agenda' => 'Agenda', 'financeiro' => 'Custos e resultados', 'indicacoes' => 'Indicações'],
         ]);
     }

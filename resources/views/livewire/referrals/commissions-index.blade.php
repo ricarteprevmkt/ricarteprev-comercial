@@ -1,7 +1,7 @@
 @php($brl = fn ($v) => 'R$ '.number_format((float) $v, 2, ',', '.'))
 
 <div class="flex flex-col gap-6">
-    <x-page-header title="Indicadores regionais" subtitle="Comissões geradas pelas regras de cada indicador: previstas, aprovadas e pagas." />
+    <x-page-header title="Parceiros regionais" subtitle="Comissões geradas pelas regras de cada parceiro: previstas, aprovadas e pagas." />
 
     <x-referral-tabs />
 
@@ -20,8 +20,8 @@
                     <flux:select.option :value="$status->value">{{ $status->label() }}</flux:select.option>
                 @endforeach
             </flux:select>
-            <flux:select wire:model.live="indicatorFilter" class="max-w-56" aria-label="Indicador">
-                <flux:select.option value="">Todos os indicadores</flux:select.option>
+            <flux:select wire:model.live="indicatorFilter" class="max-w-56" aria-label="Parceiro">
+                <flux:select.option value="">Todos os parceiros</flux:select.option>
                 @foreach ($indicators as $indicator)
                     <flux:select.option :value="$indicator->id">{{ $indicator->name }}</flux:select.option>
                 @endforeach
@@ -30,11 +30,11 @@
 
         @if ($this->commissions->isEmpty())
             <x-empty-state icon="banknotes" title="Nenhuma comissão"
-                description="As comissões são geradas automaticamente quando um contrato de cliente indicado é assinado ou recebido, conforme a regra do indicador." />
+                description="As comissões são geradas automaticamente quando um contrato de cliente indicado é assinado ou recebido, conforme a regra do parceiro." />
         @else
             <flux:table :paginate="$this->commissions" class="px-4">
                 <flux:table.columns>
-                    <flux:table.column>Indicador</flux:table.column>
+                    <flux:table.column>Parceiro</flux:table.column>
                     <flux:table.column class="max-md:hidden">Contrato</flux:table.column>
                     <flux:table.column>Situação</flux:table.column>
                     <flux:table.column align="end">Valor</flux:table.column>

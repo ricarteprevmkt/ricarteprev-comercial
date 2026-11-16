@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-6">
-    <x-page-header title="Indicadores regionais" subtitle="Indicações recebidas e como cada uma está evoluindo no funil.">
+    <x-page-header title="Parceiros regionais" subtitle="Indicações recebidas e como cada uma está evoluindo no funil.">
         <x-slot:actions>
             @can('referrals.create')
                 <flux:button variant="primary" icon="plus" wire:click="$dispatch('referral-form:create')">Registrar indicação</flux:button>
@@ -19,8 +19,8 @@
                 @endforeach
             </flux:select>
             @if ($indicators->isNotEmpty())
-                <flux:select wire:model.live="indicatorFilter" class="max-w-52" aria-label="Indicador">
-                    <flux:select.option value="">Todos os indicadores</flux:select.option>
+                <flux:select wire:model.live="indicatorFilter" class="max-w-52" aria-label="Parceiro">
+                    <flux:select.option value="">Todos os parceiros</flux:select.option>
                     @foreach ($indicators as $indicator)
                         <flux:select.option :value="$indicator->id">{{ $indicator->name }}</flux:select.option>
                     @endforeach
@@ -43,7 +43,7 @@
                 <flux:table.columns>
                     <flux:table.column>Indicado</flux:table.column>
                     <flux:table.column>Situação</flux:table.column>
-                    <flux:table.column class="max-md:hidden">Indicador</flux:table.column>
+                    <flux:table.column class="max-md:hidden">Parceiro</flux:table.column>
                     <flux:table.column class="max-lg:hidden">Responsável</flux:table.column>
                     <flux:table.column class="max-lg:hidden">Data</flux:table.column>
                     <flux:table.column align="end"><span class="sr-only">Ações</span></flux:table.column>

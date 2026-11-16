@@ -8,7 +8,7 @@ Ao final de cada etapa há um **"Me envie"**: o que preciso receber para seguir.
 
 ## Etapa 1. Escolher o endereço do sistema
 
-Sugestão: um subdomínio, como `comercial.ricarteprev.com.br`, para não misturar com o site institucional.
+Sugestão: um subdomínio, como `comercial.ricarteprev.com`, para não misturar com o site institucional.
 
 1. hPanel → **Sites** → no site da Ricarte, clique em **Painel**.
 2. Menu lateral → **Domínios** → **Subdomínios**.
@@ -39,7 +39,7 @@ O sistema e o banco ficam no mesmo servidor, então o host será `localhost`. N�
 ## Etapa 3. Ajustar a versão e as extensões do PHP
 
 1. No painel do site → **Avançado** → **Configuração do PHP**.
-2. Aba **Versão do PHP:** selecione **8.3** (ou 8.4, se disponível) e salve.
+2. Aba **Versão do PHP:** selecione **8.5**, a mesma da linha de comando do servidor (conferida na Etapa 5), e salve. Versões a partir da 8.3 funcionam, mas o site e a linha de comando devem usar a mesma.
 3. Aba **Extensões do PHP:** confirme que estas estão marcadas e salve:
 
    | Extensão | Para quê |
@@ -151,11 +151,34 @@ Com as etapas 1 a 6 feitas, sigo junto com você o roteiro de [hostinger.md](hos
 
 1. **Cron:** painel do site → **Avançado** → **Cron Jobs** → tipo **Personalizado** → comando:
    ```
-   cd /home/USUARIO/domains/DOMINIO/ricarteprev && php artisan schedule:run >> /dev/null 2>&1
+   cd /home/u316363488/domains/ricarteprev.com/ricarteprev && php artisan schedule:run >> /dev/null 2>&1
    ```
-   Frequência: **a cada minuto** (`* * * * *`). Troque `USUARIO` e `DOMINIO` pelos seus dados.
-2. **SSL:** painel do site → **Segurança** → **SSL** → instale para `comercial.ricarteprev.com.br` e ative **Forçar HTTPS**.
-3. **E-mail:** painel → **Emails** → crie, por exemplo, `sistema@ricarteprev.com.br`. Os dados SMTP são `smtp.hostinger.com`, porta `465`, SSL. A senha vai no `.env` do servidor. Sem isso, os links de criação de senha não chegam aos usuários.
+   Frequência: **a cada minuto** (`* * * * *`). (Caminho conferido na Etapa 5.)
+2. **SSL:** painel do site → **Segurança** → **SSL** → instale para `comercial.ricarteprev.com` e ative **Forçar HTTPS**.
+3. **E-mail:** painel → **Emails** → crie, por exemplo, `sistema@ricarteprev.com`. Os dados SMTP são `smtp.hostinger.com`, porta `465`, SSL. A senha vai no `.env` do servidor. Sem isso, os links de criação de senha não chegam aos usuários.
+
+## Etapa 9. Distância das rotas pelas estradas (OpenRouteService)
+
+Sem esta etapa o sistema funciona, mas a distância das rotas é estimada (linha reta × fator de estrada). Com ela, a distância passa a ser a das estradas. É gratuito até 2.000 rotas por dia, bem acima do uso da equipe.
+
+1. Acesse **openrouteservice.org** → **Sign up** e crie a conta com um e-mail da Ricarte Prev. Confirme o e-mail recebido.
+2. Entre no painel (**Dashboard**) → aba **Tokens**.
+3. Em **Token type**, deixe **Standard**; em **Token name**, escreva `ricarteprev-comercial`; clique em **CREATE TOKEN**.
+4. Copie a chave que aparece (um texto longo).
+5. No servidor, pelo SSH:
+   ```bash
+   cd ~/domains/ricarteprev.com/ricarteprev
+   nano .env
+   ```
+   Na linha `ORS_API_KEY=`, cole a chave logo depois do `=`. Salve com **Ctrl+O**, **Enter**, **Ctrl+X**.
+6. Ainda no SSH, aplique e recalcule as rotas dos últimos 30 dias:
+   ```bash
+   php artisan config:cache
+   php artisan app:rebuild-routes
+   ```
+7. Confira em **Parâmetros → Rotas e deslocamento**: a mensagem deve ser "Distâncias calculadas pelas estradas".
+
+A chave é um segredo: não envie para mim nem por WhatsApp; ela fica só no `.env` do servidor. Para o serviço só vão coordenadas (latitude e longitude), sem nome ou dado de cliente.
 
 ---
 
@@ -169,3 +192,4 @@ Com as etapas 1 a 6 feitas, sigo junto com você o roteiro de [hostinger.md](hos
 | 4 | "SSH funcionando" |
 | 5 | Saída dos comandos |
 | 6 | "Repositório criado" e depois "deploy key ok" |
+| 9 | "Rotas pelas estradas ok" (a chave fica só no servidor) |

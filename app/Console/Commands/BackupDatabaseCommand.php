@@ -39,7 +39,9 @@ class BackupDatabaseCommand extends Command
         $file = self::DIR.'/'.$config['database'].'-'.now()->format('Ymd-His').'.sql.gz';
         $path = $disk->path($file);
 
-        $dumper = $this->option('php') ? null : (new ExecutableFinder)->find('mysqldump');
+        // No MariaDB (Hostinger) o nome atual é mariadb-dump; mysqldump fica como alternativa.
+        $finder = new ExecutableFinder;
+        $dumper = $this->option('php') ? null : ($finder->find('mariadb-dump') ?? $finder->find('mysqldump'));
         $ok = $dumper ? $this->withMysqldump($dumper, $config, $path) : $this->withPhp($path);
 
         if (! $ok || ! is_file($path) || filesize($path) < 100) {

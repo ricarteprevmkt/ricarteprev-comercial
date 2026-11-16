@@ -53,8 +53,8 @@
         <x-stat label="Visitas programadas" :value="$s['planned']" icon="calendar-days" :hint="$s['pending'].' pendente(s)'" />
         <x-stat label="Concluídas" :value="$s['done']" icon="check-circle"
             :hint="$s['planned'] ? number_format($s['done'] / $s['planned'] * 100, 0).'% das programadas' : 'nenhuma programada'" />
-        <x-stat label="Distância estimada" :value="$km($s['km_estimated'])" icon="map"
-            :hint="($s['km_reported'] > 0 ? $km($s['km_reported']).' informados' : 'pelo fator de estrada').($s['approximate'] ? ' · inclui locais aproximados' : '')" />
+        <x-stat :label="$s['by_road'] ? 'Distância pelas estradas' : 'Distância estimada'" :value="$km($s['km_estimated'])" icon="map"
+            :hint="($s['km_reported'] > 0 ? $km($s['km_reported']).' informados' : ($s['by_road'] ? 'rota planejada' : 'linha reta × fator de estrada')).($s['approximate'] ? ' · inclui locais aproximados' : '')" />
         <x-stat label="Custos do dia" :value="$brl($s['expenses_actual'])" icon="banknotes"
             :hint="$s['cost_estimated'] !== null ? 'estimado do deslocamento: '.$brl($s['cost_estimated']) : 'informe o custo por km em Parâmetros'" />
     </div>
@@ -172,7 +172,7 @@
                 <span class="flex items-center gap-1"><span class="size-2.5 rounded-full border-2 border-white bg-brand-900 ring-1 ring-zinc-300"></span>Último check-in</span>
             </div>
             <p class="border-t border-zinc-100 px-5 py-2 text-xs text-zinc-500">
-                Distância estimada em linha reta × fator de estrada. Não há rastreamento em tempo real: a posição do executivo é a do último check-in.
+                {{ $s['by_road'] ? 'Distância calculada pelas estradas (OpenRouteService); no mapa, as linhas ligam as paradas em ordem.' : 'Distância estimada em linha reta × fator de estrada.' }} Não há rastreamento em tempo real: a posição do executivo é a do último check-in.
             </p>
         </x-card>
     </div>

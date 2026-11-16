@@ -40,7 +40,7 @@ class Audit extends Component
         'perfis' => 'Perfis e permissões',
         'executivos' => 'Executivos',
         'metas' => 'Metas',
-        'indicadores' => 'Indicadores',
+        'indicadores' => 'Parceiros',
         'comissoes' => 'Regras de comissão',
         'regioes' => 'Regiões',
         'cidades' => 'Cidades',

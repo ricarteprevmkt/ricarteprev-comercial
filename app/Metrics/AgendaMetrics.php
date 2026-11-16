@@ -33,7 +33,7 @@ final class AgendaMetrics
 
     /**
      * @return array{planned: int, done: int, pending: int, not_done: int, without_result: int,
-     *     km_estimated: float, km_reported: float, cost_estimated: string|null, expenses_actual: string, approximate: bool}
+     *     km_estimated: float, km_reported: float, cost_estimated: string|null, expenses_actual: string, approximate: bool, by_road: bool}
      */
     public function summary(): array
     {
@@ -62,6 +62,8 @@ final class AgendaMetrics
                 ->whereBetween('spent_on', [$this->from->toDateString(), $this->to->toDateString()])
                 ->sum('amount') ?: '0'),
             'approximate' => (clone $routes)->where('has_approximate_points', true)->exists(),
+            // Todas as rotas do intervalo calculadas pelas estradas (nenhuma pelo fator).
+            'by_road' => (clone $routes)->where('km_source', 'road')->exists() && ! (clone $routes)->where('km_source', 'estimate')->exists(),
         ];
     }
 

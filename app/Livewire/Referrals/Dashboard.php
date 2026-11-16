@@ -14,10 +14,10 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 
 /**
- * Painel de indicadores regionais. Números calculados por ReferralMetrics a
+ * Painel de parceiros regionais. Números calculados por ReferralMetrics a
  * partir das indicações, do funil e das comissões registradas.
  */
-#[Title('Indicadores regionais')]
+#[Title('Parceiros regionais')]
 class Dashboard extends Component
 {
     #[Url(as: 'regiao', except: '')]

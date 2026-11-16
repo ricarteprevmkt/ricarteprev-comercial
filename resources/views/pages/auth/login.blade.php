@@ -17,7 +17,7 @@
                 required
                 autofocus
                 autocomplete="email"
-                placeholder="nome@ricarteprev.com.br"
+                placeholder="nome@ricarteprev.com"
             />
 
             <div class="relative">

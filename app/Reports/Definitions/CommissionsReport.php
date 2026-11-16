@@ -7,7 +7,7 @@ use App\Models\RegionalIndicator;
 use App\Reports\Report;
 use App\Reports\ReportFilters;
 
-/** 12. Comissões por indicador. */
+/** 12. Comissões por parceiro. */
 final class CommissionsReport extends Report
 {
     public function key(): string
@@ -17,7 +17,7 @@ final class CommissionsReport extends Report
 
     public function title(): string
     {
-        return 'Comissões por indicador';
+        return 'Comissões por parceiro';
     }
 
     public function description(): string
@@ -34,7 +34,7 @@ final class CommissionsReport extends Report
     {
         return [
             'generated' => ['Gerada em', 'text'],
-            'indicator' => ['Indicador', 'text'],
+            'indicator' => ['Parceiro', 'text'],
             'client' => ['Cliente', 'text'],
             'contract' => ['Contrato', 'text'],
             'rule' => ['Regra', 'text'],

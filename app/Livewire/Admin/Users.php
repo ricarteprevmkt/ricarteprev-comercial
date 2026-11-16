@@ -93,7 +93,7 @@ class Users extends Component
         $role = Role::from($this->form['role']);
 
         if ($user && $this->roleIsLocked($user) && $user->primaryRole() !== $role) {
-            $this->addError('form.role', 'O perfil deste usuário acompanha o cadastro de executivo ou indicador. Altere por lá.');
+            $this->addError('form.role', 'O perfil deste usuário acompanha o cadastro de executivo ou parceiro. Altere por lá.');
 
             return;
         }
@@ -123,7 +123,7 @@ class Users extends Component
         $role = $user->primaryRole() ?? Role::Manager;
 
         if ($this->roleIsLocked($user)) {
-            Flux::toast(variant: 'warning', text: 'Use o cadastro de executivos ou de indicadores para mudar o status deste acesso.');
+            Flux::toast(variant: 'warning', text: 'Use o cadastro de executivos ou de parceiros para mudar o status deste acesso.');
 
             return;
         }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Rota estimada do dia de um executivo. É derivada da agenda e recalculada
+ * Rota do dia de um executivo. É derivada da agenda e recalculada
  * por App\Actions\Agenda\BuildRoute sempre que a agenda do dia muda.
  *
  * @property int $id
@@ -17,11 +17,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $km_estimated
  * @property int $stops_count
  * @property bool $has_approximate_points
+ * @property string|null $km_source road (pelas estradas) ou estimate (linha reta × fator)
  */
 class Route extends Model
 {
     /** @var list<string> */
-    protected $fillable = ['executive_id', 'date', 'km_estimated', 'stops_count', 'has_approximate_points'];
+    protected $fillable = ['executive_id', 'date', 'km_estimated', 'stops_count', 'has_approximate_points', 'km_source'];
 
     protected function casts(): array
     {

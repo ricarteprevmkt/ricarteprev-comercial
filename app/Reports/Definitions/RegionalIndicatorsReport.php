@@ -11,22 +11,22 @@ use App\Reports\Report;
 use App\Reports\ReportFilters;
 use Illuminate\Support\Facades\DB;
 
-/** 11. Indicadores regionais. */
+/** 11. Parceiros regionais. */
 final class RegionalIndicatorsReport extends Report
 {
     public function key(): string
     {
-        return 'indicadores-regionais';
+        return 'parceiros-regionais';
     }
 
     public function title(): string
     {
-        return 'Indicadores regionais';
+        return 'Parceiros regionais';
     }
 
     public function description(): string
     {
-        return 'Indicações válidas, evolução no funil e comissões de cada indicador.';
+        return 'Indicações válidas, evolução no funil e comissões de cada parceiro.';
     }
 
     public function filters(): array
@@ -37,7 +37,7 @@ final class RegionalIndicatorsReport extends Report
     public function columns(): array
     {
         return [
-            'name' => ['Indicador', 'text'],
+            'name' => ['Parceiro', 'text'],
             'city' => ['Cidade', 'text'],
             'total' => ['Indicações', 'int'],
             'qualified' => ['Qualificadas', 'int'],

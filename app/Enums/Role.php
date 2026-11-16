@@ -18,7 +18,7 @@ enum Role: string
             self::Admin => 'Administrador',
             self::Manager => 'Gestor comercial',
             self::Executive => 'Executivo comercial',
-            self::Indicator => 'Indicador regional',
+            self::Indicator => 'Parceiro regional',
         };
     }
 }

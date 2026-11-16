@@ -24,13 +24,13 @@ final class Navigation
                 ['label' => 'Funil comercial', 'route' => 'funnel.index', 'icon' => 'funnel', 'abilities' => ['funnel.view_all', 'funnel.view_own'], 'active' => 'funnel.*'],
                 ['label' => 'Custos e resultados', 'route' => 'finance.index', 'icon' => 'chart-bar', 'abilities' => ['finance.view', 'expenses.view_own'], 'active' => 'finance.*'],
                 // Equipe com visão geral: painel regional. Executivo: lista das indicações que atende.
-                ['label' => 'Indicadores regionais', 'route' => 'referrals.index', 'icon' => 'map-pin', 'abilities' => ['referrals.view_all'], 'active' => ['referrals.index', 'referrals.list', 'referrals.commissions', 'referrals.indicators.show']],
+                ['label' => 'Parceiros regionais', 'route' => 'referrals.index', 'icon' => 'map-pin', 'abilities' => ['referrals.view_all'], 'active' => ['referrals.index', 'referrals.list', 'referrals.commissions', 'referrals.indicators.show']],
                 ['label' => 'Indicações', 'route' => 'referrals.list', 'icon' => 'map-pin', 'abilities' => ['referrals.create'], 'requires_executive' => true],
                 ['label' => 'Minhas indicações', 'route' => 'referrals.mine', 'icon' => 'map-pin', 'abilities' => ['referrals.view_own'], 'hidden_for' => 'referrals.view_all'],
                 ['label' => 'Relatórios', 'route' => 'reports.index', 'icon' => 'document-chart-bar', 'abilities' => ['reports.view']],
             ]],
             ['group' => 'Cadastros', 'items' => [
-                ['label' => 'Indicadores', 'route' => 'referrals.indicators', 'icon' => 'user-group', 'abilities' => ['indicators.manage']],
+                ['label' => 'Parceiros', 'route' => 'referrals.indicators', 'icon' => 'user-group', 'abilities' => ['indicators.manage']],
                 ['label' => 'Regras de comissão', 'route' => 'referrals.commission-rules', 'icon' => 'banknotes', 'abilities' => ['commissions.manage']],
                 ['label' => 'Catálogos', 'route' => 'admin.catalogs', 'icon' => 'list-bullet', 'abilities' => ['settings.manage']],
             ]],

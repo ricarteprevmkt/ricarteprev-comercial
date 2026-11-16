@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-6">
-    <x-page-header title="Indicadores regionais" subtitle="Moradores e parceiros locais que indicam potenciais clientes.">
+    <x-page-header title="Parceiros regionais" subtitle="Moradores e parceiros locais que indicam potenciais clientes.">
         <x-slot:actions>
-            <flux:button variant="primary" icon="plus" wire:click="create">Novo indicador</flux:button>
+            <flux:button variant="primary" icon="plus" wire:click="create">Novo parceiro</flux:button>
         </x-slot:actions>
     </x-page-header>
 
@@ -25,14 +25,14 @@
         </div>
 
         @if ($this->indicators->isEmpty())
-            <x-empty-state icon="map-pin" title="Nenhum indicador cadastrado"
+            <x-empty-state icon="map-pin" title="Nenhum parceiro cadastrado"
                 description="Cadastre quem indica clientes nas cidades. As indicações e comissões passam a ser registradas na Fase 5.">
-                <flux:button size="sm" variant="primary" icon="plus" wire:click="create" class="mt-2">Cadastrar indicador</flux:button>
+                <flux:button size="sm" variant="primary" icon="plus" wire:click="create" class="mt-2">Cadastrar parceiro</flux:button>
             </x-empty-state>
         @else
             <flux:table :paginate="$this->indicators" class="px-4">
                 <flux:table.columns>
-                    <flux:table.column>Indicador</flux:table.column>
+                    <flux:table.column>Parceiro</flux:table.column>
                     <flux:table.column class="max-md:hidden">Cidade</flux:table.column>
                     <flux:table.column class="max-lg:hidden">Regra de comissão</flux:table.column>
                     <flux:table.column>Status</flux:table.column>
@@ -76,7 +76,7 @@
 
     <flux:modal name="indicator-form" class="w-full max-w-2xl">
         <form wire:submit="save" class="flex flex-col gap-6">
-            <flux:heading size="lg">{{ $editingId ? 'Editar indicador' : 'Novo indicador' }}</flux:heading>
+            <flux:heading size="lg">{{ $editingId ? 'Editar parceiro' : 'Novo parceiro' }}</flux:heading>
 
             <fieldset class="grid gap-4 sm:grid-cols-2">
                 <legend class="mb-2 text-sm font-semibold text-brand-900 sm:col-span-2">Contato</legend>
@@ -111,7 +111,7 @@
                         <flux:select.option :value="$region->id">{{ $region->name }}</flux:select.option>
                     @endforeach
                 </flux:select>
-                <flux:select wire:model="form.referral_channel_id" label="Tipo de indicador">
+                <flux:select wire:model="form.referral_channel_id" label="Tipo de parceiro">
                     <flux:select.option value="">Selecione</flux:select.option>
                     @foreach ($channels as $channel)
                         <flux:select.option :value="$channel->id">{{ $channel->name }}</flux:select.option>
@@ -124,7 +124,7 @@
 
             <fieldset class="grid gap-4 sm:grid-cols-2">
                 <legend class="mb-2 text-sm font-semibold text-brand-900 sm:col-span-2">Relação comercial</legend>
-                <flux:select wire:model="form.default_executive_id" label="Executivo que atende as indicações" class="sm:col-span-2" description="As novas indicações deste indicador vão para este executivo.">
+                <flux:select wire:model="form.default_executive_id" label="Executivo que atende as indicações" class="sm:col-span-2" description="As novas indicações deste parceiro vão para este executivo.">
                     <flux:select.option value="">Definir a cada indicação</flux:select.option>
                     @foreach ($executives as $executive)
                         <flux:select.option :value="$executive->id">{{ $executive->user->name }}</flux:select.option>

@@ -25,7 +25,7 @@ Etapas, na ordem: Contato → Qualificado → Atendimento agendado → Proposta 
 - **Visitas realizadas:** visitas concluídas com horário agendado no período.
 - **Visitas planejadas:** visitas agendadas para o período, exceto canceladas e as substituídas por reagendamento.
 - **Visitas pendentes:** agendadas, confirmadas ou em andamento.
-- **Distância estimada:** soma das rotas do período (linha reta × fator de estrada). Pontos sem endereço marcado usam o centro da cidade e deixam a rota marcada como aproximada.
+- **Distância da rota:** soma das rotas planejadas do período, pelas estradas (OpenRouteService). Quando o serviço não está disponível, linha reta × fator de estrada, e a tela indica "Distância estimada". É a distância planejada entre as paradas (partindo da cidade base, sem a volta), não a rodada de fato: essa é o km informado pelo executivo ao concluir a visita. Pontos sem endereço marcado usam o centro da cidade e deixam a rota marcada como aproximada.
 - **Km informados:** soma do km registrado nas visitas concluídas. Fica sempre separado do estimado.
 - **Custo estimado do deslocamento:** distância estimada × custo por km (parâmetro). Sem o parâmetro, não é exibido.
 - **Despesas do dia:** despesas efetivas lançadas na data, exceto as recusadas.
@@ -57,19 +57,19 @@ Etapas, na ordem: Contato → Qualificado → Atendimento agendado → Proposta 
 - **Receita prevista:** soma da receita prevista de cada contrato assinado; quando o contrato não tem receita prevista, usa o valor do contrato.
 - **Custo por visita:** custos comerciais atribuídos ao período ÷ visitas concluídas no período.
 - **Custo por contrato:** custos comerciais atribuídos ao período ÷ contratos assinados no período.
-- **Margem de contribuição estimada:** receita considerada − despesas aprovadas de natureza variável − comissões de indicadores geradas no período (exceto canceladas). A receita considerada é a prevista ou a recebida, conforme `finance.margin_revenue_basis`. O card mostra qual base está em uso. Despesas de natureza fixa ficam fora da margem.
+- **Margem de contribuição estimada:** receita considerada − despesas aprovadas de natureza variável − comissões de parceiros geradas no período (exceto canceladas). A receita considerada é a prevista ou a recebida, conforme `finance.margin_revenue_basis`. O card mostra qual base está em uso. Despesas de natureza fixa ficam fora da margem.
 - Se o custo da equipe (salários) entra no custo por contrato **(a validar)**: hoje, só se for lançado na categoria "Equipe comercial".
 
 ## Indicações
 
 - **Base (coorte):** indicações válidas (não duplicadas) com data no período.
 - **Leads qualificados / oportunidades geradas:** indicações da base que chegaram a "Qualificada" / "Oportunidade gerada" (etapa mais avançada alcançada).
-- **Contratos originados:** contratos assinados no período com indicador atribuído.
+- **Contratos originados:** contratos assinados no período com parceiro atribuído.
 - **Conversão das indicações:** indicações da base que chegaram a "Contrato assinado" ÷ base × 100.
 - **Comissões previstas:** comissões geradas no período ainda não aprovadas. **Aprovadas:** aprovadas no período. **Pagas:** pagamentos registrados no período.
 - **Mapa:** círculo no centro de cada município, com tamanho e cor pela quantidade de indicações (faixas 1–7, 8–15, 16–25, mais de 25).
 
-- Produtividade de indicadores é medida separadamente da produtividade dos executivos.
-- **Conversão do indicador:** contratos originados ÷ indicações × 100.
-- **Duplicidade:** um contato já existente indicado de novo dentro de `referrals.attribution_window_days` mantém o primeiro indicador. A nova indicação fica registrada como duplicada, para análise.
-- Comissão só existe quando há uma regra ativa associada ao indicador. Nenhuma indicação gera comissão automaticamente.
+- Produtividade de parceiros é medida separadamente da produtividade dos executivos.
+- **Conversão do parceiro:** contratos originados ÷ indicações × 100.
+- **Duplicidade:** um contato já existente indicado de novo dentro de `referrals.attribution_window_days` mantém o primeiro parceiro. A nova indicação fica registrada como duplicada, para análise.
+- Comissão só existe quando há uma regra ativa associada ao parceiro. Nenhuma indicação gera comissão automaticamente.

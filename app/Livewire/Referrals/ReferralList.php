@@ -33,7 +33,7 @@ class ReferralList extends Component
     #[Url(as: 'situacao', except: '')]
     public string $statusFilter = '';
 
-    #[Url(as: 'indicador', except: '')]
+    #[Url(as: 'parceiro', except: '')]
     public string $indicatorFilter = '';
 
     #[Url(as: 'regiao', except: '')]

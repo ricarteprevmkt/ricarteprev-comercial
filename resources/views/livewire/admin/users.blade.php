@@ -52,7 +52,7 @@
                                 @if ($user->executive_exists)
                                     <span class="ms-1 text-xs text-zinc-500">vinculado a executivo</span>
                                 @elseif ($user->regional_indicator_exists)
-                                    <span class="ms-1 text-xs text-zinc-500">vinculado a indicador</span>
+                                    <span class="ms-1 text-xs text-zinc-500">vinculado a parceiro</span>
                                 @endif
                             </flux:table.cell>
                             <flux:table.cell>
@@ -83,7 +83,7 @@
         <form wire:submit="save" class="flex flex-col gap-5">
             <div>
                 <flux:heading size="lg">{{ $editingId ? 'Editar usuário' : 'Novo usuário' }}</flux:heading>
-                <flux:text class="mt-1">Executivos e indicadores com acesso também podem ser criados pelos próprios cadastros.</flux:text>
+                <flux:text class="mt-1">Executivos e parceiros com acesso também podem ser criados pelos próprios cadastros.</flux:text>
             </div>
 
             <flux:input wire:model="form.name" label="Nome completo" required />

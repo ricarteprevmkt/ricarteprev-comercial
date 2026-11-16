@@ -25,7 +25,7 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
-#[Title('Cadastro de indicadores')]
+#[Title('Cadastro de parceiros')]
 class Indicators extends Component
 {
     use LoadsLocationOptions, WithFileUploads, WithPagination;
@@ -128,10 +128,10 @@ class Indicators extends Component
             'form.registered_at' => 'data de cadastro', 'photo' => 'foto',
         ]);
 
-        // O WhatsApp identifica o indicador: não pode haver dois cadastros com o mesmo número.
+        // O WhatsApp identifica o parceiro: não pode haver dois cadastros com o mesmo número.
         $whatsapp = Phone::normalize($this->form['whatsapp']);
         if (RegionalIndicator::withTrashed()->where('whatsapp', $whatsapp)->whereKeyNot($indicator->id ?? 0)->exists()) {
-            $this->addError('form.whatsapp', 'Já existe um indicador cadastrado com este WhatsApp.');
+            $this->addError('form.whatsapp', 'Já existe um parceiro cadastrado com este WhatsApp.');
 
             return;
         }
@@ -159,7 +159,7 @@ class Indicators extends Component
         }
 
         Flux::modal('indicator-form')->close();
-        $message = $indicator ? 'Indicador atualizado.' : 'Indicador cadastrado.';
+        $message = $indicator ? 'Parceiro atualizado.' : 'Parceiro cadastrado.';
         if ($result['reset_link_sent']) {
             $message .= ' Enviamos o link de criação de senha.';
         }

@@ -29,7 +29,7 @@ final class ReportFilterLabels
             $labels['Cidade'] = (string) City::query()->find($f->cityId)?->label();
         }
         if ($f->indicatorId) {
-            $labels['Indicador'] = (string) RegionalIndicator::withTrashed()->whereKey($f->indicatorId)->value('name');
+            $labels['Parceiro'] = (string) RegionalIndicator::withTrashed()->whereKey($f->indicatorId)->value('name');
         }
         if ($f->sourceId) {
             $labels['Origem'] = (string) LeadSource::query()->whereKey($f->sourceId)->value('name');

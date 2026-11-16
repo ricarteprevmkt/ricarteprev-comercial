@@ -25,9 +25,8 @@
             <livewire:period-selector />
         @endif
 
-        <div class="hidden items-center gap-3 lg:flex">
+        <div class="hidden items-center lg:flex">
             <livewire:notification-bell />
-            <x-user-menu :show-name="true" />
         </div>
     </div>
 </header>

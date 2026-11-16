@@ -18,7 +18,7 @@ use Livewire\WithPagination;
 
 /**
  * Regiões comerciais e marcação das cidades atendidas. Só cidades atendidas
- * aparecem nos formulários de executivos, indicadores, leads e visitas.
+ * aparecem nos formulários de executivos, parceiros, leads e visitas.
  */
 #[Title('Regiões e cidades')]
 class RegionsCities extends Component

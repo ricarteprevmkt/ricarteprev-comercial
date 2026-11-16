@@ -50,20 +50,6 @@ const builders = {
         };
     },
 
-    /** Funil horizontal. data: {labels, values} */
-    funnelBars(data) {
-        return {
-            ...baseOptions(),
-            chart: { ...baseOptions().chart, type: 'bar', height: 260 },
-            series: [{ name: 'Quantidade', data: data.values }],
-            colors: [PALETTE.navy, '#1c3a70', PALETTE.blue, PALETTE.sky, PALETTE.gold],
-            plotOptions: { bar: { horizontal: true, distributed: true, borderRadius: 4, barHeight: '70%' } },
-            dataLabels: { enabled: true, style: { fontSize: '12px', fontWeight: 600 } },
-            legend: { show: false },
-            xaxis: { categories: data.labels, labels: { formatter: (v) => Math.round(v) } },
-        };
-    },
-
     /** Duas linhas (visitas e contratos). data: {labels, visits, contracts} */
     visitsContracts(data) {
         return {

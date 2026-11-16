@@ -47,7 +47,7 @@ use RuntimeException;
  *   php artisan db:seed --class=LocalDevSeeder
  *   php artisan db:seed --class=DemoSeeder
  *
- * Gera 90 dias de operação: 4 executivos, 6 indicadores, contatos,
+ * Gera 90 dias de operação: 4 executivos, 6 parceiros, contatos,
  * oportunidades em todas as etapas, visitas, contratos, recebimentos,
  * despesas, indicações e comissões, sempre pelas regras do sistema.
  */

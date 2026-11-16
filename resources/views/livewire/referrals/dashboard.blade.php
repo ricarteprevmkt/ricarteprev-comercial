@@ -5,7 +5,7 @@
 @endphp
 
 <div class="flex flex-col gap-6">
-    <x-page-header title="Indicadores regionais" subtitle="Desempenho das indicações por região e o impacto das parcerias locais." icon="map-pin" :period="true">
+    <x-page-header title="Parceiros regionais" subtitle="Desempenho das indicações por região e o impacto das parcerias locais." icon="map-pin" :period="true">
         <x-slot:actions>
             <flux:select wire:model.live="regionFilter" size="sm" class="min-w-44" aria-label="Região">
                 <flux:select.option value="">Todas as regiões</flux:select.option>

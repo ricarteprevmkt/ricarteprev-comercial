@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\DB;
  * Registra uma indicação.
  *
  * - Contato novo: cria o contato (origem "Indicações", "Indicado por" este
- *   indicador) e a indicação vale para o indicador.
+ *   parceiro) e a indicação vale para o parceiro.
  * - Contato já existente: a indicação fica registrada como duplicada e a
  *   atribuição não muda, exceto quando a indicação anterior válida passou da
  *   janela de atribuição (parâmetro) e o contato ainda não é cliente: aí a

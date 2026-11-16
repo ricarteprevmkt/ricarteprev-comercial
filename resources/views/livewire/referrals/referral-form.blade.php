@@ -7,7 +7,7 @@
             </div>
 
             @if ($team)
-                <flux:select wire:model="form.regional_indicator_id" label="Indicador" required class="sm:col-span-2">
+                <flux:select wire:model="form.regional_indicator_id" label="Parceiro" required class="sm:col-span-2">
                     <flux:select.option value="">Selecione</flux:select.option>
                     @foreach ($indicators as $indicator)
                         <flux:select.option :value="$indicator->id">{{ $indicator->name }}{{ $indicator->city ? ' · '.$indicator->city->name : '' }}</flux:select.option>
@@ -28,13 +28,13 @@
             @if ($team)
                 <flux:input wire:model="form.referred_at" type="date" label="Data da indicação" required />
                 <flux:select wire:model="form.referral_channel_id" label="Canal">
-                    <flux:select.option value="">Do cadastro do indicador</flux:select.option>
+                    <flux:select.option value="">Do cadastro do parceiro</flux:select.option>
                     @foreach ($channels as $channel)
                         <flux:select.option :value="$channel->id">{{ $channel->name }}</flux:select.option>
                     @endforeach
                 </flux:select>
                 <flux:select wire:model="form.executive_id" label="Executivo responsável">
-                    <flux:select.option value="">Do cadastro do indicador</flux:select.option>
+                    <flux:select.option value="">Do cadastro do parceiro</flux:select.option>
                     @foreach ($executives as $executive)
                         <flux:select.option :value="$executive->id">{{ $executive->user->name }}</flux:select.option>
                     @endforeach

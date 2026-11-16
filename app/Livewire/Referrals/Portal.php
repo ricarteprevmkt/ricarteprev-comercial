@@ -11,7 +11,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 /**
- * Área do indicador: registrar indicações e acompanhar o andamento.
+ * Área do parceiro: registrar indicações e acompanhar o andamento.
  *
  * Por proteção de dados, mostra só nome, cidade, data e situação de cada
  * indicação. Desempenho e comissões aparecem só se o administrador liberar

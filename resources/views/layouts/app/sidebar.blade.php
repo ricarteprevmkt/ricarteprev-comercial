@@ -32,9 +32,15 @@
 
             <flux:spacer />
 
-            <p class="px-3 pb-4 text-xs leading-relaxed text-brand-100/60">
-                Mais que benefícios,<br>segurança para<br>o seu futuro.
-            </p>
+            <div class="border-t border-white/10 pt-2">
+                <x-desktop-user-menu />
+            </div>
+
+            <div class="flex flex-col items-center gap-1.5 border-t border-white/10 px-3 pt-3 text-center text-[11px] text-brand-100/60">
+                <span>Desenvolvido por</span>
+                <img src="{{ asset('images/dbase.png') }}" alt="dbase" width="197" height="200" class="h-10 w-auto">
+                <span class="tabular-nums">v{{ config('app.version') }}</span>
+            </div>
         </flux:sidebar>
 
         {{-- Cabeçalho do celular --}}

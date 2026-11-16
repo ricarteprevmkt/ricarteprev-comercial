@@ -55,7 +55,7 @@
                         </flux:select>
                     @endif
                     @if (in_array('indicator', $available, true))
-                        <flux:select wire:model.live="filters.indicator" size="sm" label="Indicador" class="min-w-44">
+                        <flux:select wire:model.live="filters.indicator" size="sm" label="Parceiro" class="min-w-44">
                             <flux:select.option value="">Todos</flux:select.option>
                             @foreach ($indicators as $indicator)
                                 <flux:select.option :value="$indicator->id">{{ $indicator->name }}</flux:select.option>

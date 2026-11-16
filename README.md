@@ -1,6 +1,6 @@
 # Ricarte Prev · Sistema de Gestão Comercial
 
-Gestão de executivos comerciais, visitas externas, funil, custos e indicadores regionais da Ricarte Prev.
+Gestão de executivos comerciais, visitas externas, funil, custos e parceiros regionais da Ricarte Prev.
 
 - Arquitetura e modelo de dados: [docs/arquitetura.md](docs/arquitetura.md)
 - Fórmulas dos indicadores: [docs/metricas.md](docs/metricas.md)
@@ -35,10 +35,10 @@ composer test        # Pint + PHPStan + Pest
 | Fase | Conteúdo | Situação |
 |---|---|---|
 | 1 | Estrutura, autenticação, permissões, layout, migrations iniciais | Concluída |
-| 2 | Cadastros: usuários, executivos, indicadores, regiões, cidades, metas, catálogos, parâmetros, auditoria | Concluída |
+| 2 | Cadastros: usuários, executivos, parceiros, regiões, cidades, metas, catálogos, parâmetros, auditoria | Concluída |
 | 3 | CRM e funil comercial: contatos, oportunidades, histórico, propostas, contratos, recebimentos e painel do funil | Concluída |
 | 4 | Agenda e rotas: visitas, registro em campo, reagendamento, mapa, rota estimada, despesas com comprovante, resumo do dia | Concluída |
-| 5 | Indicadores regionais: indicações, atribuição, acompanhamento pelo funil, painel e mapa, comissões, área do indicador | Concluída |
+| 5 | Parceiros regionais: indicações, atribuição, acompanhamento pelo funil, painel e mapa, comissões, área do parceiro | Concluída |
 | 6 | Custos e resultados: aprovação de despesas, custos por visita/contrato/região/executivo, receita contratada x recebida, margem, gráficos | Concluída |
 | 7 | Painéis: Visão geral (equipe e próprio executivo), desempenho individual, metas, alertas | Concluída |
 | 8 | 12 relatórios com PDF/Excel/CSV, avisos automáticos, backup diário, cabeçalhos de segurança, otimização | Concluída (falta a implantação no servidor) |

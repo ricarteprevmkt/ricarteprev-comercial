@@ -4,8 +4,6 @@
     $stages = $funnel['stages'];
     $prev = $prevFunnel['stages'];
     $icons = ['user', 'check-badge', 'calendar-days', 'document-text', 'document-check'];
-    $max = max(1, $funnel['base']);
-    $barColors = ['bg-brand-900', 'bg-brand-700', 'bg-brand-500', 'bg-brand-400', 'bg-success-500'];
 @endphp
 
 <div class="flex flex-col gap-6">
@@ -51,20 +49,8 @@
         <div class="grid gap-6 xl:grid-cols-3">
             {{-- Funil --}}
             <x-card title="Funil de oportunidades" description="Oportunidades abertas no período e até onde chegaram" class="xl:col-span-2">
-                <ol class="flex flex-col gap-3">
-                    @foreach ($stages as $i => $row)
-                        <li class="grid grid-cols-[9rem_1fr_4.5rem] items-center gap-3 text-sm sm:grid-cols-[12rem_1fr_5rem]">
-                            <span class="font-medium text-zinc-700">{{ $row['stage']->label() }}</span>
-                            <span class="h-7 rounded bg-zinc-100" aria-hidden="true">
-                                <span class="block h-full rounded {{ $barColors[$i] }}" style="width: {{ max(1.5, $row['count'] / $max * 100) }}%"></span>
-                            </span>
-                            <span class="text-end tabular-nums">
-                                <strong class="text-brand-900">{{ $row['count'] }}</strong>
-                                <span class="block text-xs text-zinc-500">{{ $pct($row['share']) }}</span>
-                            </span>
-                        </li>
-                    @endforeach
-                </ol>
+                <x-funnel-chart :stages="array_map(fn ($row) => ['label' => $row['stage']->label(), 'count' => $row['count'], 'note' => $pct($row['share'])], $stages)" />
+                <p class="mt-3 text-xs text-zinc-500">À direita, a parcela do total de contatos que chegou a cada etapa.</p>
             </x-card>
 
             {{-- Conversão por etapa --}}

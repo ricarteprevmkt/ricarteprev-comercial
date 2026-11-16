@@ -47,7 +47,7 @@
             <dl class="flex flex-col divide-y divide-zinc-100 text-sm">
                 <div class="flex justify-between py-2.5"><dt class="text-zinc-600">Receita {{ $s['margin_basis'] === 'received' ? 'recebida' : 'prevista' }}</dt><dd class="tabular-nums font-medium">{{ $brl($s['margin_revenue']) }}</dd></div>
                 <div class="flex justify-between py-2.5"><dt class="text-zinc-600">(−) Despesas variáveis aprovadas</dt><dd class="tabular-nums text-red-700">{{ $brl($s['variable_costs']) }}</dd></div>
-                <div class="flex justify-between py-2.5"><dt class="text-zinc-600">(−) Comissões de indicadores</dt><dd class="tabular-nums text-red-700">{{ $brl($s['commissions']) }}</dd></div>
+                <div class="flex justify-between py-2.5"><dt class="text-zinc-600">(−) Comissões de parceiros</dt><dd class="tabular-nums text-red-700">{{ $brl($s['commissions']) }}</dd></div>
                 <div class="flex justify-between py-3 text-base font-semibold"><dt class="text-brand-900">Margem estimada</dt><dd class="tabular-nums text-brand-900">{{ $brl($s['margin']) }}</dd></div>
             </dl>
             <p class="mt-2 text-xs text-zinc-500">

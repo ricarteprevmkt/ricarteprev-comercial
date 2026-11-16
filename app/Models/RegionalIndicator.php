@@ -16,7 +16,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
- * Indicador regional: morador ou parceiro local que indica potenciais clientes.
+ * Parceiro regional: morador, comerciante ou profissional local que indica potenciais clientes.
  * O acesso ao sistema (user_id) é opcional.
  *
  * @property int $id

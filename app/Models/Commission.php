@@ -11,7 +11,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
- * Comissão de indicador gerada por um evento (contrato assinado ou
+ * Comissão de parceiro gerada por um evento (contrato assinado ou
  * recebimento), conforme a regra vigente no momento da geração.
  *
  * @property int $id

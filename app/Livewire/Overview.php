@@ -37,11 +37,9 @@ class Overview extends Component
         abort_unless(auth()->user()->canAny(['dashboard.view', 'dashboard.view_own']), 403);
     }
 
+    /** O funil é desenhado no servidor: basta renderizar de novo com o novo período. */
     #[On('period-changed')]
-    public function periodChanged(): void
-    {
-        $this->dispatch('overview-funnel', data: $this->funnelChart($this->build()['evolution']));
-    }
+    public function periodChanged(): void {}
 
     /** @return list<int>|null */
     private function scope(): ?array
@@ -59,14 +57,31 @@ class Overview extends Component
 
     /**
      * @param  array<string, mixed>  $evolution
-     * @return array{labels: list<string>, values: list<int>}
+     * @return list<array{label: string, count: int, note: string}>
      */
     private function funnelChart(array $evolution): array
     {
-        return [
-            'labels' => ['Visitas', 'Oportunidades', 'Atendimentos agendados', 'Propostas apresentadas', 'Contratos'],
-            'values' => [$evolution['visits'], $evolution['opportunities'], $evolution['scheduled'], $evolution['proposals'], $evolution['contracts']],
+        $values = [
+            'Visitas' => (int) $evolution['visits'],
+            'Oportunidades' => (int) $evolution['opportunities'],
+            'Atendimentos agendados' => (int) $evolution['scheduled'],
+            'Propostas apresentadas' => (int) $evolution['proposals'],
+            'Contratos' => (int) $evolution['contracts'],
         ];
+
+        $stages = [];
+        $previous = null;
+        foreach ($values as $label => $count) {
+            $note = match (true) {
+                $previous === null => '',
+                $previous === 0 => '—',
+                default => number_format($count / $previous * 100, 1, ',', '.').'%',
+            };
+            $stages[] = ['label' => $label, 'count' => $count, 'note' => $note];
+            $previous = $count;
+        }
+
+        return $stages;
     }
 
     /** @return array<string, mixed> */

@@ -108,7 +108,7 @@ it('registra tentativa de login sem sucesso', function () {
 
 it('mostra a cada perfil a entrada certa de indicações no menu', function () {
     $this->actingAs(userWithRole(Role::Admin))->get(route('admin.users'))
-        ->assertSee('Indicadores regionais')->assertDontSee('Minhas indicações');
+        ->assertSee('Parceiros regionais')->assertDontSee('Minhas indicações');
 
     $this->actingAs(userWithRole(Role::Indicator))->get(route('referrals.mine'))
         ->assertSee('Minhas indicações');

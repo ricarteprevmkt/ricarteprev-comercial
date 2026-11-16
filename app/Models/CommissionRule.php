@@ -13,8 +13,8 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
- * Regra de comissão de indicador. Só gera comissão quando associada a um
- * indicador e quando o evento configurado acontece (Fase 5).
+ * Regra de comissão de parceiro. Só gera comissão quando associada a um
+ * parceiro e quando o evento configurado acontece (Fase 5).
  *
  * @property int $id
  * @property string $name

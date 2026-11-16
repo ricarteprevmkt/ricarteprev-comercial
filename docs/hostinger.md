@@ -28,7 +28,7 @@ Antes, conclua as etapas 1 a 6 de [configuracao-hostinger.md](configuracao-hosti
 1. **SSH:** clone o repositório na pasta do domínio, **fora** do `public_html`:
 
    ```bash
-   cd ~/domains/SEU_DOMINIO
+   cd ~/domains/ricarteprev.com
    git clone git@github.com:USUARIO_GITHUB/ricarteprev-comercial.git ricarteprev
    cd ricarteprev
    cp .env.production.example .env
@@ -41,7 +41,7 @@ Antes, conclua as etapas 1 a 6 de [configuracao-hostinger.md](configuracao-hosti
 2. **Pasta pública:** troque a pasta do subdomínio por um atalho para `public`:
 
    ```bash
-   cd ~/domains/SEU_DOMINIO/public_html
+   cd ~/domains/ricarteprev.com/public_html
    mv comercial comercial_antigo
    ln -s ../ricarteprev/public comercial
    ```
@@ -49,7 +49,7 @@ Antes, conclua as etapas 1 a 6 de [configuracao-hostinger.md](configuracao-hosti
    Se o sistema usar o domínio principal (e não um subdomínio), o atalho substitui o próprio `public_html`:
 
    ```bash
-   cd ~/domains/SEU_DOMINIO
+   cd ~/domains/ricarteprev.com
    mv public_html public_html_antigo
    ln -s ricarteprev/public public_html
    ```
@@ -57,7 +57,7 @@ Antes, conclua as etapas 1 a 6 de [configuracao-hostinger.md](configuracao-hosti
 3. **Banco e administrador:**
 
    ```bash
-   cd ~/domains/SEU_DOMINIO/ricarteprev
+   cd ~/domains/ricarteprev.com/ricarteprev
    bash scripts/deploy.sh
    php artisan app:create-admin
    ```
@@ -65,7 +65,7 @@ Antes, conclua as etapas 1 a 6 de [configuracao-hostinger.md](configuracao-hosti
 4. **hPanel > Avançado > Cron jobs:** adicione, a cada minuto:
 
    ```
-   cd /home/USUARIO/domains/SEU_DOMINIO/ricarteprev && php artisan schedule:run >> /dev/null 2>&1
+   cd /home/u316363488/domains/ricarteprev.com/ricarteprev && php artisan schedule:run >> /dev/null 2>&1
    ```
 
 5. **hPanel > Segurança > SSL:** ative o certificado e force HTTPS.
@@ -84,7 +84,7 @@ git add -A && git commit -m "..." && git push
 No servidor:
 
 ```bash
-cd ~/domains/SEU_DOMINIO/ricarteprev && bash scripts/deploy.sh
+cd ~/domains/ricarteprev.com/ricarteprev && bash scripts/deploy.sh
 ```
 
 ## O que o cron executa
@@ -108,7 +108,7 @@ Para conferir no servidor: `php artisan schedule:list`.
 - **Restaurar** (crie antes um banco vazio no hPanel e use os dados dele):
 
   ```bash
-  gzip -dc storage/app/private/backups/ARQUIVO.sql.gz | mysql -u USUARIO -p NOME_DO_BANCO
+  gzip -dc storage/app/private/backups/ARQUIVO.sql.gz | mysql -u u316363488_comercial -p u316363488_comercial
   ```
 
 - **Cópia fora do servidor:** uma vez por semana, baixe o arquivo mais recente pelo Gerenciador de Arquivos do hPanel (ou `scp`) e guarde em local seguro. Se o servidor for perdido, as cópias que estão nele vão junto.

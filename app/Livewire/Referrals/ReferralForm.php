@@ -14,9 +14,9 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 /**
- * Registro de indicação. O indicador com acesso ao sistema registra as próprias
- * (indicador fixo, executivo definido pelo cadastro dele); a equipe escolhe o
- * indicador e o executivo.
+ * Registro de indicação. O parceiro com acesso ao sistema registra as próprias
+ * (parceiro fixo, executivo definido pelo cadastro dele); a equipe escolhe o
+ * parceiro e o executivo.
  */
 class ReferralForm extends Component
 {
@@ -75,7 +75,7 @@ class ReferralForm extends Component
         ], [
             'form.consent.accepted' => 'Confirme que a pessoa indicada autorizou o contato.',
         ], [
-            'form.regional_indicator_id' => 'indicador', 'form.name' => 'nome', 'form.phone' => 'telefone',
+            'form.regional_indicator_id' => 'parceiro', 'form.name' => 'nome', 'form.phone' => 'telefone',
             'form.city_id' => 'cidade', 'form.referred_at' => 'data da indicação', 'form.executive_id' => 'executivo',
         ]);
 

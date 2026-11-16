@@ -11,7 +11,7 @@
 
     @if (! $indicator)
         <flux:callout icon="exclamation-triangle" color="amber">
-            <flux:callout.text>Seu acesso ainda não está ligado a um cadastro de indicador. Fale com a Ricarte Prev.</flux:callout.text>
+            <flux:callout.text>Seu acesso ainda não está ligado a um cadastro de parceiro. Fale com a Ricarte Prev.</flux:callout.text>
         </flux:callout>
     @else
         @if ($totals)

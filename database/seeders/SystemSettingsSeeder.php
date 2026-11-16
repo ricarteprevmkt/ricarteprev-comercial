@@ -17,7 +17,7 @@ class SystemSettingsSeeder extends Seeder
         $settings = [
             ['key' => 'routes.road_factor', 'value' => '1.30', 'type' => 'decimal', 'group' => 'rotas',
                 'label' => 'Fator de estrada',
-                'description' => 'Multiplica a distância em linha reta para estimar a distância rodada.'],
+                'description' => 'Reserva: multiplica a distância em linha reta quando o cálculo pelas estradas não está disponível.'],
             ['key' => 'routes.cost_per_km', 'value' => null, 'type' => 'decimal', 'group' => 'rotas',
                 'label' => 'Custo estimado por km (R$)',
                 'description' => 'Usado para estimar o custo de deslocamento antes do lançamento das despesas reais.'],
@@ -35,7 +35,7 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'Base de receita para calcular a margem de contribuição estimada.'],
             ['key' => 'referrals.attribution_window_days', 'value' => 90, 'type' => 'int', 'group' => 'indicacoes',
                 'label' => 'Janela de atribuição da indicação (dias)',
-                'description' => 'Uma nova indicação de um contato já existente dentro desse prazo fica com o primeiro indicador.'],
+                'description' => 'Uma nova indicação de um contato já existente dentro desse prazo fica com o primeiro parceiro.'],
         ];
 
         foreach ($settings as $setting) {

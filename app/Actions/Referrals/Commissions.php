@@ -18,14 +18,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Comissões de indicadores.
+ * Comissões de parceiros.
  *
- * Geração (automática), conforme a regra associada ao indicador do contrato:
+ * Geração (automática), conforme a regra associada ao parceiro do contrato:
  * - o evento da regra (assinatura ou recebimento) define QUANDO gera;
  * - a base define SOBRE O QUÊ: valor do contrato e receita prevista geram
  *   uma vez por contrato; receita recebida gera a cada recebimento;
  * - valor fixo gera uma vez por contrato.
- * Sem indicador ou sem regra ativa, nada é gerado.
+ * Sem parceiro ou sem regra ativa, nada é gerado.
  *
  * Depois: aprovar (valor aprovado), registrar pagamentos e, se for o caso, cancelar.
  */
