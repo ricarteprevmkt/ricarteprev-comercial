@@ -33,10 +33,13 @@ Antes, conclua as etapas 1 a 6 de [configuracao-hostinger.md](configuracao-hosti
    cd ricarteprev
    cp .env.production.example .env
    nano .env            # preencha APP_URL, DB_* e MAIL_*; salve com Ctrl+O, Enter, Ctrl+X
-   composer install --no-dev --optimize-autoloader
+   composer install --no-dev --optimize-autoloader --no-scripts
+   php artisan package:discover
    php artisan key:generate
    bash scripts/check-server.sh
    ```
+
+   O PHP da Hostinger bloqueia a função `proc_open`. Por isso o Composer roda com `--no-scripts` e a descoberta de pacotes é feita em seguida. Pelo mesmo motivo, as tarefas agendadas rodam dentro do próprio `schedule:run` e o backup gera o SQL pelo PHP.
 
 2. **Pasta pública:** troque a pasta do subdomínio por um atalho para `public`:
 

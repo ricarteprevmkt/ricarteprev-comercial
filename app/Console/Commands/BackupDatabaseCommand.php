@@ -41,7 +41,9 @@ class BackupDatabaseCommand extends Command
 
         // No MariaDB (Hostinger) o nome atual é mariadb-dump; mysqldump fica como alternativa.
         $finder = new ExecutableFinder;
-        $dumper = $this->option('php') ? null : ($finder->find('mariadb-dump') ?? $finder->find('mysqldump'));
+        // Sem proc_open (bloqueado na Hostinger), não dá para chamar programas externos: cópia pelo PHP.
+        $canRun = function_exists('proc_open');
+        $dumper = $this->option('php') || ! $canRun ? null : ($finder->find('mariadb-dump') ?? $finder->find('mysqldump'));
         $ok = $dumper ? $this->withMysqldump($dumper, $config, $path) : $this->withPhp($path);
 
         if (! $ok || ! is_file($path) || filesize($path) < 100) {

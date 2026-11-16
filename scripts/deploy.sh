@@ -29,7 +29,10 @@ echo "==> Código"
 git pull --ff-only
 
 echo "==> Dependências PHP"
-"$COMPOSER_BIN" install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+# --no-scripts: o PHP da Hostinger bloqueia proc_open, que o Composer usa para
+# rodar os scripts do projeto. A descoberta de pacotes roda em seguida, direto.
+"$COMPOSER_BIN" install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-scripts
+"$PHP_BIN" artisan package:discover --ansi
 
 if [ ! -f public/build/manifest.json ]; then
   echo "public/build/manifest.json não encontrado. Rode 'npm run build' localmente e faça commit." >&2
