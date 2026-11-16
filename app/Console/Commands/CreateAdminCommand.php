@@ -14,15 +14,19 @@ use Illuminate\Validation\Rules\Password;
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\text;
 
-#[Signature('app:create-admin {--name= : Nome completo} {--email= : E-mail de acesso}')]
+#[Signature('app:create-admin {--name= : Nome completo} {--email= : E-mail de acesso} {--password-stdin : Lê a senha da entrada padrão (para servidores sem proc_open)}')]
 #[Description('Cria um usuário administrador (a senha é pedida de forma oculta)')]
 class CreateAdminCommand extends Command
 {
     public function handle(): int
     {
+        // Os prompts interativos usam proc_open, bloqueado na Hostinger. Lá, a senha
+        // chega pela entrada padrão (lida pelo "read -s" do bash, que não a mostra).
+        $secret = $this->option('password-stdin') ? rtrim((string) stream_get_contents(STDIN), "\r\n") : null;
+
         $name = $this->option('name') ?: text('Nome completo', required: true);
         $email = $this->option('email') ?: text('E-mail', required: true);
-        $secret = password('Senha', required: true, hint: app()->isProduction() ? 'Mínimo de 12 caracteres, com letras, números e símbolos.' : '');
+        $secret ??= password('Senha', required: true, hint: app()->isProduction() ? 'Mínimo de 12 caracteres, com letras, números e símbolos.' : '');
 
         $validator = Validator::make(
             ['name' => $name, 'email' => $email, 'password' => $secret],
