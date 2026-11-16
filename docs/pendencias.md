@@ -7,8 +7,7 @@ Itens que dependem de informação ou ação fora do código. Atualizado a cada 
 | # | Pendência | Depende de | Bloqueia |
 |---|---|---|---|
 | 1 | **Exportação para o C2 Prev:** documentação da API do C2, autenticação e formato (layout) do arquivo ou payload de saída | Daniel / C2 | Módulo de exportação |
-| 2 | **Servidor Hostinger:** endereço `comercial.ricarteprev.com`, banco e usuário `u316363488_comercial` e SSH já feitos (16/11/2026). Etapa 5 conferida: PHP 8.5, todas as extensões, Composer 2.9, Git e MariaDB 11.8. Falta o repositório (pendência 3) | Daniel (ver [configuracao-hostinger.md](configuracao-hostinger.md)) | Primeira implantação |
-| 3 | **Repositório remoto:** repositório privado no GitHub para o deploy por `git pull` | Daniel | Primeira implantação |
+| 2 | **Servidor Hostinger:** primeira implantação feita em 16/11/2026 (https://comercial.ricarteprev.com, PHP 8.5, MariaDB 11.8, repositório `ricarteprevmkt/ricarteprev-comercial`). Cron e e-mail (`sistema@ricarteprev.com`) configurados e testados. Falta só confirmar o primeiro backup automático (17/11, 2h30) | Daniel | — |
 
 ## Exportação para o C2 Prev (pendência 1)
 
@@ -36,5 +35,5 @@ Enquanto isso, a Fase 3 já guarda os dados necessários (CPF/CNPJ, telefone nor
 
 - [ ] Tiles do mapa: o padrão usa o servidor público do OpenStreetMap, adequado para uso interno moderado. Se o uso crescer, contratar um provedor de tiles e trocar `MAP_TILE_URL` no `.env`.
 - [ ] Chave do OpenRouteService no `.env` do servidor (`ORS_API_KEY`), para a distância das rotas pelas estradas. Sem ela, vale a estimativa pelo fator de estrada. Ver a Etapa 9 de [configuracao-hostinger.md](configuracao-hostinger.md).
-- [ ] E-mail SMTP de produção (sem ele, os links de criação de senha não chegam).
+- [x] E-mail SMTP de produção: `sistema@ricarteprev.com`, testado em 16/11/2026. A senha no `.env` vai entre aspas simples.
 - [ ] Proposta comercial publicada precisa ser atualizada: ainda cita app nativo e portal PWA.
