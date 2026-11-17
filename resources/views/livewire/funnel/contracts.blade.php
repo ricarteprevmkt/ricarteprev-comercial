@@ -21,6 +21,15 @@
                     <flux:select.option :value="$status->value">{{ $status->label() }}</flux:select.option>
                 @endforeach
             </flux:select>
+            @if ($c2On)
+                <flux:select wire:model.live="inssFilter" class="max-w-60" aria-label="Resultado no INSS">
+                    <flux:select.option value="">Todos os resultados no INSS</flux:select.option>
+                    @foreach ($outcomes as $outcome)
+                        <flux:select.option :value="$outcome->value">{{ $outcome->label() }}</flux:select.option>
+                    @endforeach
+                    <flux:select.option value="sem-c2">Sem cadastro no C2 há mais de {{ $c2Days }} dia(s)</flux:select.option>
+                </flux:select>
+            @endif
         </div>
 
         @if ($this->contracts->isEmpty())
@@ -30,10 +39,11 @@
                 <flux:table.columns>
                     <flux:table.column>Cliente</flux:table.column>
                     <flux:table.column>Situação</flux:table.column>
+                    @if ($c2On)<flux:table.column class="max-md:hidden">INSS</flux:table.column>@endif
                     <flux:table.column align="end">Contratado</flux:table.column>
                     <flux:table.column align="end" class="max-md:hidden">Recebido</flux:table.column>
-                    <flux:table.column class="max-lg:hidden">Origem</flux:table.column>
-                    <flux:table.column class="max-lg:hidden">Responsável</flux:table.column>
+                    <flux:table.column class="max-xl:hidden">Origem</flux:table.column>
+                    <flux:table.column class="max-xl:hidden">Responsável</flux:table.column>
                     <flux:table.column align="end"><span class="sr-only">Ações</span></flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
@@ -44,13 +54,25 @@
                                 <div class="text-xs text-zinc-500">{{ $contract->number ? 'Nº '.$contract->number.' · ' : '' }}{{ $contract->signed_at ? 'assinado em '.$contract->signed_at->format('d/m/Y') : 'sem data de assinatura' }}</div>
                             </flux:table.cell>
                             <flux:table.cell><flux:badge size="sm" :color="$contract->status->color()">{{ $contract->status->label() }}</flux:badge></flux:table.cell>
+                            @if ($c2On)
+                                <flux:table.cell class="max-md:hidden">
+                                    @php($outcome = \App\Models\C2Process::overallOutcome($contract->c2Processes))
+                                    @if ($outcome)
+                                        <flux:badge size="sm" :color="$outcome->color()">{{ $outcome->label() }}</flux:badge>
+                                    @elseif ($contract->status === \App\Enums\ContractStatus::Signed && $contract->signed_at?->lte(now()->subDays($c2Days)))
+                                        <flux:badge size="sm" color="amber">Sem cadastro no C2</flux:badge>
+                                    @else
+                                        <span class="text-zinc-400">—</span>
+                                    @endif
+                                </flux:table.cell>
+                            @endif
                             <flux:table.cell align="end" class="tabular-nums">{{ $brl($contract->contract_value) }}</flux:table.cell>
                             <flux:table.cell align="end" class="max-md:hidden tabular-nums text-zinc-600">{{ $contract->received_total ? $brl($contract->received_total) : '—' }}</flux:table.cell>
-                            <flux:table.cell class="max-lg:hidden">
+                            <flux:table.cell class="max-xl:hidden">
                                 {{ $contract->source?->name ?? '—' }}
                                 @if ($contract->indicator)<div class="text-xs text-zinc-500">por {{ $contract->indicator->name }}</div>@endif
                             </flux:table.cell>
-                            <flux:table.cell class="max-lg:hidden">{{ $contract->executive->user->name }}</flux:table.cell>
+                            <flux:table.cell class="max-xl:hidden">{{ $contract->executive->user->name }}</flux:table.cell>
                             <flux:table.cell align="end">
                                 <flux:dropdown position="bottom" align="end">
                                     <flux:button size="sm" variant="ghost" icon="ellipsis-horizontal" aria-label="Ações do contrato de {{ $contract->lead->name }}" />

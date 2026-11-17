@@ -180,5 +180,59 @@
                 </ul>
             </x-card>
         </div>
+
+        @if ($inss)
+            <x-card title="Resultado no INSS" description="Contratos assinados no período e o resultado do processo no C2 Prev. Taxa = deferidos ÷ (deferidos + indeferidos)" :padding="false">
+                <x-slot:actions>
+                    <flux:select wire:model.live="inssGroup" size="sm" class="min-w-36" aria-label="Agrupar por">
+                        @foreach (\App\Metrics\InssMetrics::GROUPS as $value => $label)
+                            <flux:select.option :value="$value">Por {{ mb_strtolower($label) }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
+                </x-slot:actions>
+
+                <div class="grid grid-cols-2 gap-px border-b border-zinc-100 bg-zinc-100 sm:grid-cols-5">
+                    @foreach ([['Assinados', $inss['totals']['signed'], 'text-brand-900'], ['Deferidos', $inss['totals']['granted'], 'text-green-700'], ['Indeferidos', $inss['totals']['denied'], 'text-red-700'], ['Em andamento', $inss['totals']['in_progress'], 'text-sky-700'], ['Sem cadastro no C2', $inss['totals']['missing'], 'text-amber-700']] as [$label, $value, $color])
+                        <div class="bg-white px-5 py-3">
+                            <div class="text-xs text-zinc-500">{{ $label }}</div>
+                            <div class="text-xl font-semibold tabular-nums {{ $color }}">{{ $value }}</div>
+                        </div>
+                    @endforeach
+                </div>
+
+                @if (count($inss['rows']) === 0)
+                    <p class="px-5 py-8 text-center text-sm text-zinc-500">Nenhum contrato assinado no período.</p>
+                @else
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-zinc-100 text-xs text-zinc-500">
+                                    <th class="px-5 py-2.5 text-start font-medium">{{ \App\Metrics\InssMetrics::GROUPS[$inssGroup] ?? 'Executivo' }}</th>
+                                    <th class="px-3 py-2.5 text-end font-medium">Assinados</th>
+                                    <th class="px-3 py-2.5 text-end font-medium">Deferidos</th>
+                                    <th class="px-3 py-2.5 text-end font-medium">Indeferidos</th>
+                                    <th class="px-3 py-2.5 text-end font-medium max-sm:hidden">Em andamento</th>
+                                    <th class="px-3 py-2.5 text-end font-medium max-sm:hidden">Sem C2</th>
+                                    <th class="px-5 py-2.5 text-end font-medium">Taxa de deferimento</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tabular-nums">
+                                @foreach ($inss['rows'] as $row)
+                                    <tr class="border-b border-zinc-100 last:border-0">
+                                        <td class="px-5 py-2.5 font-medium text-zinc-900">{{ $row['label'] }}</td>
+                                        <td class="px-3 py-2.5 text-end">{{ $row['signed'] }}</td>
+                                        <td class="px-3 py-2.5 text-end text-green-700">{{ $row['granted'] }}</td>
+                                        <td class="px-3 py-2.5 text-end text-red-700">{{ $row['denied'] }}</td>
+                                        <td class="px-3 py-2.5 text-end max-sm:hidden">{{ $row['in_progress'] }}</td>
+                                        <td class="px-3 py-2.5 text-end max-sm:hidden">{{ $row['missing'] }}</td>
+                                        <td class="px-5 py-2.5 text-end font-semibold text-brand-900">{{ $pct($row['rate']) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </x-card>
+        @endif
     @endif
 </div>

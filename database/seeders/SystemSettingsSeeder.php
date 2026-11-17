@@ -36,6 +36,9 @@ class SystemSettingsSeeder extends Seeder
             ['key' => 'referrals.attribution_window_days', 'value' => 90, 'type' => 'int', 'group' => 'indicacoes',
                 'label' => 'Janela de atribuição da indicação (dias)',
                 'description' => 'Uma nova indicação de um contato já existente dentro desse prazo fica com o primeiro parceiro.'],
+            ['key' => 'c2.registration_days', 'value' => 2, 'type' => 'int', 'group' => 'c2',
+                'label' => 'Dias para o cliente aparecer no C2',
+                'description' => 'Contrato assinado há mais dias que isso, sem processo no C2 com o CPF do cliente, gera aviso.'],
         ];
 
         foreach ($settings as $setting) {

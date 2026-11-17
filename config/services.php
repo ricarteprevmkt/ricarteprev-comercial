@@ -49,6 +49,16 @@ return [
         'timeout' => (int) env('ORS_TIMEOUT', 6),
     ],
 
+    /*
+    | C2 Prev: API de Monitoramento (somente leitura). Traz o resultado dos
+    | processos no INSS. Sem chave, a integração fica desligada.
+    */
+    'c2' => [
+        'key' => env('C2_API_KEY'),
+        'url' => env('C2_API_URL', 'https://monitoramento.c2prev.com'),
+        'timeout' => (int) env('C2_TIMEOUT', 15),
+    ],
+
     'map' => [
         'tiles' => env('MAP_TILE_URL', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
         'attribution' => env('MAP_TILE_ATTRIBUTION', '&copy; colaboradores do OpenStreetMap'),

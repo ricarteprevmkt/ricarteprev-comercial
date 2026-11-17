@@ -4,7 +4,10 @@ namespace App\Livewire\Funnel;
 
 use App\Actions\Crm\RegisterContract;
 use App\Enums\ContractStatus;
+use App\Enums\InssOutcome;
 use App\Models\Contract;
+use App\Models\SystemSetting;
+use App\Services\C2\C2Client;
 use App\Support\Period;
 use App\Support\Visibility;
 use Flux\Flux;
@@ -33,6 +36,10 @@ class Contracts extends Component
     #[Url(as: 'busca', except: '')]
     public string $search = '';
 
+    /** Resultado no INSS (C2): '', sem-c2 ou um InssOutcome. */
+    #[Url(as: 'inss', except: '')]
+    public string $inssFilter = '';
+
     public ?int $selectedId = null;
 
     public string $signedAt = '';
@@ -47,7 +54,7 @@ class Contracts extends Component
 
     public function updating(string $property): void
     {
-        if (in_array($property, ['statusFilter', 'search'], true)) {
+        if (in_array($property, ['statusFilter', 'search', 'inssFilter'], true)) {
             $this->resetPage();
         }
     }
@@ -161,12 +168,16 @@ class Contracts extends Component
     {
         return Contract::query()
             ->visibleTo(auth()->user())
-            ->with(['lead', 'executive.user', 'source', 'indicator'])
+            ->with(['lead', 'executive.user', 'source', 'indicator', 'c2Processes'])
             ->join('leads', 'leads.id', '=', 'contracts.lead_id')
             ->select('contracts.*')
             // withSum depois do select, senão o select descarta a soma.
             ->withSum('receipts as received_total', 'amount')
             ->when($this->statusFilter !== '', fn ($q) => $q->where('contracts.status', $this->statusFilter))
+            ->when($this->inssFilter === 'sem-c2', fn ($q) => $q->missingInC2($this->c2Days()))
+            ->when(InssOutcome::tryFrom($this->inssFilter), fn ($q, InssOutcome $outcome) => $q->whereExists(fn ($e) => $e
+                ->selectRaw('1')->from('c2_processes')->whereColumn('c2_processes.lead_id', 'contracts.lead_id')
+                ->where('c2_processes.outcome', $outcome->value)))
             ->when($this->search !== '', fn ($q) => $q->where(fn ($q) => $q
                 ->where('leads.name', 'like', "%{$this->search}%")
                 ->orWhere('contracts.number', 'like', "%{$this->search}%")))
@@ -175,9 +186,17 @@ class Contracts extends Component
             ->paginate(20);
     }
 
+    private function c2Days(): int
+    {
+        return (int) SystemSetting::get('c2.registration_days', 2);
+    }
+
     public function render(): View
     {
         return view('livewire.funnel.contracts', [
+            'c2On' => C2Client::enabled(),
+            'c2Days' => $this->c2Days(),
+            'outcomes' => InssOutcome::cases(),
             'statuses' => ContractStatus::cases(),
             'periodLabel' => Period::current()->label(),
             'scopeAll' => Visibility::executiveIds(auth()->user()) === null,

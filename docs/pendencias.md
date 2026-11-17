@@ -6,23 +6,23 @@ Itens que dependem de informação ou ação fora do código. Atualizado a cada 
 
 | # | Pendência | Depende de | Bloqueia |
 |---|---|---|---|
-| 1 | **Exportação para o C2 Prev:** documentação da API do C2, autenticação e formato (layout) do arquivo ou payload de saída | Daniel / C2 | Módulo de exportação |
+| 1 | **Integração com o C2 Prev:** código pronto (leitura do resultado no INSS). Falta liberar a API no C2, gerar a chave e colocá-la no `.env` do servidor (Etapa 10 de [configuracao-hostinger.md](configuracao-hostinger.md)) | Daniel / C2 | Coluna "INSS", quadro "Resultado no INSS" e aviso de contrato sem cadastro no C2 |
 | 2 | **Servidor Hostinger:** primeira implantação feita em 16/11/2026 (https://comercial.ricarteprev.com, PHP 8.5, MariaDB 11.8, repositório `ricarteprevmkt/ricarteprev-comercial`). Cron e e-mail (`sistema@ricarteprev.com`) configurados e testados. Falta só confirmar o primeiro backup automático (17/11, 2h30) | Daniel | — |
 
-## Exportação para o C2 Prev (pendência 1)
+## Integração com o C2 Prev (pendência 1)
 
-Decisão: o sistema comercial **exporta** dados para o C2 Prev. O C2 continua sendo usado pela Ricarte, e este sistema não importa nada dele.
+Decisão de 17/11/2026: **o sistema comercial é a fonte dos leads; o C2 é a fonte dos clientes.** A fronteira é o contrato assinado. A API do C2 é só de leitura, então o cadastro do cliente no C2 continua manual.
 
-Para construir a exportação, preciso de:
+O que a integração faz:
 
-- [ ] Documentação da API do C2 (endpoints, autenticação, limites de requisição), **ou** o layout do arquivo de importação aceito pelo C2 (CSV/planilha), se não houver API.
-- [ ] Lista de campos obrigatórios e opcionais, com formato de cada um (datas, telefones, CPF, valores).
-- [ ] Quais registros vão para o C2: só leads convertidos em contrato, todos os leads, ou contratos.
-- [ ] Como o C2 identifica um registro já enviado (para não duplicar em reenvios).
-- [ ] Como mapear os nossos catálogos (origens, etapas, motivos) para os valores do C2, incluindo o campo "Indicado por".
-- [ ] Frequência desejada: manual (botão de exportar) ou automática (agendada).
+- Lê do C2, a cada 5 minutos, os processos do Meu INSS e liga cada um ao contato pelo CPF (só o hash do CPF é guardado).
+- Mostra o resultado (deferido, indeferido, em andamento) na lista de contratos e o quadro "Resultado no INSS" no painel do funil, com a taxa de deferimento por executivo, origem e parceiro. **Só indicador:** não altera contrato nem comissão.
+- Avisa no sino quando um contrato assinado há mais de 2 dias (parâmetro ajustável) ainda não tem processo no C2.
 
-Enquanto isso, a Fase 3 já guarda os dados necessários (CPF/CNPJ, telefone normalizado, origem, indicador, datas de cada etapa), de modo que a exportação seja só uma camada nova, sem refazer o CRM.
+A conferir quando houver dados reais:
+
+- [ ] Os textos de situação e decisão que o C2 devolve. A classificação em deferido/indeferido é feita pelas palavras do texto (`InssOutcome::classify`); se o C2 usar outros termos, ajusto.
+- [ ] Se um cliente com mais de um contrato precisa de resultado separado por contrato (hoje o resultado é por cliente).
 
 ## Validações com a Ricarte Prev
 

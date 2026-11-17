@@ -101,6 +101,7 @@ O único cron (`schedule:run` a cada minuto) dispara:
 | Resumo diário de pendências no sino | Todo dia às 7h30 |
 | Cópia de segurança do banco | Todo dia às 2h30 |
 | Limpeza da auditoria (2 anos) e de jobs falhos | Mensal e semanal |
+| Leitura do C2 Prev (resultado no INSS), se houver `C2_API_KEY` | A cada 5 minutos |
 
 Para conferir no servidor: `php artisan schedule:list`.
 

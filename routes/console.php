@@ -34,3 +34,6 @@ $task('app:send-alerts')->dailyAt('07:30');
 
 // Cópia de segurança diária do banco (storage/app/private/backups), guardada por BACKUP_KEEP_DAYS dias.
 $task('app:backup-database')->dailyAt('02:30')->withoutOverlapping(60);
+
+// C2 Prev: resultado dos processos no INSS (só roda com C2_API_KEY no .env).
+$task('app:c2-sync')->everyFiveMinutes()->withoutOverlapping(15);

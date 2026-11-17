@@ -64,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
         Route::livewire('regioes', Admin\RegionsCities::class)->middleware('can.any:regions.manage')->name('regions');
         Route::livewire('catalogos', Admin\Catalogs::class)->middleware('can.any:settings.manage')->name('catalogs');
         Route::livewire('parametros', Admin\Settings::class)->middleware('can.any:settings.manage')->name('settings');
+        Route::livewire('integracao-c2', Admin\C2Integration::class)->middleware('can.any:settings.manage')->name('c2');
         Route::livewire('auditoria', Admin\Audit::class)->middleware('can.any:audit.view')->name('audit');
     });
 

@@ -39,6 +39,7 @@ final class Navigation
                 ['label' => 'Perfis e permissões', 'route' => 'admin.roles', 'icon' => 'shield-check', 'abilities' => ['roles.manage']],
                 ['label' => 'Regiões e cidades', 'route' => 'admin.regions', 'icon' => 'map', 'abilities' => ['regions.manage']],
                 ['label' => 'Parâmetros', 'route' => 'admin.settings', 'icon' => 'adjustments-horizontal', 'abilities' => ['settings.manage']],
+                ['label' => 'Integração C2 Prev', 'route' => 'admin.c2', 'icon' => 'arrow-path', 'abilities' => ['settings.manage']],
                 ['label' => 'Auditoria', 'route' => 'admin.audit', 'icon' => 'clipboard-document-list', 'abilities' => ['audit.view']],
             ]],
         ];

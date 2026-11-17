@@ -6,6 +6,8 @@ use App\Enums\ContractStatus;
 use App\Models\Catalogs\LeadSource;
 use App\Models\Concerns\ScopedToExecutive;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -34,6 +36,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read Opportunity $opportunity
  * @property-read LeadSource|null $source
  * @property-read RegionalIndicator|null $indicator
+ * @property-read Collection<int, C2Process> $c2Processes
  */
 class Contract extends Model
 {
@@ -89,6 +92,28 @@ class Contract extends Model
     public function receipts(): HasMany
     {
         return $this->hasMany(ContractReceipt::class)->latest('received_at');
+    }
+
+    /**
+     * Processos do cliente no C2 Prev (ligados ao contato pelo CPF).
+     *
+     * @return HasMany<C2Process, $this>
+     */
+    public function c2Processes(): HasMany
+    {
+        return $this->hasMany(C2Process::class, 'lead_id', 'lead_id');
+    }
+
+    /**
+     * Assinados há mais de $days dias e ainda sem processo no C2 com o CPF do cliente.
+     *
+     * @param  Builder<self>  $query
+     */
+    public function scopeMissingInC2(Builder $query, int $days): void
+    {
+        $query->where('contracts.status', ContractStatus::Signed->value)
+            ->where('contracts.signed_at', '<=', now()->subDays($days)->toDateString())
+            ->whereNotExists(fn ($q) => $q->selectRaw('1')->from('c2_processes')->whereColumn('c2_processes.lead_id', 'contracts.lead_id'));
     }
 
     public function getActivitylogOptions(): LogOptions

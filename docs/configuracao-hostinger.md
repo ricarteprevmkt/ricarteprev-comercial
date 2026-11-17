@@ -182,6 +182,38 @@ A chave é um segredo: não envie para mim nem por WhatsApp; ela fica só no `.e
 
 ---
 
+## Etapa 10. Integração com o C2 Prev
+
+O sistema lê do C2 o resultado dos processos no INSS (deferido, indeferido, em andamento) e liga cada processo ao contato pelo CPF. Nada é enviado ao C2: a API dele é só de leitura. Sem esta etapa, o sistema funciona normalmente, sem a coluna "INSS" e sem o quadro "Resultado no INSS".
+
+1. **Liberar a integração:** peça ao suporte do C2 Prev que libere a **API de Monitoramento** para o escritório da Ricarte Prev (é feito no painel administrativo deles).
+2. **Gerar a chave:** com a integração liberada, um administrador da Ricarte entra no C2 → **Configurações → Integrações** → cria uma chave com as permissões de leitura de **processos**, **monitoramentos** e **eventos**. Copie a chave (só aparece uma vez).
+   - O C2 também oferece webhook (aviso automático). Não é necessário: o sistema consulta o C2 a cada 5 minutos.
+3. **Colocar a chave no servidor**, pelo SSH:
+   ```bash
+   cd ~/domains/ricarteprev.com/ricarteprev
+   nano .env
+   ```
+   Na linha `C2_API_KEY=`, cole a chave logo depois do `=` (se a linha não existir, acrescente-a no final). Salve com **Ctrl+O**, **Enter**, **Ctrl+X**.
+4. **Aplicar e testar:**
+   ```bash
+   php artisan config:cache
+   php artisan app:c2-sync --check
+   ```
+   A resposta deve ser "Conexão com o C2 funcionando". Se aparecer "Faltam permissões", ajuste a chave no C2.
+5. **Primeira leitura** (opcional, o agendador faz sozinho em até 5 minutos):
+   ```bash
+   php artisan app:c2-sync
+   ```
+   Com muitos processos, a carga inicial é dividida em várias rodadas para respeitar o limite da API; a mensagem "Carga inicial em andamento" é normal.
+6. **Conferir** em **Administração → Integração C2 Prev**: última leitura, processos lidos e a lista de clientes do C2 sem contato no sistema (CPF ausente ou diferente no cadastro do contato).
+
+A chave é um segredo: não envie para mim; ela fica só no `.env` do servidor. Do C2, o sistema guarda só o nome do cliente, o resultado e as datas do processo. O CPF não é gravado: só uma versão embaralhada (hash), usada para ligar ao contato.
+
+O aviso de "contrato assinado sem cadastro no C2" usa o prazo de **Parâmetros → Integração com o C2 Prev** (2 dias) e só começa depois da carga inicial.
+
+---
+
 ## Resumo do que preciso receber
 
 | Etapa | O que me enviar |
@@ -193,3 +225,4 @@ A chave é um segredo: não envie para mim nem por WhatsApp; ela fica só no `.e
 | 5 | Saída dos comandos |
 | 6 | "Repositório criado" e depois "deploy key ok" |
 | 9 | "Rotas pelas estradas ok" (a chave fica só no servidor) |
+| 10 | Saída do `php artisan app:c2-sync --check` (a chave fica só no servidor) |

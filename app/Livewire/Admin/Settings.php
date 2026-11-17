@@ -109,7 +109,7 @@ class Settings extends Component
             'groups' => $groups,
             'choices' => self::CHOICES,
             'roadRouting' => ['enabled' => RoadDistance::enabled(), 'paused' => RoadDistance::paused()],
-            'groupLabels' => ['rotas' => 'Rotas e deslocamento', 'funil' => 'Funil comercial', 'agenda' => 'Agenda', 'financeiro' => 'Custos e resultados', 'indicacoes' => 'Indicações'],
+            'groupLabels' => ['rotas' => 'Rotas e deslocamento', 'funil' => 'Funil comercial', 'agenda' => 'Agenda', 'financeiro' => 'Custos e resultados', 'indicacoes' => 'Indicações', 'c2' => 'Integração com o C2 Prev'],
         ]);
     }
 }

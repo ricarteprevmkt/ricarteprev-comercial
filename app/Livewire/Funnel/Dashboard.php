@@ -3,7 +3,9 @@
 namespace App\Livewire\Funnel;
 
 use App\Metrics\FunnelMetrics;
+use App\Metrics\InssMetrics;
 use App\Models\Opportunity;
+use App\Services\C2\C2Client;
 use App\Support\Period;
 use App\Support\Visibility;
 use Illuminate\Contracts\View\View;
@@ -21,6 +23,9 @@ class Dashboard extends Component
 {
     #[Url(as: 'executivo', except: '')]
     public string $executiveFilter = '';
+
+    #[Url(as: 'inss', except: 'executivo')]
+    public string $inssGroup = 'executivo';
 
     public function mount(): void
     {
@@ -64,7 +69,16 @@ class Dashboard extends Component
             ->limit(6)
             ->get();
 
+        // Resultado no INSS: só aparece com a integração do C2 ligada.
+        $inss = null;
+        if (C2Client::enabled()) {
+            $inssMetrics = new InssMetrics($period, $this->scope());
+            $group = array_key_exists($this->inssGroup, InssMetrics::GROUPS) ? $this->inssGroup : 'executivo';
+            $inss = ['totals' => $inssMetrics->totals(), 'rows' => $inssMetrics->by($group)];
+        }
+
         return view('livewire.funnel.dashboard', [
+            'inss' => $inss,
             'period' => $period,
             'funnel' => $funnel,
             'prevFunnel' => $prevFunnel,
