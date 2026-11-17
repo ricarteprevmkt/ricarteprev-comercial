@@ -29,6 +29,12 @@ final class Navigation
                 ['label' => 'Minhas indicações', 'route' => 'referrals.mine', 'icon' => 'map-pin', 'abilities' => ['referrals.view_own'], 'hidden_for' => 'referrals.view_all'],
                 ['label' => 'Relatórios', 'route' => 'reports.index', 'icon' => 'document-chart-bar', 'abilities' => ['reports.view']],
             ]],
+            ['group' => 'Administrativo', 'items' => [
+                ['label' => 'Painel', 'route' => 'adm.index', 'icon' => 'building-library', 'abilities' => ['inss.view']],
+                ['label' => 'Processos no INSS', 'route' => 'adm.processes', 'icon' => 'document-text', 'abilities' => ['inss.view'], 'active' => 'adm.processes*'],
+                ['label' => 'Prazos', 'route' => 'adm.deadlines', 'icon' => 'calendar', 'abilities' => ['inss.view']],
+                ['label' => 'Pendências', 'route' => 'adm.pending', 'icon' => 'exclamation-triangle', 'abilities' => ['inss.view']],
+            ]],
             ['group' => 'Cadastros', 'items' => [
                 ['label' => 'Parceiros', 'route' => 'referrals.indicators', 'icon' => 'user-group', 'abilities' => ['indicators.manage']],
                 ['label' => 'Regras de comissão', 'route' => 'referrals.commission-rules', 'icon' => 'banknotes', 'abilities' => ['commissions.manage']],

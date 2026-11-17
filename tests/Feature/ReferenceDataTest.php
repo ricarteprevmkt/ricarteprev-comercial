@@ -43,11 +43,11 @@ it('não desfaz ajustes de permissão ao rodar o seeder de novo', function () {
     expect(RoleModel::findByName(Role::Executive->value)->hasPermissionTo('expenses.manage'))->toBeFalse();
 });
 
-it('cria os quatro perfis do sistema', function () {
+it('cria os cinco perfis do sistema', function () {
     $this->seed(RolesAndPermissionsSeeder::class);
 
     expect(RoleModel::pluck('name')->sort()->values()->all())
-        ->toBe(['administrador', 'executivo', 'gestor', 'indicador']);
+        ->toBe(['administrador', 'administrativo', 'executivo', 'gestor', 'indicador']);
 });
 
 it('lê parâmetros com tipo correto e atualiza o cache ao salvar', function () {

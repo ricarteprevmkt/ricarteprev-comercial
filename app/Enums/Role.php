@@ -9,6 +9,7 @@ enum Role: string
 {
     case Admin = 'administrador';
     case Manager = 'gestor';
+    case Administrative = 'administrativo';
     case Executive = 'executivo';
     case Indicator = 'indicador';
 
@@ -17,6 +18,7 @@ enum Role: string
         return match ($this) {
             self::Admin => 'Administrador',
             self::Manager => 'Gestor comercial',
+            self::Administrative => 'Administrativo',
             self::Executive => 'Executivo comercial',
             self::Indicator => 'Parceiro regional',
         };

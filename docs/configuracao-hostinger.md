@@ -151,9 +151,10 @@ Com as etapas 1 a 6 feitas, sigo junto com você o roteiro de [hostinger.md](hos
 
 1. **Cron:** painel do site → **Avançado** → **Cron Jobs** → tipo **Personalizado** → comando:
    ```
-   cd /home/u316363488/domains/ricarteprev.com/ricarteprev && php artisan schedule:run >> /dev/null 2>&1
+   cd /home/u316363488/domains/ricarteprev.com/ricarteprev && /opt/alt/php85/usr/bin/php artisan schedule:run >> storage/logs/cron.log 2>&1
    ```
    Frequência: **a cada minuto** (`* * * * *`). (Caminho conferido na Etapa 5.)
+   Use o caminho completo do PHP (`/opt/alt/php85/usr/bin/php`): o `php` do cron não é o mesmo do SSH, e com ele o cron não rodava. Para conferir se o cron está rodando: `tail storage/logs/cron.log`.
 2. **SSL:** painel do site → **Segurança** → **SSL** → instale para `comercial.ricarteprev.com` e ative **Forçar HTTPS**.
 3. **E-mail:** painel → **Emails** → crie, por exemplo, `sistema@ricarteprev.com`. Os dados SMTP são `smtp.hostinger.com`, porta `465`, SSL. A senha vai no `.env` do servidor. Sem isso, os links de criação de senha não chegam aos usuários.
 

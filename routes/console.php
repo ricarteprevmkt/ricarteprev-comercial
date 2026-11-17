@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Schedule;
 | Na Hostinger não há processo permanente (Supervisor), então um único cron
 | roda a cada minuto e dispara tudo daqui:
 |
-|   * * * * * cd ~/domains/ricarteprev.com/ricarteprev && php artisan schedule:run >> /dev/null 2>&1
+|   * * * * * cd ~/domains/ricarteprev.com/ricarteprev && /opt/alt/php85/usr/bin/php artisan schedule:run >> storage/logs/cron.log 2>&1
+|
+| Use o caminho completo do PHP: o `php` do cron não é o do SSH.
 |
 | O PHP da Hostinger não permite abrir outros processos (proc_open), então
 | cada tarefa roda dentro do próprio schedule:run, pelo Artisan::call, em vez

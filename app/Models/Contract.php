@@ -95,13 +95,14 @@ class Contract extends Model
     }
 
     /**
-     * Processos do cliente no C2 Prev (ligados ao contato pelo CPF).
+     * Processos do cliente no C2 Prev (ligados ao contato pelo CPF), sem os
+     * protocolos antigos.
      *
      * @return HasMany<C2Process, $this>
      */
     public function c2Processes(): HasMany
     {
-        return $this->hasMany(C2Process::class, 'lead_id', 'lead_id');
+        return $this->hasMany(C2Process::class, 'lead_id', 'lead_id')->where('c2_processes.in_scope', true);
     }
 
     /**
@@ -113,7 +114,8 @@ class Contract extends Model
     {
         $query->where('contracts.status', ContractStatus::Signed->value)
             ->where('contracts.signed_at', '<=', now()->subDays($days)->toDateString())
-            ->whereNotExists(fn ($q) => $q->selectRaw('1')->from('c2_processes')->whereColumn('c2_processes.lead_id', 'contracts.lead_id'));
+            ->whereNotExists(fn ($q) => $q->selectRaw('1')->from('c2_processes')->whereColumn('c2_processes.lead_id', 'contracts.lead_id')
+                ->where('c2_processes.in_scope', true));
     }
 
     public function getActivitylogOptions(): LogOptions

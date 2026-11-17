@@ -177,7 +177,7 @@ class Contracts extends Component
             ->when($this->inssFilter === 'sem-c2', fn ($q) => $q->missingInC2($this->c2Days()))
             ->when(InssOutcome::tryFrom($this->inssFilter), fn ($q, InssOutcome $outcome) => $q->whereExists(fn ($e) => $e
                 ->selectRaw('1')->from('c2_processes')->whereColumn('c2_processes.lead_id', 'contracts.lead_id')
-                ->where('c2_processes.outcome', $outcome->value)))
+                ->where('c2_processes.in_scope', true)->where('c2_processes.outcome', $outcome->value)))
             ->when($this->search !== '', fn ($q) => $q->where(fn ($q) => $q
                 ->where('leads.name', 'like', "%{$this->search}%")
                 ->orWhere('contracts.number', 'like', "%{$this->search}%")))

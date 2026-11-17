@@ -4,6 +4,11 @@ use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ReportExportController;
 use App\Livewire\Admin;
+use App\Livewire\Administrative\Dashboard;
+use App\Livewire\Administrative\Deadlines;
+use App\Livewire\Administrative\Pending;
+use App\Livewire\Administrative\Processes;
+use App\Livewire\Administrative\ProcessShow;
 use App\Livewire\Agenda;
 use App\Livewire\Executives;
 use App\Livewire\Finance;
@@ -57,6 +62,15 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('minhas-indicacoes', Referrals\Portal::class)->middleware('can.any:referrals.view_own')->name('referrals.mine');
     Route::livewire('parceiros-regionais/cadastro', Referrals\Indicators::class)->middleware('can.any:indicators.manage')->name('referrals.indicators');
     Route::livewire('parceiros-regionais/regras-de-comissao', Referrals\CommissionRules::class)->middleware('can.any:commissions.manage')->name('referrals.commission-rules');
+
+    // Administrativo: processos no INSS lidos do C2 Prev (só consulta).
+    Route::prefix('administrativo')->name('adm.')->middleware('can.any:inss.view')->group(function () {
+        Route::livewire('/', Dashboard::class)->name('index');
+        Route::livewire('processos', Processes::class)->name('processes');
+        Route::livewire('processos/{process}', ProcessShow::class)->name('processes.show');
+        Route::livewire('prazos', Deadlines::class)->name('deadlines');
+        Route::livewire('pendencias', Pending::class)->name('pending');
+    });
 
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::livewire('usuarios', Admin\Users::class)->middleware('can.any:users.manage')->name('users');

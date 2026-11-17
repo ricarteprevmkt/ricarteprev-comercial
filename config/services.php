@@ -57,6 +57,8 @@ return [
         'key' => env('C2_API_KEY'),
         'url' => env('C2_API_URL', 'https://monitoramento.c2prev.com'),
         'timeout' => (int) env('C2_TIMEOUT', 15),
+        // Plataforma do C2, para o link "Abrir no C2" (ficha do cliente).
+        'app_url' => env('C2_APP_URL', 'https://c2prev.compute.capital'),
     ],
 
     'map' => [

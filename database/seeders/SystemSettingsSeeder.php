@@ -39,6 +39,12 @@ class SystemSettingsSeeder extends Seeder
             ['key' => 'c2.registration_days', 'value' => 2, 'type' => 'int', 'group' => 'c2',
                 'label' => 'Dias para o cliente aparecer no C2',
                 'description' => 'Contrato assinado há mais dias que isso, sem processo no C2 com o CPF do cliente, gera aviso.'],
+            ['key' => 'c2.scope_tolerance_days', 'value' => 30, 'type' => 'int', 'group' => 'c2',
+                'label' => 'Folga antes da assinatura (dias)',
+                'description' => 'Protocolo aberto até esses dias antes da assinatura do contrato ainda conta como do escritório. Os mais antigos ficam fora do escopo.'],
+            ['key' => 'c2.scope_months', 'value' => 12, 'type' => 'int', 'group' => 'c2',
+                'label' => 'Protocolos de clientes sem contrato no sistema (meses)',
+                'description' => 'Para clientes sem contrato no sistema, contam os protocolos em andamento ou abertos nesse período. Os mais antigos ficam fora do escopo.'],
         ];
 
         foreach ($settings as $setting) {

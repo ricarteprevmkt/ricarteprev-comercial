@@ -53,6 +53,9 @@ final class Acl
                 'commissions.manage' => 'Gerenciar comissões',
                 'commissions.view_own' => 'Ver as próprias comissões',
             ],
+            'Administrativo' => [
+                'inss.view' => 'Consultar os processos no INSS (lidos do C2 Prev)',
+            ],
             'Relatórios' => [
                 'reports.view' => 'Ver relatórios',
                 'reports.export' => 'Exportar relatórios em PDF e Excel',
@@ -97,6 +100,10 @@ final class Acl
                 'finance.view', 'expenses.view_own', 'expenses.manage', 'expenses.approve',
                 'referrals.view_all', 'referrals.create', 'indicators.manage', 'commissions.manage',
                 'reports.view', 'reports.export',
+                'inss.view',
+            ],
+            'administrativo' => [
+                'inss.view',
             ],
             'executivo' => [
                 'dashboard.view_own',

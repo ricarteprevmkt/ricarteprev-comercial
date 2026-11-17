@@ -20,6 +20,7 @@ use Throwable;
  *    processo. Feita uma vez, em várias rodadas se precisar.
  * 2. Feed: lê só os eventos novos e atualiza os processos que mudaram.
  * 3. Religa processos sem contato, para o caso de o CPF ter sido corrigido.
+ * 4. Separa os protocolos antigos (RefreshC2Scope).
  *
  * Cada rodada usa no máximo $budget consultas (a API aceita 120/min). Se a
  * cota acabar no meio de uma página, a página é relida na próxima rodada.
@@ -69,9 +70,12 @@ final class SyncC2Processes
             IntegrationState::put(self::LAST_ERROR, ['message' => $error, 'at' => now()->toIso8601String()]);
         }
 
+        $linked = $this->relink();
+        app(RefreshC2Scope::class)->handle();
+
         return [
             'synced' => $this->synced,
-            'linked' => $this->relink(),
+            'linked' => $linked,
             'requests' => $this->client->requests,
             'error' => $error,
             'backfill_done' => (bool) IntegrationState::get(self::BACKFILL_DONE, false),
@@ -93,7 +97,7 @@ final class SyncC2Processes
                 $id = (string) ($item['process_id'] ?? '');
                 // Processo já lido desde o início da carga: não consulta de novo ao reler a página.
                 if ($id !== '' && ! C2Process::query()->where('c2_id', $id)->where('synced_at', '>=', $startedAt)->exists()) {
-                    $this->syncProcess($id);
+                    $this->syncProcess($id, $item);
                 }
             }
 
@@ -125,7 +129,11 @@ final class SyncC2Processes
 
             foreach ($page['items'] ?? [] as $event) {
                 $id = (string) ($event['process_id'] ?? '');
-                if ($id !== '' && ! isset($this->seen[$id])) {
+                $type = (string) ($event['type'] ?? '');
+
+                if ($id !== '' && str_starts_with($type, 'monitoring.')) {
+                    $this->updateMonitoring($id, $type === 'monitoring.recovered' ? 'active' : 'action_required');
+                } elseif ($id !== '' && ! isset($this->seen[$id])) {
                     $this->syncProcess($id);
                 }
             }
@@ -138,7 +146,25 @@ final class SyncC2Processes
         } while (($page['has_more'] ?? false) && $next !== null);
     }
 
-    private function syncProcess(string $id): void
+    /**
+     * O evento de monitoramento não traz o motivo: na falha, consulta o
+     * monitoramento do processo para saber se é senha inválida ou autenticação.
+     */
+    private function updateMonitoring(string $processId, string $state): void
+    {
+        $action = null;
+
+        if ($state !== 'active') {
+            $item = $this->call('/v1/monitoramentos', ['process_id' => $processId, 'limit' => 1])['items'][0] ?? null;
+            $state = is_array($item) ? (string) ($item['state'] ?? $state) : $state;
+            $action = is_array($item) ? ($item['action_required'] ?? null) : null;
+        }
+
+        C2Process::query()->where('c2_id', $processId)->update(['monitoring_state' => $state, 'monitoring_action' => $action]);
+    }
+
+    /** @param  array<string, mixed>|null  $monitoring  item de /v1/monitoramentos, na carga inicial */
+    private function syncProcess(string $id, ?array $monitoring = null): void
     {
         try {
             $data = $this->call('/v1/processos/'.rawurlencode($id));
@@ -162,15 +188,30 @@ final class SyncC2Processes
             'client_name' => $data['client']['name'] ?? null,
             'cpf_hash' => $hash,
             'cpf_last_digits' => $hash ? substr($cpf, -2) : null,
-            'request_number' => $data['request_number'] ?? null,
+            'request_number' => $this->limit($data['request_number'] ?? null, 60),
+            'benefit_number' => $this->limit($data['benefit_number'] ?? null, 60),
             'benefit_type' => $this->limit($data['benefit_type'] ?? $data['service'] ?? null),
+            'service' => $this->limit($data['service'] ?? null),
             'status_text' => $this->limit($status),
             'decision_text' => $this->limit($decision),
+            'requirement_text' => $this->text($data['requirement']['description'] ?? null),
+            'requirement_deadline' => $this->date($data['requirement']['deadline'] ?? null),
+            'appointment_date' => $this->date($data['appointment']['date'] ?? null),
+            'appointment_time' => $this->limit($data['appointment']['time'] ?? null, 10),
+            'appointment_location' => $this->limit($data['appointment']['location'] ?? null),
+            'decision_reason' => $this->text($data['decision']['reason'] ?? null),
+            'appeal_deadline' => $this->date($data['decision']['appeal_deadline'] ?? null),
             'outcome' => InssOutcome::classify($decision, $status, $concludedAt !== null),
             'opened_at' => $this->date($data['opened_at'] ?? null),
             'concluded_at' => $concludedAt,
+            'checked_at' => $this->dateTime($data['last_checked_at'] ?? null),
             'synced_at' => now(),
         ]);
+
+        if ($monitoring !== null) {
+            $process->monitoring_state = $this->limit($monitoring['state'] ?? null, 30);
+            $process->monitoring_action = $this->limit($monitoring['action_required'] ?? null, 40);
+        }
 
         if ($process->lead_id === null && $hash !== null) {
             $process->lead_id = $this->leadFor($hash);
@@ -215,21 +256,41 @@ final class SyncC2Processes
         return $this->client->get($path, $query);
     }
 
+    /** Aceita ISO (2026-11-20, 2026-11-20T10:00:00Z) e o formato brasileiro (20/11/2026). */
     private function date(mixed $value): ?string
     {
-        if (! is_string($value) || $value === '') {
+        return $this->parse($value)?->toDateString();
+    }
+
+    private function dateTime(mixed $value): ?CarbonImmutable
+    {
+        return $this->parse($value);
+    }
+
+    private function parse(mixed $value): ?CarbonImmutable
+    {
+        if (! is_string($value) || trim($value) === '') {
             return null;
         }
 
         try {
-            return CarbonImmutable::parse($value)->toDateString();
+            if (preg_match('#^(\d{2})/(\d{2})/(\d{4})#', trim($value), $m)) {
+                return CarbonImmutable::createFromFormat('!d/m/Y', "{$m[1]}/{$m[2]}/{$m[3]}") ?: null;
+            }
+
+            return CarbonImmutable::parse($value);
         } catch (Throwable) {
             return null;
         }
     }
 
-    private function limit(mixed $value): ?string
+    private function limit(mixed $value, int $max = 255): ?string
     {
-        return is_string($value) && $value !== '' ? mb_substr($value, 0, 255) : null;
+        return is_string($value) && trim($value) !== '' ? mb_substr(trim($value), 0, $max) : null;
+    }
+
+    private function text(mixed $value): ?string
+    {
+        return $this->limit($value, 5000);
     }
 }

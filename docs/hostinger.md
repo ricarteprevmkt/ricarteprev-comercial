@@ -68,8 +68,10 @@ Antes, conclua as etapas 1 a 6 de [configuracao-hostinger.md](configuracao-hosti
 4. **hPanel > Avançado > Cron jobs:** adicione, a cada minuto:
 
    ```
-   cd /home/u316363488/domains/ricarteprev.com/ricarteprev && php artisan schedule:run >> /dev/null 2>&1
+   cd /home/u316363488/domains/ricarteprev.com/ricarteprev && /opt/alt/php85/usr/bin/php artisan schedule:run >> storage/logs/cron.log 2>&1
    ```
+
+   Use o caminho completo do PHP (`/opt/alt/php85/usr/bin/php`): o `php` do cron não é o mesmo do SSH, e com ele o cron não rodava. Para conferir se o cron está rodando: `tail storage/logs/cron.log`.
 
 5. **hPanel > Segurança > SSL:** ative o certificado e force HTTPS.
 
