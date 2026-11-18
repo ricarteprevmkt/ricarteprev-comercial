@@ -7,7 +7,7 @@ Itens que dependem de informação ou ação fora do código. Atualizado a cada 
 | # | Pendência | Depende de | Bloqueia |
 |---|---|---|---|
 | 1 | **Integração com o C2 Prev:** ativa no servidor desde 17/11/2026 (chave no `.env`, primeira carga feita, leitura automática a cada 5 minutos). Falta conferir os textos de situação do C2 (abaixo) | Daniel | — |
-| 2 | **Servidor Hostinger:** primeira implantação feita em 16/11/2026 (https://comercial.ricarteprev.com, PHP 8.5, MariaDB 11.8, repositório `ricarteprevmkt/ricarteprev-comercial`). E-mail (`sistema@ricarteprev.com`) testado. O cron só passou a rodar em 17/11/2026, com o caminho completo do PHP (`/opt/alt/php85/usr/bin/php`); falta confirmar o primeiro backup automático (18/11, 2h30) | Daniel | — |
+| 2 | **Servidor Hostinger:** primeira implantação feita em 16/11/2026 (https://comercial.ricarteprev.com, PHP 8.5, MariaDB 11.8, repositório `ricarteprevmkt/ricarteprev-comercial`). E-mail (`sistema@ricarteprev.com`) testado. O cron só passou a rodar em 17/11/2026, com o caminho completo do PHP (`/opt/alt/php85/usr/bin/php`); primeiro backup automático confirmado em 18/11/2026 | — | — |
 
 ## Integração com o C2 Prev (pendência 1)
 

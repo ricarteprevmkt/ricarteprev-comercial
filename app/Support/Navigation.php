@@ -19,6 +19,7 @@ final class Navigation
         return [
             ['group' => 'Comercial', 'items' => [
                 ['label' => 'Visão geral', 'route' => 'dashboard', 'icon' => 'home', 'abilities' => ['dashboard.view', 'dashboard.view_own']],
+                ['label' => 'Dashboard', 'route' => 'analytics', 'icon' => 'presentation-chart-line', 'abilities' => ['dashboard.view', 'dashboard.view_own']],
                 ['label' => 'Executivos', 'route' => 'executives.index', 'icon' => 'user', 'abilities' => ['executives.view'], 'active' => 'executives.*'],
                 ['label' => 'Agenda e rotas', 'route' => 'agenda.index', 'icon' => 'calendar-days', 'abilities' => ['agenda.view_all', 'agenda.view_own']],
                 ['label' => 'Funil comercial', 'route' => 'funnel.index', 'icon' => 'funnel', 'abilities' => ['funnel.view_all', 'funnel.view_own'], 'active' => 'funnel.*'],

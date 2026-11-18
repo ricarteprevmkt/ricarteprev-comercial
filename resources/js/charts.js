@@ -123,6 +123,166 @@ const builders = {
             tooltip: { y: { formatter: (v) => 'R$ ' + Number(v ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) } },
         };
     },
+
+    /** Minigráfico dos cartões. data: {values, color} */
+    spark(data) {
+        return {
+            chart: { type: 'area', height: 46, sparkline: { enabled: true }, animations: { enabled: true, speed: 600 } },
+            series: [{ name: '', data: data.values }],
+            colors: [data.color ?? PALETTE.blue],
+            stroke: { width: 2, curve: 'smooth' },
+            fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.35, opacityTo: 0, stops: [0, 100] } },
+            tooltip: { enabled: false },
+        };
+    },
+
+    /** Realizado (área) e projeção (linha tracejada). data: {labels, actual, projection, money, title} */
+    trend(data) {
+        const fmt = data.money ? brl : (v) => (v === null || v === undefined ? '' : Math.round(v).toLocaleString('pt-BR'));
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'line', height: 320, animations: { enabled: true, speed: 700 } },
+            series: [
+                { name: data.title, type: 'area', data: data.actual },
+                { name: 'Projeção', type: 'line', data: data.projection },
+            ],
+            colors: [PALETTE.blue, PALETTE.gold],
+            stroke: { width: [3, 3], curve: 'smooth', dashArray: [0, 6] },
+            fill: { type: ['gradient', 'solid'], gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.02, stops: [0, 95] } },
+            markers: { size: [3, 4], strokeWidth: 0, hover: { size: 6 } },
+            xaxis: { categories: data.labels },
+            yaxis: { labels: { formatter: fmt }, min: 0 },
+            tooltip: { shared: true, y: { formatter: (v) => (v === null || v === undefined ? '—' : fmt(v)) } },
+        };
+    },
+
+    /** Medidor de meta. data: {pct, expected, label} */
+    radial(data) {
+        const value = Math.min(100, Number(data.pct ?? 0));
+        return {
+            chart: { type: 'radialBar', height: 210, fontFamily: 'Inter, system-ui, sans-serif', animations: { enabled: true, speed: 900 } },
+            series: [value],
+            labels: [data.label],
+            colors: [value >= Number(data.expected ?? 0) ? PALETTE.green : PALETTE.gold],
+            plotOptions: {
+                radialBar: {
+                    hollow: { size: '62%' },
+                    track: { background: '#eef3fa', strokeWidth: '100%' },
+                    startAngle: -120,
+                    endAngle: 120,
+                    dataLabels: {
+                        name: { offsetY: 22, fontSize: '12px', color: '#71717a' },
+                        value: { offsetY: -12, fontSize: '26px', fontWeight: 700, color: PALETTE.navy, formatter: () => Number(data.pct ?? 0).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%' },
+                    },
+                },
+            },
+            stroke: { lineCap: 'round' },
+        };
+    },
+
+    /** Funil por etapa. data: {labels, values} */
+    funnel(data) {
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'bar', height: 300 },
+            series: [{ name: 'Oportunidades', data: data.values }],
+            plotOptions: { bar: { horizontal: true, isFunnel: true, borderRadius: 4, barHeight: '78%', distributed: true } },
+            colors: ['#0b234b', '#1c3a70', '#2f6fd0', '#567dbe', '#e9a83a'],
+            dataLabels: { enabled: true, formatter: (v) => Number(v).toLocaleString('pt-BR'), style: { fontSize: '12px', fontWeight: 700 }, dropShadow: { enabled: false } },
+            xaxis: { categories: data.labels },
+            legend: { show: true, position: 'bottom', horizontalAlign: 'center', fontSize: '12px' },
+            tooltip: { y: { formatter: (v) => Number(v).toLocaleString('pt-BR') + ' oportunidade(s)' } },
+        };
+    },
+
+    /** Executivos: contratos (barras) e receita (linha). data: {labels, contracts, revenue} */
+    rankingDual(data) {
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'line', height: 300 },
+            series: [{ name: 'Contratos', type: 'column', data: data.contracts }, { name: 'Receita contratada', type: 'line', data: data.revenue }],
+            colors: [PALETTE.navy, PALETTE.gold],
+            stroke: { width: [0, 3], curve: 'smooth' },
+            plotOptions: { bar: { columnWidth: '50%', borderRadius: 4 } },
+            markers: { size: [0, 5] },
+            xaxis: { categories: data.labels, labels: { hideOverlappingLabels: false, rotate: -30, style: { fontSize: '11px' } } },
+            yaxis: [
+                { title: { text: 'Contratos' }, labels: { formatter: (v) => Math.round(v) }, min: 0 },
+                { opposite: true, title: { text: 'Receita' }, labels: { formatter: brl }, min: 0 },
+            ],
+        };
+    },
+
+    /** Mapa de calor. data: [{name, data: [{x, y}]}] */
+    heatmap(data) {
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'heatmap', height: 260 },
+            series: data,
+            colors: [PALETTE.blue],
+            plotOptions: { heatmap: { radius: 4, shadeIntensity: 0.6, colorScale: { ranges: [{ from: 0, to: 0, color: '#f4f4f5', name: 'nenhuma' }] } } },
+            dataLabels: { enabled: false },
+            stroke: { width: 2, colors: ['#ffffff'] },
+            legend: { show: false },
+            tooltip: { y: { formatter: (v) => v + ' visita(s)' } },
+        };
+    },
+
+    /** Interessados por semana. data: {labels, new, qualified, discarded} */
+    prospects(data) {
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'bar', height: 260 },
+            series: [{ name: 'Chegaram', data: data.new }, { name: 'Qualificados', data: data.qualified }, { name: 'Descartados', data: data.discarded }],
+            colors: [PALETTE.sky, PALETTE.green, PALETTE.zinc],
+            plotOptions: { bar: { columnWidth: '70%', borderRadius: 3 } },
+            xaxis: { categories: data.labels, labels: { style: { fontSize: '11px' } } },
+            yaxis: { labels: { formatter: (v) => Math.round(v) }, min: 0 },
+        };
+    },
+
+    /** Decisões do INSS por mês e taxa de deferimento. data: {labels, granted, denied, rate} */
+    inss(data) {
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'line', height: 280, stacked: true },
+            series: [
+                { name: 'Deferidos', type: 'column', data: data.granted },
+                { name: 'Indeferidos', type: 'column', data: data.denied },
+                { name: 'Taxa de deferimento', type: 'line', data: data.rate },
+            ],
+            colors: [PALETTE.green, PALETTE.red, PALETTE.navy],
+            stroke: { width: [0, 0, 3], curve: 'smooth' },
+            plotOptions: { bar: { columnWidth: '50%', borderRadius: 3 } },
+            markers: { size: [0, 0, 4] },
+            xaxis: { categories: data.labels },
+            yaxis: [
+                { seriesName: 'Deferidos', title: { text: 'Decisões' }, labels: { formatter: (v) => Math.round(v) }, min: 0 },
+                { seriesName: 'Deferidos', show: false },
+                { opposite: true, seriesName: 'Taxa de deferimento', max: 100, min: 0, labels: { formatter: (v) => Math.round(v) + '%' } },
+            ],
+        };
+    },
+
+    /** Receita contratada, recebida e custos. data: {labels, costs, revenue, received} */
+    moneyFlow(data) {
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'line', height: 300 },
+            series: [
+                { name: 'Receita contratada', type: 'column', data: data.revenue },
+                { name: 'Receita recebida', type: 'column', data: data.received },
+                { name: 'Custos', type: 'line', data: data.costs },
+            ],
+            colors: [PALETTE.navy, PALETTE.gold, PALETTE.red],
+            stroke: { width: [0, 0, 3], curve: 'smooth' },
+            plotOptions: { bar: { columnWidth: '55%', borderRadius: 3 } },
+            markers: { size: [0, 0, 4] },
+            xaxis: { categories: data.labels },
+            yaxis: { labels: { formatter: brl }, min: 0 },
+            tooltip: { y: { formatter: (v) => 'R$ ' + Number(v ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) } },
+        };
+    },
 };
 
 function apexChart(kind, initial, event) {
@@ -147,3 +307,54 @@ function apexChart(kind, initial, event) {
 }
 
 registerAlpineData('apexChart', apexChart);
+
+/** Gráfico de tendência com troca de indicador sem nova consulta. sets: {chave: dados} */
+function trendChart(sets, initialKey) {
+    return {
+        chart: null,
+        key: initialKey,
+        async init() {
+            const ApexCharts = await loadApexCharts();
+            this.chart = new ApexCharts(this.$refs.canvas, builders.trend(sets[this.key]));
+            this.chart.render();
+            this.$watch('key', (k) => this.chart?.updateOptions(builders.trend(sets[k]), true, true));
+        },
+        current() {
+            return sets[this.key];
+        },
+        destroy() {
+            this.chart?.destroy();
+        },
+    };
+}
+
+registerAlpineData('trendChart', trendChart);
+
+/** Número que conta até o valor final ao aparecer. format: int | money | pct | days */
+function countUp(target, format) {
+    const fmt = (v) => {
+        if (target === null) return '—';
+        if (format === 'money') return 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        if (format === 'pct') return v.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+        if (format === 'days') return v.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' dias';
+        return Math.round(v).toLocaleString('pt-BR');
+    };
+    return {
+        text: fmt(target ?? 0),
+        init() {
+            if (target === null || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                this.text = fmt(target ?? 0);
+                return;
+            }
+            const start = performance.now();
+            const step = (t) => {
+                const p = Math.min(1, (t - start) / 900);
+                this.text = fmt(target * (1 - Math.pow(1 - p, 3)));
+                if (p < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        },
+    };
+}
+
+registerAlpineData('countUp', countUp);

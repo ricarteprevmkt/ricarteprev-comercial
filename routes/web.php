@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('agenda', Agenda\Index::class)->middleware('can.any:agenda.view_all,agenda.view_own')->name('agenda.index');
 
     // Fase 7: painéis.
+    Route::livewire('dashboard', App\Livewire\Dashboard::class)->middleware('can.any:dashboard.view,dashboard.view_own')->name('analytics');
     Route::livewire('visao-geral', Overview::class)->middleware('can.any:dashboard.view,dashboard.view_own')->name('dashboard');
     Route::livewire('executivos/{executive}', Executives\Show::class)->middleware('can.any:executives.view,dashboard.view_own')->name('executives.show');
 
