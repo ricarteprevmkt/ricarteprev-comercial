@@ -59,6 +59,8 @@ return [
         'timeout' => (int) env('C2_TIMEOUT', 15),
         // Plataforma do C2, para o link "Abrir no C2" (ficha do cliente).
         'app_url' => env('C2_APP_URL', 'https://c2prev.compute.capital'),
+        // Chave da tarefa agendada que envia os totais do escritório (painel do C2).
+        'snapshot_token' => env('C2_SNAPSHOT_TOKEN'),
     ],
 
     'map' => [

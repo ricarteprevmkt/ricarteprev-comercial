@@ -213,6 +213,24 @@ A chave é um segredo: não envie para mim; ela fica só no `.env` do servidor. 
 
 O aviso de "contrato assinado sem cadastro no C2" usa o prazo de **Parâmetros → Integração com o C2 Prev** (2 dias) e só começa depois da carga inicial.
 
+## Etapa 11. Totais do escritório no Dashboard (tarefa agendada do Claude)
+
+Uma tarefa agendada no app do Claude, no seu computador, lê do C2 a cada 30 minutos só **totais** (financeiro, judicial, prazos, clientes e leads) e envia ao sistema. Ela precisa de uma chave combinada entre o servidor e o seu computador.
+
+1. **Gerar a chave, no SSH:**
+   ```
+   php -r "echo bin2hex(random_bytes(32)), PHP_EOL;"
+   ```
+   Copie o texto que aparecer.
+2. **Colocar no servidor:** `nano .env` → no fim, `C2_SNAPSHOT_TOKEN='a-chave'` → salvar → `php artisan config:cache`.
+3. **Colocar no seu computador:** crie a pasta `C:\Users\Daniel\.ricarteprev` e, dentro dela, o arquivo `c2-painel-token` (sem extensão) só com a chave, numa linha. No PowerShell:
+   ```
+   New-Item -ItemType Directory -Force "$env:USERPROFILE\.ricarteprev"; Set-Content -NoNewline -Encoding ascii "$env:USERPROFILE\.ricarteprev\c2-painel-token" "a-chave"
+   ```
+4. **Testar:** no app do Claude, em **Agendadas**, abra "Ricarte Prev: totais do C2 para o Dashboard" e clique em **Executar agora**. O resultado deve terminar em `HTTP 201`. No Dashboard aparece o bloco **Escritório (C2 Prev)**.
+
+A tarefa só roda com o app do Claude aberto; se ele estiver fechado, roda quando abrir. O bloco mostra "Desatualizado" quando o último envio tem mais de 3 horas. A chave não deve ser enviada para mim.
+
 ---
 
 ## Resumo do que preciso receber
@@ -227,3 +245,4 @@ O aviso de "contrato assinado sem cadastro no C2" usa o prazo de **Parâmetros �
 | 6 | "Repositório criado" e depois "deploy key ok" |
 | 9 | "Rotas pelas estradas ok" (a chave fica só no servidor) |
 | 10 | Saída do `php artisan app:c2-sync --check` (a chave fica só no servidor) |
+| 11 | A última linha da execução manual da tarefa ("Painel C2 enviado: HTTP …") |

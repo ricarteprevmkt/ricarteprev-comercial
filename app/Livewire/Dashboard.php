@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Metrics\DashboardMetrics;
+use App\Models\C2Snapshot;
 use App\Support\Period;
 use App\Support\Visibility;
 use Illuminate\Contracts\View\View;
@@ -50,6 +51,34 @@ class Dashboard extends Component
         return $id ? [(int) $id] : [];
     }
 
+    /**
+     * Totais do escritório lidos do C2 pela tarefa agendada: o último envio e
+     * a evolução diária (último envio de cada dia) dos últimos 30 dias.
+     *
+     * @return array{snapshot: C2Snapshot, groups: array<string, array<string, string>>, trend: array{labels: list<string>, receivable: list<float|null>, overdue: list<float|null>}}|null
+     */
+    private function office(bool $finance): ?array
+    {
+        $snapshot = C2Snapshot::latest();
+        if ($snapshot === null) {
+            return null;
+        }
+
+        $daily = C2Snapshot::query()->where('collected_at', '>=', now()->subDays(30))->orderBy('collected_at')->get()
+            ->groupBy(fn (C2Snapshot $s) => $s->collected_at->setTimezone(config('app.timezone'))->format('d/m'))
+            ->map(fn ($day) => $day->last());
+
+        return [
+            'snapshot' => $snapshot,
+            'groups' => $finance ? C2Snapshot::METRICS : array_diff_key(C2Snapshot::METRICS, ['financeiro' => true]),
+            'trend' => [
+                'labels' => array_values(array_map('strval', $daily->keys()->all())),
+                'receivable' => $finance ? array_values($daily->map(fn (?C2Snapshot $s) => $s?->value('receivable_open'))->all()) : [],
+                'overdue' => array_values($daily->map(fn (?C2Snapshot $s) => $s?->value('deadlines_overdue'))->all()),
+            ],
+        ];
+    }
+
     public function render(): View
     {
         $user = auth()->user();
@@ -78,6 +107,7 @@ class Dashboard extends Component
             'inss' => $metrics->inssMonthly(),
             'costRevenue' => $metrics->costRevenue(),
             'insights' => DashboardMetrics::insights($kpis, $goal, $sources),
+            'office' => $user->can('dashboard.view') ? $this->office($user->can('finance.view')) : null,
             'teamView' => $user->can('dashboard.view'),
             'executives' => $user->can('dashboard.view') ? Visibility::assignableExecutives($user) : collect(),
             // Muda quando os filtros mudam: os gráficos são recriados com os dados novos.

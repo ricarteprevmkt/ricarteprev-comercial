@@ -62,7 +62,7 @@
                             {{ $k['label'] }}
                         </span>
                         @if ($k['delta'] !== null)
-                            @php($good = ($k['delta'] >= 0) xor $k['invert'])
+                            @php $good = ($k['delta'] >= 0) xor $k['invert']; @endphp
                             <span @class(['flex items-center gap-0.5 rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums', 'bg-success-50 text-success-500' => $good, 'bg-red-50 text-red-600' => ! $good])
                                 title="Em relação ao período anterior ({{ $fmt($k['previous'], $k['format']) }})">
                                 <flux:icon :name="$k['delta'] >= 0 ? 'arrow-up' : 'arrow-down'" variant="micro" />{{ number_format(abs($k['delta']), 1, ',', '.') }}%
@@ -85,7 +85,7 @@
                     <div class="mt-1.5 whitespace-nowrap text-xl font-bold text-brand-900 tabular-nums" x-data="countUp(@js($k['value']), @js($k['format']))" x-text="text">{{ $fmt($k['value'], $k['format']) }}</div>
                     <div class="mt-0.5 flex items-center gap-2 text-[11px]">
                         @if ($k['delta'] !== null)
-                            @php($good = ($k['delta'] >= 0) xor $k['invert'])
+                            @php $good = ($k['delta'] >= 0) xor $k['invert']; @endphp
                             <span @class(['shrink-0 font-semibold tabular-nums', 'text-success-500' => $good, 'text-red-600' => ! $good]) title="Em relação ao período anterior">{{ $k['delta'] >= 0 ? '▲' : '▼' }} {{ number_format(abs($k['delta']), 1, ',', '.') }}%</span>
                         @endif
                         <span class="truncate text-zinc-400" title="{{ $k['hint'] }}">{{ $k['hint'] }}</span>
@@ -93,6 +93,65 @@
                 </div>
             @endforeach
         </div>
+
+        {{-- Escritório: totais lidos do C2 pela tarefa agendada --}}
+        @if ($office)
+            @php
+                $snap = $office['snapshot'];
+                $groupMeta = ['financeiro' => ['Financeiro', 'banknotes'], 'prazos' => ['Prazos e tarefas', 'clock'], 'judicial' => ['Judicial', 'scale'], 'crm' => ['Clientes e leads', 'user-plus']];
+                $alertKeys = ['receivable_overdue', 'payable_overdue', 'deadlines_overdue', 'tasks_overdue', 'judicial_stale_90d'];
+            @endphp
+            <section class="dash-in rounded-2xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-5" style="animation-delay: 300ms">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <h2 class="flex items-center gap-2 text-base font-semibold text-brand-900"><flux:icon name="building-office-2" class="size-5" /> Escritório (C2 Prev)</h2>
+                        <p class="text-sm text-zinc-500">Totais lidos do C2 a cada 30 minutos. Não dependem do período escolhido acima.</p>
+                    </div>
+                    <span @class(['rounded-full px-3 py-1 text-xs font-medium', 'bg-amber-100 text-amber-800' => $snap->isStale(), 'bg-white text-zinc-600 ring-1 ring-zinc-200' => ! $snap->isStale()])>
+                        {{ $snap->isStale() ? 'Desatualizado · ' : 'Atualizado ' }}{{ $snap->collected_at->setTimezone(config('app.timezone'))->diffForHumans() }}
+                    </span>
+                </div>
+
+                <div @class(['mt-4 grid gap-4 md:grid-cols-2', 'xl:grid-cols-4' => count($office['groups']) === 4, 'xl:grid-cols-3' => count($office['groups']) === 3])>
+                    @foreach ($office['groups'] as $group => $metrics)
+                        <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-xs">
+                            <div class="mb-2 flex items-center gap-2 text-sm font-semibold text-brand-900">
+                                <span class="flex size-7 items-center justify-center rounded-full bg-brand-900 text-white"><flux:icon :name="$groupMeta[$group][1]" class="size-3.5" /></span>
+                                {{ $groupMeta[$group][0] }}
+                            </div>
+                            <dl class="divide-y divide-zinc-100 text-sm">
+                                @foreach ($metrics as $key => $label)
+                                    @continue(str_ends_with($key, '_prev_month'))
+                                    @php
+                                        $v = $snap->value($key);
+                                        $money = $group === 'financeiro';
+                                        $show = fn (?float $n) => $n === null ? '—' : ($money ? 'R$ '.number_format($n, 0, ',', '.') : number_format($n, 0, ',', '.'));
+                                        // O mês atual ainda está correndo: mostra o mês anterior inteiro como referência, sem %.
+                                        $prev = in_array($key, ['received_month', 'clients_new_month'], true) ? $snap->value(str_replace('_month', '_prev_month', $key)) : null;
+                                    @endphp
+                                    <div class="flex items-center justify-between gap-3 py-1.5">
+                                        <dt class="text-zinc-600">{{ $label }}</dt>
+                                        <dd class="text-right">
+                                            <span @class(['font-semibold tabular-nums', 'text-red-600' => in_array($key, $alertKeys, true) && $v > 0, 'text-brand-900' => ! (in_array($key, $alertKeys, true) && $v > 0)])>{{ $show($v) }}</span>
+                                            @if ($prev !== null)
+                                                <div class="text-[11px] tabular-nums text-zinc-400">mês anterior: {{ $show($prev) }}</div>
+                                            @endif
+                                        </dd>
+                                    </div>
+                                @endforeach
+                            </dl>
+                        </div>
+                    @endforeach
+                </div>
+
+                @if (count($office['trend']['labels']) > 1)
+                    <div class="mt-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-xs">
+                        <div class="text-sm font-semibold text-brand-900">Últimos 30 dias</div>
+                        <div wire:key="office-{{ $chartKey }}" wire:ignore x-data="apexChart('office', @js($office['trend']))"><div x-ref="canvas"></div></div>
+                    </div>
+                @endif
+            </section>
+        @endif
 
         {{-- Tendência com projeção + meta do mês --}}
         <div class="grid gap-6 xl:grid-cols-3">

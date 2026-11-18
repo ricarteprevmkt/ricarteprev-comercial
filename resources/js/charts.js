@@ -264,6 +264,29 @@ const builders = {
         };
     },
 
+    /** Escritório (C2): carteira a receber e prazos atrasados por dia. data: {labels, receivable, overdue} */
+    office(data) {
+        const series = [];
+        const yaxis = [];
+        if (data.receivable.length) {
+            series.push({ name: 'A receber em aberto', type: 'area', data: data.receivable });
+            yaxis.push({ seriesName: 'A receber em aberto', labels: { formatter: brl } });
+        }
+        series.push({ name: 'Prazos atrasados', type: 'line', data: data.overdue });
+        yaxis.push({ seriesName: 'Prazos atrasados', opposite: data.receivable.length > 0, min: 0, labels: { formatter: (v) => Math.round(v) } });
+        return {
+            ...baseOptions(),
+            chart: { ...baseOptions().chart, type: 'line', height: 220 },
+            series,
+            colors: data.receivable.length ? [PALETTE.navy, PALETTE.red] : [PALETTE.red],
+            stroke: { width: data.receivable.length ? [2, 3] : [3], curve: 'smooth' },
+            fill: { type: data.receivable.length ? ['gradient', 'solid'] : ['solid'], gradient: { opacityFrom: 0.3, opacityTo: 0.02 } },
+            markers: { size: 3 },
+            xaxis: { categories: data.labels },
+            yaxis,
+        };
+    },
+
     /** Receita contratada, recebida e custos. data: {labels, costs, revenue, received} */
     moneyFlow(data) {
         return {
