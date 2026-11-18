@@ -14,6 +14,7 @@ use App\Livewire\Executives;
 use App\Livewire\Finance;
 use App\Livewire\Funnel;
 use App\Livewire\Overview;
+use App\Livewire\Prospects;
 use App\Livewire\Referrals;
 use App\Livewire\Reports;
 use App\Support\Navigation;
@@ -62,6 +63,9 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('minhas-indicacoes', Referrals\Portal::class)->middleware('can.any:referrals.view_own')->name('referrals.mine');
     Route::livewire('parceiros-regionais/cadastro', Referrals\Indicators::class)->middleware('can.any:indicators.manage')->name('referrals.indicators');
     Route::livewire('parceiros-regionais/regras-de-comissao', Referrals\CommissionRules::class)->middleware('can.any:commissions.manage')->name('referrals.commission-rules');
+
+    // Interessados (WhatsApp do C2), antes do funil.
+    Route::livewire('interessados', Prospects\Index::class)->middleware('can.any:prospects.view_all,prospects.view_own')->name('prospects.index');
 
     // Administrativo: processos no INSS lidos do C2 Prev (só consulta).
     Route::prefix('administrativo')->name('adm.')->middleware('can.any:inss.view')->group(function () {

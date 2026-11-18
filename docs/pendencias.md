@@ -38,6 +38,13 @@ A definir:
 - Processos judiciais ficam fora do sistema (decisão de 17/11/2026).
 - [ ] Fase 2: avisos de prazo no sino e por e-mail; fase 3: relatórios (motivos de indeferimento, tempo até a decisão).
 
+## Interessados do WhatsApp (17/11/2026)
+
+A API do C2 não tem os leads do CRM. Por isso a seção **Comercial → Interessados** recebe a planilha exportada do C2 (Excel ou CSV), pelo botão "Importar planilha do C2". O telefone identifica a pessoa (DDD + 8 últimos dígitos): reimportar não duplica. Os interessados ficam fora do funil até alguém qualificar (vira contato e oportunidade com a origem WhatsApp) ou descartar com motivo. Gestor distribui; o executivo vê os seus.
+
+- [ ] Perguntar ao C2 se há (ou haverá) API ou webhook para os leads do CRM. Se houver, a importação manual vira leitura automática.
+- [ ] Combinar quem exporta e importa a planilha, e com que frequência (sugestão: todo dia útil de manhã).
+
 ## Validações com a Ricarte Prev
 
 - [ ] O custo da equipe (salários) entra no custo por contrato? Hoje entra só se for lançado na categoria "Equipe comercial", que está como **fixa** e não entra na margem.

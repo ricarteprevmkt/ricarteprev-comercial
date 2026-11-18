@@ -38,6 +38,11 @@ final class Acl
                 'leads.manage' => 'Cadastrar contatos e mover oportunidades',
                 'contracts.manage' => 'Registrar contratos',
             ],
+            'Interessados' => [
+                'prospects.view_all' => 'Ver todos os interessados (WhatsApp)',
+                'prospects.view_own' => 'Ver os interessados atribuídos a si',
+                'prospects.manage' => 'Importar, distribuir e descartar interessados',
+            ],
             'Custos e resultados' => [
                 'finance.view' => 'Ver custos e resultados da operação',
                 'expenses.view_own' => 'Ver as próprias despesas',
@@ -97,6 +102,7 @@ final class Acl
                 'executives.view', 'goals.manage',
                 'agenda.view_all', 'agenda.view_own', 'agenda.manage',
                 'funnel.view_all', 'funnel.view_own', 'leads.manage', 'contracts.manage',
+                'prospects.view_all', 'prospects.manage',
                 'finance.view', 'expenses.view_own', 'expenses.manage', 'expenses.approve',
                 'referrals.view_all', 'referrals.create', 'indicators.manage', 'commissions.manage',
                 'reports.view', 'reports.export',
@@ -109,6 +115,7 @@ final class Acl
                 'dashboard.view_own',
                 'agenda.view_own', 'agenda.manage',
                 'funnel.view_own', 'leads.manage', 'contracts.manage',
+                'prospects.view_own',
                 'expenses.view_own', 'expenses.manage',
                 'referrals.create',
             ],

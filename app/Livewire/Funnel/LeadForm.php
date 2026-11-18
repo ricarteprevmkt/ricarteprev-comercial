@@ -6,9 +6,11 @@ use App\Actions\Crm\SaveLead;
 use App\Enums\LeadStatus;
 use App\Enums\LeadType;
 use App\Enums\OpportunityStage;
+use App\Enums\ProspectStatus;
 use App\Livewire\Concerns\LoadsLocationOptions;
 use App\Models\Catalogs\LeadSource;
 use App\Models\Lead;
+use App\Models\Prospect;
 use App\Models\RegionalIndicator;
 use App\Rules\BrazilianPhone;
 use App\Rules\ValidDocument;
@@ -42,6 +44,9 @@ class LeadForm extends Component
 
     public bool $allowSamePhone = false;
 
+    /** Interessado sendo qualificado (vira contato e oportunidade ao salvar). */
+    public ?int $prospectId = null;
+
     public bool $samePhoneWarning = false;
 
     public function mount(): void
@@ -54,6 +59,30 @@ class LeadForm extends Component
     {
         abort_unless(auth()->user()->can('leads.manage'), 403);
         $this->resetFields();
+        Flux::modal('lead-form')->show();
+    }
+
+    /** Qualificar um interessado: abre o cadastro já preenchido com os dados dele. */
+    #[On('lead-form:from-prospect')]
+    public function fromProspect(int $id): void
+    {
+        $prospect = Prospect::query()->findOrFail($id);
+        $this->authorize('qualify', $prospect);
+        $this->resetFields();
+        $this->prospectId = $prospect->id;
+
+        $notes = collect([
+            $prospect->demand ? 'Demanda: '.$prospect->demand : null,
+            $prospect->notes,
+            'Interessado pelo '.($prospect->origin ?? 'WhatsApp').' desde '.$prospect->entered_at->format('d/m/Y').'.',
+        ])->filter()->implode(PHP_EOL.PHP_EOL);
+
+        $this->form['name'] = preg_match('/\p{L}{2,}/u', $prospect->name) ? $prospect->name : '';
+        $this->form['whatsapp'] = Phone::format($prospect->phone);
+        $this->form['lead_source_id'] = LeadSource::query()->where('name', 'WhatsApp')->value('id');
+        $this->form['executive_id'] = $prospect->executive_id ?? $this->form['executive_id'];
+        $this->form['notes'] = mb_substr($notes, 0, 2000);
+        $this->opportunity['interest'] = $prospect->demand ? mb_substr($prospect->demand, 0, 255) : '';
         Flux::modal('lead-form')->show();
     }
 
@@ -159,6 +188,13 @@ class LeadForm extends Component
             return;
         }
 
+        if ($this->prospectId !== null && $lead === null) {
+            Prospect::query()->whereKey($this->prospectId)->where('status', ProspectStatus::New->value)->update([
+                'status' => ProspectStatus::Qualified->value, 'lead_id' => $result['lead']->id, 'qualified_at' => now(),
+                'executive_id' => $result['lead']->executive_id, 'handled_by' => $user->id,
+            ]);
+        }
+
         Flux::modal('lead-form')->close();
         Flux::toast(variant: 'success', text: $lead ? 'Contato atualizado.' : ($result['opportunity'] ? 'Contato cadastrado e oportunidade aberta.' : 'Contato cadastrado.'));
         $this->dispatch('lead-saved');
@@ -174,6 +210,7 @@ class LeadForm extends Component
     {
         $this->resetValidation();
         $this->leadId = null;
+        $this->prospectId = null;
         $this->openOpportunity = true;
         $this->allowSamePhone = false;
         $this->samePhoneWarning = false;
