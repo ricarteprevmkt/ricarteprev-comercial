@@ -98,8 +98,10 @@
         @if ($office)
             @php
                 $snap = $office['snapshot'];
-                $groupMeta = ['financeiro' => ['Financeiro', 'banknotes'], 'prazos' => ['Prazos e tarefas', 'clock'], 'judicial' => ['Judicial', 'scale'], 'crm' => ['Clientes e leads', 'user-plus']];
-                $alertKeys = ['receivable_overdue', 'payable_overdue', 'deadlines_overdue', 'tasks_overdue', 'judicial_stale_90d'];
+                $groupMeta = ['financeiro' => ['Financeiro', 'banknotes'], 'prazos' => ['Prazos e tarefas', 'clock'], 'gestantes' => ['Gestantes (salário-maternidade)', 'heart'], 'judicial' => ['Judicial', 'scale'], 'crm' => ['Clientes e leads', 'user-plus']];
+                $alertKeys = ['receivable_overdue', 'payable_overdue', 'deadlines_overdue', 'tasks_overdue', 'judicial_stale_90d', 'pregnant_entry_open', 'guides_overdue'];
+                // Grupo sem nenhum número no último envio (ex.: tarefa ainda na versão anterior) não aparece.
+                $groups = array_filter($office['groups'], fn ($metrics) => collect(array_keys($metrics))->contains(fn ($k) => $snap->value($k) !== null));
             @endphp
             <section class="dash-in rounded-2xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-5" style="animation-delay: 300ms">
                 <div class="flex flex-wrap items-center justify-between gap-2">
@@ -112,8 +114,8 @@
                     </span>
                 </div>
 
-                <div @class(['mt-4 grid gap-4 md:grid-cols-2', 'xl:grid-cols-4' => count($office['groups']) === 4, 'xl:grid-cols-3' => count($office['groups']) === 3])>
-                    @foreach ($office['groups'] as $group => $metrics)
+                <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    @foreach ($groups as $group => $metrics)
                         <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-xs">
                             <div class="mb-2 flex items-center gap-2 text-sm font-semibold text-brand-900">
                                 <span class="flex size-7 items-center justify-center rounded-full bg-brand-900 text-white"><flux:icon :name="$groupMeta[$group][1]" class="size-3.5" /></span>

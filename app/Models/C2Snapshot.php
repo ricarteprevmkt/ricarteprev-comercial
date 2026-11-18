@@ -35,6 +35,16 @@ class C2Snapshot extends Model
             'deadlines_next7' => 'Prazos nos próximos 7 dias',
             'tasks_overdue' => 'Tarefas atrasadas',
         ],
+        'gestantes' => [
+            'pregnant_total' => 'Processos de gestante',
+            'pregnant_entry_open' => 'Entrada liberada, sem requerimento',
+            'pregnant_entry_next30' => 'Entrada abre nos próximos 30 dias',
+            'pregnant_dpp_next30' => 'DPP nos próximos 30 dias',
+            'guides_pending' => 'Contribuição pendente',
+            'guides_overdue' => 'Guia com data vencida',
+            'guides_next30' => 'Guia com data nos próximos 30 dias',
+            'guides_paid_month' => 'Guias pagas nos últimos 30 dias',
+        ],
         'judicial' => [
             'judicial_active' => 'Processos judiciais ativos',
             'judicial_new_month' => 'Judiciais novos no mês',
