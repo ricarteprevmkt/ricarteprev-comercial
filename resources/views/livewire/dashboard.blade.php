@@ -99,7 +99,10 @@
             @php
                 $snap = $office['snapshot'];
                 $groupMeta = ['financeiro' => ['Financeiro', 'banknotes'], 'prazos' => ['Prazos e tarefas', 'clock'], 'gestantes' => ['Gestantes (salário-maternidade)', 'heart'], 'judicial' => ['Judicial', 'scale'], 'crm' => ['Clientes e leads', 'user-plus']];
-                $alertKeys = ['receivable_overdue', 'payable_overdue', 'deadlines_overdue', 'tasks_overdue', 'judicial_stale_90d', 'pregnant_entry_open', 'guides_overdue'];
+                $alertKeys = ['receivable_overdue', 'payable_overdue', 'deadlines_overdue', 'tasks_overdue', 'judicial_stale_90d', 'pregnant_alert_guide_paid', 'pregnant_alert_dpp_passed'];
+                // Linhas de conferência de cadastro (etapa incoerente no C2) e subitens recuados.
+                $checkKeys = ['pregnant_alert_guide_paid', 'pregnant_alert_dpp_passed'];
+                $subKeys = ['pregnant_birth_next30'];
                 // Grupo sem nenhum número no último envio (ex.: tarefa ainda na versão anterior) não aparece.
                 $groups = array_filter($office['groups'], fn ($metrics) => collect(array_keys($metrics))->contains(fn ($k) => $snap->value($k) !== null));
             @endphp
@@ -131,8 +134,11 @@
                                         // O mês atual ainda está correndo: mostra o mês anterior inteiro como referência, sem %.
                                         $prev = in_array($key, ['received_month', 'clients_new_month'], true) ? $snap->value(str_replace('_month', '_prev_month', $key)) : null;
                                     @endphp
-                                    <div class="flex items-center justify-between gap-3 py-1.5">
-                                        <dt class="text-zinc-600">{{ $label }}</dt>
+                                    @if ($key === ($checkKeys[0] ?? null))
+                                        <div class="pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-zinc-400">Conferir no C2 (etapa desatualizada)</div>
+                                    @endif
+                                    <div @class(['flex items-center justify-between gap-3 py-1.5', 'pl-4' => in_array($key, $subKeys, true)])>
+                                        <dt @class(['text-zinc-600', 'text-xs' => in_array($key, $subKeys, true)])>{{ in_array($key, $subKeys, true) ? '↳ ' : '' }}{{ $label }}</dt>
                                         <dd class="text-right">
                                             <span @class(['font-semibold tabular-nums', 'text-red-600' => in_array($key, $alertKeys, true) && $v > 0, 'text-brand-900' => ! (in_array($key, $alertKeys, true) && $v > 0)])>{{ $show($v) }}</span>
                                             @if ($prev !== null)

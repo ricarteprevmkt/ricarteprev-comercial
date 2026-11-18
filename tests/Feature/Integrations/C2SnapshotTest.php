@@ -74,9 +74,10 @@ it('mostra o escritório no dashboard; o financeiro só a quem vê custos', func
     // Envio antigo, sem os indicadores de gestantes: o grupo não aparece.
     Livewire::actingAs(userWithRole(Role::Admin))->test(Dashboard::class)->assertDontSee('Gestantes (salário-maternidade)');
 
-    C2Snapshot::query()->create(snapshotPayload(['pregnant_total' => 94, 'pregnant_entry_open' => 28, 'guides_pending' => 65]));
+    C2Snapshot::query()->create(snapshotPayload(['pregnant_total' => 94, 'pregnant_stage_guide' => 72, 'pregnant_stage_birth' => 17, 'pregnant_alert_dpp_passed' => 6]));
     Livewire::actingAs(userWithRole(Role::Admin))->test(Dashboard::class)
-        ->assertSee('Gestantes (salário-maternidade)')->assertSee('Entrada liberada, sem requerimento')->assertSee('28');
+        ->assertSee('Gestantes (salário-maternidade)')->assertSee('Aguardando pagamento da guia')->assertSee('72')
+        ->assertSee('Conferir no C2 (etapa desatualizada)')->assertSee('DPP passou, ainda aguardando nascer');
 
     $executive = userWithRole(Role::Executive);
     Livewire::actingAs($executive)->test(Dashboard::class)->assertDontSee('Escritório (C2 Prev)');

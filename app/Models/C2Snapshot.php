@@ -35,15 +35,16 @@ class C2Snapshot extends Model
             'deadlines_next7' => 'Prazos nos próximos 7 dias',
             'tasks_overdue' => 'Tarefas atrasadas',
         ],
+        // Pelas etapas do processo GESTANTE no C2: guia → nascer → certidão.
         'gestantes' => [
             'pregnant_total' => 'Processos de gestante',
-            'pregnant_entry_open' => 'Entrada liberada, sem requerimento',
-            'pregnant_entry_next30' => 'Entrada abre nos próximos 30 dias',
-            'pregnant_dpp_next30' => 'DPP nos próximos 30 dias',
-            'guides_pending' => 'Contribuição pendente',
-            'guides_overdue' => 'Guia com data vencida',
-            'guides_next30' => 'Guia com data nos próximos 30 dias',
+            'pregnant_stage_guide' => 'Aguardando pagamento da guia',
+            'pregnant_stage_birth' => 'Aguardando nascer',
+            'pregnant_birth_next30' => 'Com DPP nos próximos 30 dias',
+            'pregnant_stage_certificate' => 'Aguardando certidão da criança',
             'guides_paid_month' => 'Guias pagas nos últimos 30 dias',
+            'pregnant_alert_guide_paid' => 'Guia paga, mas etapa ainda na guia',
+            'pregnant_alert_dpp_passed' => 'DPP passou, ainda aguardando nascer',
         ],
         'judicial' => [
             'judicial_active' => 'Processos judiciais ativos',
